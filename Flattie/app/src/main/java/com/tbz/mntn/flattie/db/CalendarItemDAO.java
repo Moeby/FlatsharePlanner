@@ -28,12 +28,6 @@ public class CalendarItemDAO {
         return instance;
     }
 
-    public void insert(){
-        // TODO: #44 implement method
-        // don't insert a group_fk first, maybe change attribute in DB to nullable
-        // removal_date = null
-    }
-
     // TESTME: #44
     public int insert(CalendarItem calendarItem){
         int rows                = -1;
