@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+// TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class RepEventExceptionDAO {
     private static RepEventExceptionDAO instance = new RepEventExceptionDAO();
     private ArrayList<RepEventExeption> repEventExeptions = new ArrayList();
@@ -28,7 +29,6 @@ public class RepEventExceptionDAO {
 
     // TESTME: #44
     public int insert(RepEventExeption repEventExeption){
-        // TODO: #44 get connection
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -80,7 +80,6 @@ public class RepEventExceptionDAO {
 
     // TESTME: #44
     public int delete(RepEventExeption repEventExeption){
-        // TODO: #44 get connection
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;

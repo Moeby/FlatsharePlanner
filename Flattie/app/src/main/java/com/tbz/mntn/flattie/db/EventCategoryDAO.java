@@ -24,7 +24,6 @@ public class EventCategoryDAO {
 
     // TESTME: #44
     public EventCategory selectById(int id){
-        // TODO: #44 get connection
         EventCategory category  = null;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -68,7 +67,6 @@ public class EventCategoryDAO {
 
     // TESTME: #44
     public List<EventCategory> selectAll(){
-        // TODO: #44 get connection
         List<EventCategory> categories  = new ArrayList();
         Connection con          = null;
         PreparedStatement stmt  = null;

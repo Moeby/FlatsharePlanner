@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+// TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class UserDAO {
     private static UserDAO instance = new UserDAO();
     private ArrayList<User> users = new ArrayList();
@@ -33,7 +34,6 @@ public class UserDAO {
         // don't insert a group_fk first, maybe change attribute in DB to nullable
         // removal_date = null
 
-        // TODO: #44 get connection
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -103,7 +103,6 @@ public class UserDAO {
 
     // TESTME: #44
     public int remove(User user){
-        // TODO: #44 get connection
         Date removalDate        = new Date(new java.util.Date().getTime());
         int rows                = -1;
         Connection con          = null;

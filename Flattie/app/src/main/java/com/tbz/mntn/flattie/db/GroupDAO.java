@@ -22,7 +22,6 @@ public class GroupDAO {
 
     // TESTME: #44
     public int insert(Group group){
-        // TODO: #44 get connection
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -64,7 +63,6 @@ public class GroupDAO {
 
     // TESTME: #44
     public Group selectById(int id){
-        // TODO: #44 get connection
         Group group             = null;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -108,7 +106,6 @@ public class GroupDAO {
 
     // TESTME: #44
     public int remove(Group group){
-        // TODO: #44 get connection
         Date removalDate        = new Date(new java.util.Date().getTime());
         int rows                = -1;
         Connection con          = null;
@@ -148,7 +145,7 @@ public class GroupDAO {
     }
 
     public void reactivate(Group group){
-        // TODO: someday get connection
+        // TODO: someday implement method
         // #44 at the moment no required feature!
     }
 }

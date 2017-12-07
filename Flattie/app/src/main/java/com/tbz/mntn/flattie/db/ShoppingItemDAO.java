@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+// TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class ShoppingItemDAO {
     private static ShoppingItemDAO instance = new ShoppingItemDAO();
     private ArrayList<ShoppingItem> shoppingItems = new ArrayList();
@@ -27,7 +28,6 @@ public class ShoppingItemDAO {
 
     // TESTME: #44
     public int insert(ShoppingItem shoppingItem){
-        // TODO: #44 get connection
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -75,7 +75,7 @@ public class ShoppingItemDAO {
         return rows;
     }
 
-    // TODO: #44 add update
+    // TOASK: #44 add update
 
     public void selectAllByGroupId(){
         // TODO: #44 implement method
@@ -84,7 +84,6 @@ public class ShoppingItemDAO {
 
     // TESTME: #44
     public int delete(ShoppingItem shoppingItem){
-        // TODO: #44 get connection
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;

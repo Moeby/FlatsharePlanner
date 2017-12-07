@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+// TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class CalendarItemDAO {
     private static CalendarItemDAO instance = new CalendarItemDAO();
     private ArrayList<CalendarItem> calendarItems = new ArrayList();
@@ -35,7 +36,6 @@ public class CalendarItemDAO {
 
     // TESTME: #44
     public int insert(CalendarItem calendarItem){
-        // TODO: #44 get connection
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -91,8 +91,6 @@ public class CalendarItemDAO {
 
     // TESTME: #44
     public int delete(CalendarItem calendarItem){
-        // TOASK: #44 delete exceptions as well --> if repeatable != none
-        // TODO: #44 get connection
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
