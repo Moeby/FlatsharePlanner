@@ -17,4 +17,5 @@
 - no notification will be send
 
 ### Mention Files
-- enter filename in commit message will create a link to the file
+- enter filename in commit message should create a link to the file
+- not working as expected
