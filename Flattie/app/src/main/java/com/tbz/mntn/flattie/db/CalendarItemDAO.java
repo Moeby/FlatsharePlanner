@@ -1,9 +1,5 @@
 package com.tbz.mntn.flattie.db;
 
-/**
- * Created by Nadja on 06.12.2017.
- */
-
 public class CalendarItemDAO {
     private static CalendarItemDAO instance = new CalendarItemDAO();
 

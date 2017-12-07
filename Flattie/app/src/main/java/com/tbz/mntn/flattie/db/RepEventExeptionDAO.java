@@ -1,9 +1,5 @@
 package com.tbz.mntn.flattie.db;
 
-/**
- * Created by Nadja on 06.12.2017.
- */
-
 public class RepEventExeptionDAO {
     private static RepEventExeptionDAO instance = new RepEventExeptionDAO();
 

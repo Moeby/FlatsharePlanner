@@ -1,9 +1,5 @@
 package com.tbz.mntn.flattie.db;
 
-/**
- * Created by Nadja on 06.12.2017.
- */
-
 public class ShoppingItemDAO {
     private static ShoppingItemDAO instance = new ShoppingItemDAO();
 

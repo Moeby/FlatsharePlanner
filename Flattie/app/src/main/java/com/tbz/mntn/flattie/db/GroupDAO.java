@@ -1,9 +1,5 @@
 package com.tbz.mntn.flattie.db;
 
-/**
- * Created by Nadja on 06.12.2017.
- */
-
 public class GroupDAO {
     private static GroupDAO instance = new GroupDAO();
 
@@ -36,7 +32,6 @@ public class GroupDAO {
 
     public void reactivate(){
         // TODO: #44 implement method
-        // FIXME: 07.12.2017 add to ticket #44
         // at the moment no required feature!
     }
 }

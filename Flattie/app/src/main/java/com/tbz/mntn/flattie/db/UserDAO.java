@@ -40,7 +40,6 @@ public class UserDAO {
 
     public void updateGroup(){
         // TODO: #44 implement method
-        // FIXME: 07.12.2017 add to ticket #44
         // update group_fk when user is removed from / added to its group
     }
 
@@ -51,7 +50,6 @@ public class UserDAO {
 
     public void reactivate(){
         // TODO: #44 implement method
-        // FIXME: 07.12.2017 add to ticket #44
         // at the moment no required feature!
     }
 }
