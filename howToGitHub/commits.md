@@ -1,5 +1,6 @@
 ### Mention Issues
-- enter issue number in commit will create a link to the issue
+- enter issue number in commit message will create a link to the issue
+
 **attention: if you use one of the listed words before issue number, the _issue will get closed_!**
 - close
 - closes
@@ -12,4 +13,8 @@
 - resolved
 
 ### Mention Users
-Unfortunately not supported yet.
+- enter user mention in commit message will create a link to the user
+- no notification will be send
+
+### Mention Files
+- enter filename in commit message will create a link to the file
