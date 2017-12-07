@@ -14,6 +14,12 @@
 - [ ] add [ ] behind list char to get a task list
 - [x] add [x] to set task as completed
 
+### Table
+titel 1 | title 2
+------- | -------
+cell 1 | cell 2
+column 1 | column 2
+
 ### Code with highlite
 ``` java
 // this is java code
@@ -24,6 +30,10 @@ public class Java(){
 
 ### Link
 - use \[text](url) to get a link to [sbb](https://www.sbb.ch)
+#### Issue References
+- use \#nr to link another issue like that #1
+#### Mentions
+- use @ to mention a user like that @teshi24
 
 ### Don't forget the emojis :relaxed:
 - :star:
