@@ -1,5 +1,6 @@
 ### Mention Issues
 - enter issue number in commit message will create a link to the issue
+- moreover, the commit message will occure in the issue like a comment
 
 **attention: if you use one of the listed words before issue number, the _issue will get closed_!**
 - close
