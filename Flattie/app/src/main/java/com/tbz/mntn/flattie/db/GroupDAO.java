@@ -2,11 +2,11 @@ package com.tbz.mntn.flattie.db;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
+// TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class GroupDAO {
     private static GroupDAO instance = new GroupDAO();
-    private static List<Group> groups = new Group();
+    private static List<Group> groups = new ArrayList();
 
     // table constants
     private static final String TABLE = "group";
@@ -116,8 +116,10 @@ public class GroupDAO {
         ResultSet result        = null;
         try{
             stmt = con.prepareStatement("UPDATE " + TABLE +
-                            " SET " + REMOVAL_DATE + " = ?;");
+                            " SET " + REMOVAL_DATE + " = ?"
+                    +   " WHERE " + ID + " = ?;");
             stmt.setDate(1, removalDate);
+            stmt.setInt(2, group.getId());
 
             rows = stmt.executeUpdate();
 
@@ -145,41 +147,8 @@ public class GroupDAO {
         return rows;
     }
 
-    // TESTME: #44
-    public int reactivate(Group group){
-        // at the moment no required feature!
-        // TODO: #44 get connection
-        int rows                = -1;
-        Connection con          = null;
-        PreparedStatement stmt  = null;
-        ResultSet result        = null;
-        try{
-            stmt = con.prepareStatement("UPDATE " + TABLE +
-                    " SET " + REMOVAL_DATE + " = ?;");
-            stmt.setDate(1, null);
-
-            rows = stmt.executeUpdate();
-
-            if(rows > 0){
-                // TODO: #44 check if needed
-                groups.remove(group);
-                group.setRemovalDate(null);
-                groups.add(group);
-            }
-        } catch (SQLException e){
-            // TODO: #44 implement errorhandling
-        } finally {
-            try  {
-                // free resources
-                if (result != null)
-                    result.close();
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
-            }
-        }
-        return rows;
+    public void reactivate(Group group){
+        // TODO: someday get connection
+        // #44 at the moment no required feature!
     }
 }
