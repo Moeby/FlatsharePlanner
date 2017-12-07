@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class UserDAO {
     private static UserDAO instance = new UserDAO();
-    private static List<User> users = new ArrayList();
+    private ArrayList<User> users = new ArrayList();
 
     // table constants
     private static final String TABLE = "user";

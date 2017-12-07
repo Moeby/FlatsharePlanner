@@ -9,7 +9,7 @@ import java.util.ArrayList;
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class EventCategoryDAO {
     private static EventCategoryDAO instance = new EventCategoryDAO();
-    private static List<EventCategory> eventCategories = new ArrayList();
+    private ArrayList<EventCategory> eventCategories = new ArrayList();
 
     // table constants
     private static final String TABLE   = "event_category";

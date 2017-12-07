@@ -6,7 +6,7 @@ import java.util.ArrayList;
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class GroupDAO {
     private static GroupDAO instance = new GroupDAO();
-    private static List<Group> groups = new ArrayList();
+    private ArrayList<Group> groups = new ArrayList();
 
     // table constants
     private static final String TABLE = "group";

@@ -13,8 +13,8 @@ public class DAOFactory {
     static public GroupDAO getGroupDAO(){
         return GroupDAO.getInstance();
     }
-    static public RepEventExeptionDAO getRepEventExeptionDAO(){
-        return RepEventExeptionDAO.getInstance();
+    static public RepEventExceptionDAO getRepEventExeptionDAO(){
+        return RepEventExceptionDAO.getInstance();
     }
     static public ShoppingItemDAO getShoppingItemDAO(){
         return ShoppingItemDAO.getInstance();

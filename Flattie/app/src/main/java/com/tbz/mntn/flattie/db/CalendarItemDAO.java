@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class CalendarItemDAO {
     private static CalendarItemDAO instance = new CalendarItemDAO();
-    private static List<CalendarItem> calendarItems = new ArrayList();
+    private ArrayList<CalendarItem> calendarItems = new ArrayList();
 
     // table constants
     private static final String TABLE = "calendar_item";
@@ -89,8 +89,48 @@ public class CalendarItemDAO {
         // what do with exceptions?
     }
 
-    public void delete(){
-        // TODO: #44 implement method
-        // delete exceptions as well --> if repeatable != none
+    // TESTME: #44
+    public int delete(CalendarItem calendarItem){
+        // TOASK: #44 delete exceptions as well --> if repeatable != none
+        // TODO: #44 get connection
+        int rows                = -1;
+        Connection con          = null;
+        PreparedStatement stmt  = null;
+        ResultSet result        = null;
+        try{
+            boolean repeatable = calendarItem.isRepeatable();
+            if(repeatable){
+                // TOREMEMBER: ask first if the user wants to delete the whole repeatable event
+                RepEventExceptionDAO handleExceptions = DAOFactory.getRepEventExeptionDAO();
+                ArrayList<RepEventExeption> repEventExceptions = calendarItem.getListOfExeptions();
+                for(RepEventException repEventException: repEventExceptions){
+                    handleExceptions.delete(repEventException);
+                }
+            }
+
+            stmt = con.prepareStatement("DELETE FROM " + TABLE
+                            + " WHERE " + ID + " = ?;"
+                    , Statement.RETURN_GENERATED_KEYS);
+            stmt.setInt(1, calendarItem.getId());
+
+            rows = stmt.executeUpdate();
+            if(rows > 0){
+                calendarItems.remove(calendarItem);
+            }
+        } catch (SQLException e){
+            // TODO: #44 implement errorhandling
+        } finally {
+            try  {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException e) {
+                // TODO: #44 implement errorhandling
+                System.out.println("Statement or result close failed");
+            }
+        }
+        return rows;
     }
 }

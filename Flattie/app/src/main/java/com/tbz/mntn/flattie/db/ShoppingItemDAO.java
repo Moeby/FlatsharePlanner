@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class ShoppingItemDAO {
     private static ShoppingItemDAO instance = new ShoppingItemDAO();
-    private static List<ShoppingItem> shoppingItems = new ArrayList();
+    private ArrayList<ShoppingItem> shoppingItems = new ArrayList();
 
     // table constants
     private static final String TABLE = "shopping_item";
