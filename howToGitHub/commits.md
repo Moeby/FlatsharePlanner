@@ -8,9 +8,9 @@
 - write short message with issue in first line
 - write description into textarea below if needed
 ##### From Command Line
-``` cmd
-git commit -m 'short message with issue <enter>
-<enter>
+```
+git commit -m 'short message with issue [enter]
+[enter]
 optional description'
 ```
 
