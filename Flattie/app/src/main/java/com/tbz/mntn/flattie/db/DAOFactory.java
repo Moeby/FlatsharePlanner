@@ -1,22 +1,27 @@
 package com.tbz.mntn.flattie.db;
 
 public class DAOFactory {
-    static public UserDAO getUserDAO(){
+    static public UserDAO getUserDAO() {
         return UserDAO.getInstance();
     }
-    static public CalendarItemDAO getCalendarItemDAO(){
+
+    static public CalendarItemDAO getCalendarItemDAO() {
         return CalendarItemDAO.getInstance();
     }
-    static public EventCategoryDAO getEventCategoryDAO(){
+
+    static public EventCategoryDAO getEventCategoryDAO() {
         return EventCategoryDAO.getInstance();
     }
-    static public GroupDAO getGroupDAO(){
+
+    static public GroupDAO getGroupDAO() {
         return GroupDAO.getInstance();
     }
-    static public RepEventExceptionDAO getRepEventExeptionDAO(){
+
+    static public RepEventExceptionDAO getRepEventExeptionDAO() {
         return RepEventExceptionDAO.getInstance();
     }
-    static public ShoppingItemDAO getShoppingItemDAO(){
+
+    static public ShoppingItemDAO getShoppingItemDAO() {
         return ShoppingItemDAO.getInstance();
     }
 }

@@ -8,50 +8,53 @@ import java.util.ArrayList;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class EventCategoryDAO {
-    private static EventCategoryDAO instance = new EventCategoryDAO();
-    private ArrayList<EventCategory> eventCategories = new ArrayList();
+    private static EventCategoryDAO instance            = new EventCategoryDAO();
+    private ArrayList<EventCategory> eventCategories    = new ArrayList();
 
     // table constants
     private static final String TABLE   = "event_category";
     private static final String ID      = "id";
     private static final String NAME    = "name";
 
-    private EventCategoryDAO(){}
+    private EventCategoryDAO() {
+    }
 
     public static EventCategoryDAO getInstance() {
         return instance;
     }
 
     // TESTME: #44
-    public EventCategory selectById(int id){
+    // return null if not found
+    public EventCategory selectById(int id) {
         EventCategory category  = null;
         Connection con          = null;
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
             stmt = con.prepareStatement("SELECT " + NAME + " FROM " + TABLE
-                                            + " WHERE " + ID + " = ?;");
+                                        + " WHERE " + ID + " = ?;");
             stmt.setInt(1, id);
+
             result = stmt.executeQuery();
-            if(result.next()){
-                for(EventCategory eventCategory: eventCategories){
-                    if(id == eventCategory.getId()){
+            if (result.next()) {
+                for (EventCategory eventCategory : eventCategories) {
+                    if (id == eventCategory.getId()) {
                         category = eventCategory;
                         break;
                     }
                 }
-                if(category != null) {
+                if (category == null) {
+                    category = new EventCategory();
                     category.setId(id);
                     category.setName(result.getString(NAME));
+
                     eventCategories.add(category);
                 }
-            }else{
-                category = null;
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             // TODO: #44 implement errorhandling
-        }finally {
-            try  {
+        } finally {
+            try {
                 // free resources
                 if (result != null)
                     result.close();
@@ -66,36 +69,37 @@ public class EventCategoryDAO {
     }
 
     // TESTME: #44
-    public List<EventCategory> selectAll(){
+    // return null if not found
+    public List<EventCategory> selectAll() {
         List<EventCategory> categories  = new ArrayList();
-        Connection con          = null;
-        PreparedStatement stmt  = null;
-        ResultSet result        = null;
+        Connection con                  = null;
+        PreparedStatement stmt          = null;
+        ResultSet result                = null;
         try {
-            stmt = con.prepareStatement("SELECT " + ID + ", " + NAME + " FROM " + TABLE + ";");
-            result = stmt.executeQuery();
-            while(result.next()){
-                int id = result.getInt(ID);
-                EventCategory category = null;
-                for(EventCategory eventCategory: eventCategories){
-                    if(id == eventCategory.getId()){
+            stmt    = con.prepareStatement("SELECT " + ID + ", " + NAME + " FROM " + TABLE + ";");
+            result  = stmt.executeQuery();
+            while (result.next()) {
+                int id                  = result.getInt(ID);
+                EventCategory category  = null;
+                for (EventCategory eventCategory : eventCategories) {
+                    if (id == eventCategory.getId()) {
                         category = eventCategory;
                         break;
                     }
                 }
-                if(category != null){
+                if (category == null) {
                     category = new EventCategory();
                     category.setId(id);
                     category.setName(result.getString(NAME));
-    
+
                     eventCategories.add(category);
                 }
                 categories.add(category);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             // TODO: #44 implement errorhandling
-        }finally {
-            try  {
+        } finally {
+            try {
                 // free resources
                 if (result != null)
                     result.close();
@@ -106,9 +110,9 @@ public class EventCategoryDAO {
                 System.out.println("Statement or result close failed");
             }
         }
-        if(!categories.isEmpty()) {
+        if (!categories.isEmpty()) {
             return categories;
-        }else{
+        } else {
             return null;
         }
     }
