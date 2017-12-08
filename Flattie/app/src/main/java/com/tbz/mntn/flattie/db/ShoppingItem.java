@@ -1,4 +1,4 @@
-package db;
+package com.tbz.mntn.flattie.db;
 
 public class ShoppingItem {
 
