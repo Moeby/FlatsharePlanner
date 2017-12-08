@@ -1,3 +1,5 @@
+**Do a commit for each unit of change!**
+
 ### Mention Issues
 - enter issue number in commit message will create a link to the issue
 - moreover, the commit message will occure in the issue like a comment
