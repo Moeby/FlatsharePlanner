@@ -55,9 +55,12 @@ public class UserDAO {
             }
 
             rows = stmt.executeUpdate();
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            try {
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
                 if (generatedKeys.next())
                     user.setId(generatedKeys.getInt(1));
+            }catch (SQLException e){
+                // TODO: #44 implement errorhandling
             }
 
             if (rows > 0)

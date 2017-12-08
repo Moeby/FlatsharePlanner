@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class EventCategoryDAO {

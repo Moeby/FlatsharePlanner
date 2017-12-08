@@ -47,9 +47,12 @@ public class CalendarItemDAO {
             stmt.setInt(6,      calendarItem.getEventCategory().getId());
 
             rows = stmt.executeUpdate();
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            try {
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
                 if (generatedKeys.next())
                     calendarItem.setId(generatedKeys.getInt(1));
+            } catch (SQLException e){
+                // TODO: #44 implement errorhandling
             }
 
             if (rows > 0)
@@ -92,7 +95,7 @@ public class CalendarItemDAO {
             if (repeatable) {
                 // TOREMEMBER: ask first if the user wants to delete the whole repeatable event
                 RepEventExceptionDAO handleExceptions           = DAOFactory.getRepEventExeptionDAO();
-                ArrayList<RepEventExeption> repEventExceptions  = calendarItem.getListOfExeptions();
+                ArrayList<RepEventException> repEventExceptions  = calendarItem.getListOfExeptions();
                 for (RepEventException repEventException : repEventExceptions)
                     handleExceptions.delete(repEventException);
             }

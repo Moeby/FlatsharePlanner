@@ -35,9 +35,12 @@ public class GroupDAO {
             stmt.setString(2, group.getRemovalDate());
 
             rows = stmt.executeUpdate();
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            try {
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
                 if (generatedKeys.next())
                     group.setId(generatedKeys.getInt(1));
+            } catch (SQLException e){
+                // TODO: #44 implement errorhandling
             }
 
             if (rows > 0)

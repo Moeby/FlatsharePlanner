@@ -10,7 +10,7 @@ import java.util.ArrayList;
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class RepEventExceptionDAO {
     private static RepEventExceptionDAO instance            = new RepEventExceptionDAO();
-    private ArrayList<RepEventExeption> repEventExeptions   = new ArrayList();
+    private ArrayList<RepEventException> repEventExceptions = new ArrayList();
 
     // table constants
     private static final String TABLE               = "rep_event_exeption";
@@ -29,7 +29,7 @@ public class RepEventExceptionDAO {
     }
 
     // TESTME: #44
-    public int insert(RepEventExeption repEventExeption) {
+    public int insert(RepEventException repEventException) {
         int rows = -1;
         Connection con = null;
         PreparedStatement stmt = null;
@@ -38,19 +38,22 @@ public class RepEventExceptionDAO {
             stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + START + "," + END + "," + SKIPPED + "," + CALENDAR_ITEM_FK + ")"
                                         + " VALUES( ?, ?, ?, ?, ?);"
                                         , Statement.RETURN_GENERATED_KEYS);
-            stmt.setDate(1,     repEventExeption.getStart());
-            stmt.setDate(2,     repEventExeption.getEnd());
-            stmt.setBoolean(3,  repEventExeption.isSkipped());
-            stmt.setInt(2,      repEventExeption.getCalendarItem().getId());
+            stmt.setDate(1,     repEventException.getStart());
+            stmt.setDate(2,     repEventException.getEnd());
+            stmt.setBoolean(3,  repEventException.isSkipped());
+            stmt.setInt(2,      repEventException.getCalendarItem().getId());
 
             rows = stmt.executeUpdate();
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            try {
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
                 if (generatedKeys.next())
-                    repEventExeption.setId(generatedKeys.getInt(1));
+                    repEventException.setId(generatedKeys.getInt(1));
+            } catch (SQLException e){
+                // TODO: #44 implement errorhandling
             }
 
             if (rows > 0)
-                repEventExeptions.add(repEventExeption);
+                repEventExceptions.add(repEventException);
 
         } catch (SQLException e) {
             // TODO: #44 implement errorhandling
@@ -78,7 +81,7 @@ public class RepEventExceptionDAO {
     }
 
     // TESTME: #44
-    public int delete(RepEventExeption repEventExeption) {
+    public int delete(RepEventException repEventException) {
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -87,11 +90,11 @@ public class RepEventExceptionDAO {
             stmt = con.prepareStatement("DELETE FROM " + TABLE
                                         + " WHERE " + ID + " = ?;"
                                         , Statement.RETURN_GENERATED_KEYS);
-            stmt.setInt(1, repEventExeption.getId());
+            stmt.setInt(1, repEventException.getId());
 
             rows = stmt.executeUpdate();
             if (rows > 0)
-                repEventExeptions.remove(repEventExeption);
+                repEventExceptions.remove(repEventException);
 
         } catch (SQLException e) {
             // TODO: #44 implement errorhandling

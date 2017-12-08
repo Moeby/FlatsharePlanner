@@ -1,6 +1,5 @@
 package com.tbz.mntn.flattie.db;
 
-import java.security.acl.Group;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,9 +47,12 @@ public class ShoppingItemDAO {
             }
 
             rows = stmt.executeUpdate();
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            try {
+                ResultSet generatedKeys = stmt.getGeneratedKeys()
                 if (generatedKeys.next())
                     shoppingItem.setId(generatedKeys.getInt(1));
+            } catch (SQLException e) {
+                // TODO: #44 implement errorhandling
             }
 
             if (rows > 0)
