@@ -7,16 +7,19 @@ public class CalendarItem {
 
 	private int id;
 	private String description;
+	// TODO: 08.12.2017 for #45: change to Enum
 	private String repeatable;
-	private Timestamp startDatetime;
+	// TODO: 08.12.2017 for #45: change to Date
+    private Timestamp startDatetime;
+	// TODO: 08.12.2017 for #45: change to Date
 	private Timestamp endDatetime;
 	private Group group;
 	private EventCategory eventCategory;
 	private User user;
-	private ArrayList<RepEventExeption> repEventExeptions;
+	private ArrayList<RepEventException> repEventExceptions;
 	
 	public CalendarItem(int id, String description, String repeatable, Timestamp startDatetime, Timestamp endDatetime,
-			Group group, EventCategory eventCategory, User user, ArrayList<RepEventExeption> repEventExeptions) {
+			Group group, EventCategory eventCategory, User user, ArrayList<RepEventException> repEventExceptions) {
 		this.id = id;
 		this.description = description;
 		this.repeatable = repeatable;
@@ -25,7 +28,7 @@ public class CalendarItem {
 		this.group = group;
 		this.eventCategory = eventCategory;
 		this.user = user;
-		this.repEventExeptions = repEventExeptions;
+		this.repEventExceptions = repEventExceptions;
 	}
 
 	public int getId() {
@@ -92,12 +95,12 @@ public class CalendarItem {
 		this.user = user;
 	}
 
-	public ArrayList<RepEventExeption> getRepEventExeptions() {
-		return repEventExeptions;
+	public ArrayList<RepEventException> getRepEventExceptions() {
+		return repEventExceptions;
 	}
 
-	public void setRepEventExeptions(ArrayList<RepEventExeption> repEventExeptions) {
-		this.repEventExeptions = repEventExeptions;
+	public void setRepEventExceptions(ArrayList<RepEventException> repEventExceptions) {
+		this.repEventExceptions = repEventExceptions;
 	}
 	
 }

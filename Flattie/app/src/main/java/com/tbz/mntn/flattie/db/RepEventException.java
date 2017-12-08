@@ -2,16 +2,18 @@ package com.tbz.mntn.flattie.db;
 
 import java.sql.Timestamp;
 
-public class RepEventExeption {
+public class RepEventException {
 
 	private int id;
+	// TODO: 08.12.2017 for #45 change to date
 	private Timestamp startDatetime;
+	// TODO: 08.12.2017 for #45 change to date
 	private Timestamp endDatetime;
 	private boolean skipped;
 	private CalendarItem calendarItem;
 	
-	public RepEventExeption(int id, Timestamp startDatetime, Timestamp endDatetime, boolean skipped,
-			CalendarItem calendarItem) {
+	public RepEventException(int id, Timestamp startDatetime, Timestamp endDatetime, boolean skipped,
+                             CalendarItem calendarItem) {
 		this.id = id;
 		this.startDatetime = startDatetime;
 		this.endDatetime = endDatetime;
