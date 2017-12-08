@@ -1,3 +1,19 @@
+## Commits
+- do a commit for each unit of change!
+- use descriptive commit messages and mention issues
+- use header and description
+
+### Header and Description
+##### From Web
+- write short message with issue in first line
+- write description into textarea below if needed
+##### From Command Line
+```
+git commit -m 'short message with issue [enter]
+[enter]
+optional description'
+```
+
 ### Mention Issues
 - enter issue number in commit message will create a link to the issue
 - moreover, the commit message will occure in the issue like a comment
