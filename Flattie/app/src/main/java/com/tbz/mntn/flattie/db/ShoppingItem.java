@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.db;
 
+import android.support.annotation.Nullable;
+
 public class ShoppingItem {
 
 	private int id;
@@ -7,8 +9,7 @@ public class ShoppingItem {
 	private boolean bought;
 	private Group group;
 	
-	public ShoppingItem(int id, String name, boolean bought, Group group) {
-		this.id = id;
+	public ShoppingItem(String name, boolean bought, @Nullable Group group) {
 		this.name = name;
 		this.bought = bought;
 		this.group = group;

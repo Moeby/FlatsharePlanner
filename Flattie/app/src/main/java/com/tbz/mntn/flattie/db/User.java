@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.db;
 
+import android.support.annotation.Nullable;
+
 import java.sql.Date;
 
 public class User {
@@ -10,9 +12,15 @@ public class User {
 	private String password;
 	private Date removalDate;
 	private Group group;
-	
-	public User(int id, String email, String username, String password, Date removalDate, Group group) {
-		this.id = id;
+
+	/**
+	 * @param email
+	 * @param username
+	 * @param password
+	 * @param removalDate
+	 * @param group
+	 */
+	public User(String email, String username, String password, @Nullable Date removalDate, @Nullable Group group) {
 		this.email = email;
 		this.username = username;
 		this.password = password;
@@ -32,6 +40,9 @@ public class User {
 		return email;
 	}
 
+	/**
+	 * @param email
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -40,6 +51,9 @@ public class User {
 		return username;
 	}
 
+	/**
+	 * @param username
+	 */
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -48,6 +62,9 @@ public class User {
 		return password;
 	}
 
+	/**
+	 * @param password
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -56,7 +73,10 @@ public class User {
 		return removalDate;
 	}
 
-	public void setRemovalDate(Date removalDate) {
+	/**
+	 * @param removalDate
+	 */
+	public void setRemovalDate(@Nullable Date removalDate) {
 		this.removalDate = removalDate;
 	}
 
@@ -64,7 +84,10 @@ public class User {
 		return group;
 	}
 
-	public void setGroup(Group group) {
+	/**
+	 * @param group
+	 */
+	public void setGroup(@Nullable Group group) {
 		this.group = group;
 	}
 
