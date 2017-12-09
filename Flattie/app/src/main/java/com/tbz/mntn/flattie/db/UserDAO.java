@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
@@ -31,9 +32,6 @@ public class UserDAO {
 
     // TESTME: #44
     public int insert(User user) {
-        // don't insert a group_fk first, maybe change attribute in DB to nullable
-        // removal_date = null
-
         int rows = -1;
         Connection con = null;
         PreparedStatement stmt = null;
@@ -50,8 +48,7 @@ public class UserDAO {
             if (group != null) {
                 stmt.setInt(5, group.getId());
             } else {
-                // FIXME: #44 How to add nullable with prepared statements?
-                stmt.setString(5, null);
+                stmt.setNull(5, Types.INTEGER);
             }
 
             rows = stmt.executeUpdate();

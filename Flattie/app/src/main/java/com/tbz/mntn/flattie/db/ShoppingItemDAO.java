@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
@@ -42,8 +43,7 @@ public class ShoppingItemDAO {
             if (group != null) {
                 stmt.setInt(3, group.getId());
             } else {
-                // FIXME: #44 How to add nullable with prepared statements?
-                stmt.setString(3, null);
+                stmt.setNull(5, Types.INTEGER);
             }
 
             rows = stmt.executeUpdate();
