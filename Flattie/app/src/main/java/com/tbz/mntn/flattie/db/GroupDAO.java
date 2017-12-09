@@ -31,8 +31,8 @@ public class GroupDAO {
             stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + NAME + "," + REMOVAL_DATE + ")"
                                         + " VALUES( ?, ?);"
                                         , Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, group.getName());
-            stmt.setString(2, group.getRemovalDate());
+            stmt.setString(1,   group.getName());
+            stmt.setDate(2,     group.getRemovalDate());
 
             rows = stmt.executeUpdate();
             try {

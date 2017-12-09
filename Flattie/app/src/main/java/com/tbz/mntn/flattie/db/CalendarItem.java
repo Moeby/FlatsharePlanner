@@ -3,7 +3,7 @@ package com.tbz.mntn.flattie.db;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 public class CalendarItem {
     private int id;
@@ -15,6 +15,9 @@ public class CalendarItem {
     private EventCategory eventCategory;
     private User user;
     private ArrayList<RepEventException> repEventExceptions;
+
+    public CalendarItem() {
+    }
 
     /**
      * @param description

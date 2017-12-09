@@ -9,6 +9,9 @@ public class EventCategory {
     private String name;
     private ArrayList<CalendarItem> calendarItems;
 
+    public EventCategory() {
+    }
+
     /**
      * @param name
      * @param calendarItems

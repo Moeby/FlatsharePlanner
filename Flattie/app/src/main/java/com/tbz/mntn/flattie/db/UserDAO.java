@@ -140,8 +140,7 @@ public class UserDAO {
         return rows;
     }
 
-    public void reactivate() {
+    private void reactivate() {
         // TODO: someday implement method
-        // #44 at the moment no required feature!
     }
 }

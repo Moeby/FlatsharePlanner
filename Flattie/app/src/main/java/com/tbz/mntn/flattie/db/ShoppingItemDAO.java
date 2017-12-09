@@ -34,10 +34,10 @@ public class ShoppingItemDAO {
         ResultSet result        = null;
         try {
             stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + NAME + "," + BOUGHT + "," + GROUP_FK + ")"
-                                        + " VALUES( ?, ?, ?, ?, ?);"
+                                        + " VALUES( ?, ?, ?);"
                                         , Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,   shoppingItem.getName());
-            stmt.setInt(2,      shoppingItem.getBought());
+            stmt.setBoolean(2,  shoppingItem.isBought());
             Group group = shoppingItem.getGroup();
             if (group != null) {
                 stmt.setInt(3, group.getId());
@@ -48,7 +48,7 @@ public class ShoppingItemDAO {
 
             rows = stmt.executeUpdate();
             try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys()
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
                 if (generatedKeys.next())
                     shoppingItem.setId(generatedKeys.getInt(1));
             } catch (SQLException e) {

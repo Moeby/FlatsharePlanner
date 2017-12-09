@@ -40,9 +40,9 @@ public class CalendarItemDAO {
                                         + " VALUES( ?, ?, ?, ?, ?);"
                                         , Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,   calendarItem.getDescription());
-            stmt.setString(2,   calendarItem.getRepeatable());
-            stmt.setDate(3,     calendarItem.getStart());
-            stmt.setDate(4,     calendarItem.getEnd());
+            stmt.setString(2,   calendarItem.getRepeatable().toString());
+            stmt.setDate(3,     calendarItem.getStartDatetime());
+            stmt.setDate(4,     calendarItem.getEndDatetime());
             stmt.setInt(5,      calendarItem.getGroup().getId());
             stmt.setInt(6,      calendarItem.getEventCategory().getId());
 
@@ -91,11 +91,11 @@ public class CalendarItemDAO {
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
-            boolean repeatable  = calendarItem.isRepeatable();
+            boolean repeatable  = (calendarItem.getRepeatable() != Repeatable.NONE);
             if (repeatable) {
                 // TOREMEMBER: ask first if the user wants to delete the whole repeatable event
                 RepEventExceptionDAO handleExceptions           = DAOFactory.getRepEventExeptionDAO();
-                ArrayList<RepEventException> repEventExceptions  = calendarItem.getListOfExeptions();
+                ArrayList<RepEventException> repEventExceptions  = calendarItem.getRepEventExceptions();
                 for (RepEventException repEventException : repEventExceptions)
                     handleExceptions.delete(repEventException);
             }

@@ -6,89 +6,92 @@ import java.sql.Date;
 
 public class User {
 
-	private int id;
-	private String email;
-	private String username;
-	private String password;
-	private Date removalDate;
-	private Group group;
+    private int id;
+    private String email;
+    private String username;
+    private String password;
+    private Date removalDate;
+    private Group group;
 
-	/**
-	 * @param email
-	 * @param username
-	 * @param password
-	 * @param removalDate
-	 * @param group
-	 */
-	public User(String email, String username, String password, @Nullable Date removalDate, @Nullable Group group) {
-		this.email = email;
-		this.username = username;
-		this.password = password;
-		this.removalDate = removalDate;
-		this.group = group;
-	}
+    public User() {
+    }
 
-	public int getId() {
-		return id;
-	}
+    /**
+     * @param email
+     * @param username
+     * @param password
+     * @param removalDate
+     * @param group
+     */
+    public User(String email, String username, String password, @Nullable Date removalDate, @Nullable Group group) {
+        this.email          = email;
+        this.username       = username;
+        this.password       = password;
+        this.removalDate    = removalDate;
+        this.group          = group;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	/**
-	 * @param email
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    /**
+     * @param email
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	/**
-	 * @param username
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    /**
+     * @param username
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	/**
-	 * @param password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public Date getRemovalDate() {
-		return removalDate;
-	}
+    /**
+     * @param password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	/**
-	 * @param removalDate
-	 */
-	public void setRemovalDate(@Nullable Date removalDate) {
-		this.removalDate = removalDate;
-	}
+    public Date getRemovalDate() {
+        return removalDate;
+    }
 
-	public Group getGroup() {
-		return group;
-	}
+    /**
+     * @param removalDate
+     */
+    public void setRemovalDate(@Nullable Date removalDate) {
+        this.removalDate = removalDate;
+    }
 
-	/**
-	 * @param group
-	 */
-	public void setGroup(@Nullable Group group) {
-		this.group = group;
-	}
+    public Group getGroup() {
+        return group;
+    }
+
+    /**
+     * @param group
+     */
+    public void setGroup(@Nullable Group group) {
+        this.group = group;
+    }
 
 }

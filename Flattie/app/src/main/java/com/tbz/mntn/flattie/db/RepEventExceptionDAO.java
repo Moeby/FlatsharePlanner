@@ -36,12 +36,12 @@ public class RepEventExceptionDAO {
         ResultSet result = null;
         try {
             stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + START + "," + END + "," + SKIPPED + "," + CALENDAR_ITEM_FK + ")"
-                                        + " VALUES( ?, ?, ?, ?, ?);"
+                                        + " VALUES( ?, ?, ?, ?);"
                                         , Statement.RETURN_GENERATED_KEYS);
-            stmt.setDate(1,     repEventException.getStart());
-            stmt.setDate(2,     repEventException.getEnd());
+            stmt.setDate(1,     repEventException.getStartDatetime());
+            stmt.setDate(2,     repEventException.getEndDatetime());
             stmt.setBoolean(3,  repEventException.isSkipped());
-            stmt.setInt(2,      repEventException.getCalendarItem().getId());
+            stmt.setInt(4,      repEventException.getCalendarItem().getId());
 
             rows = stmt.executeUpdate();
             try {

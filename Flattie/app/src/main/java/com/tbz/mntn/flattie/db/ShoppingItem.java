@@ -4,47 +4,55 @@ import android.support.annotation.Nullable;
 
 public class ShoppingItem {
 
-	private int id;
-	private String name;
-	private boolean bought;
-	private Group group;
-	
-	public ShoppingItem(String name, boolean bought, @Nullable Group group) {
-		this.name = name;
-		this.bought = bought;
-		this.group = group;
-	}
+    private int id;
+    private String name;
+    private boolean bought;
+    private Group group;
 
-	public int getId() {
-		return id;
-	}
+    public ShoppingItem() {
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * @param name
+     * @param bought
+     * @param group
+     */
+    public ShoppingItem(String name, boolean bought, @Nullable Group group) {
+        this.name   = name;
+        this.bought = bought;
+        this.group  = group;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public boolean isBought() {
-		return bought;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setBought(boolean bought) {
-		this.bought = bought;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Group getGroup() {
-		return group;
-	}
+    public boolean isBought() {
+        return bought;
+    }
 
-	public void setGroup(Group group) {
-		this.group = group;
-	}
-	
+    public void setBought(boolean bought) {
+        this.bought = bought;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
 }

@@ -13,6 +13,10 @@ public class Group {
     private ArrayList<User> users;
     private ArrayList<CalendarItem> calendarItems;
 
+    public Group() {
+
+    }
+
     /**
      * @param name
      * @param removalDate

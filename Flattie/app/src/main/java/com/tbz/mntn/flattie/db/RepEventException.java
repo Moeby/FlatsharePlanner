@@ -12,6 +12,9 @@ public class RepEventException {
     private boolean skipped;
     private CalendarItem calendarItem;
 
+    public RepEventException() {
+    }
+
     /**
      * @param startDatetime
      * @param endDatetime
@@ -20,10 +23,10 @@ public class RepEventException {
      */
     public RepEventException(Date startDatetime, @Nullable Date endDatetime, boolean skipped,
                              @Nullable CalendarItem calendarItem) {
-        this.startDatetime = startDatetime;
-        this.endDatetime = endDatetime;
-        this.skipped = skipped;
-        this.calendarItem = calendarItem;
+        this.startDatetime  = startDatetime;
+        this.endDatetime    = endDatetime;
+        this.skipped        = skipped;
+        this.calendarItem   = calendarItem;
     }
 
     public int getId() {
