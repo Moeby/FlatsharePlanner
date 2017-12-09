@@ -150,4 +150,12 @@ public class GroupDAO {
         // TODO: someday implement method
         // #44 at the moment no required feature!
     }
+
+    public ArrayList<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(ArrayList<Group> groups) {
+        this.groups = groups;
+    }
 }

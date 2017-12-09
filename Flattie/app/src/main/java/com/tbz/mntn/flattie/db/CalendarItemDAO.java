@@ -124,4 +124,12 @@ public class CalendarItemDAO {
         }
         return rows;
     }
+
+    public ArrayList<CalendarItem> getCalendarItems() {
+        return calendarItems;
+    }
+
+    public void setCalendarItems(ArrayList<CalendarItem> calendarItems) {
+        this.calendarItems = calendarItems;
+    }
 }

@@ -75,8 +75,6 @@ public class ShoppingItemDAO {
         return rows;
     }
 
-    // TOASK: #44 add update
-
     public void selectAllByGroupId() {
         // TODO: #44 implement method
         // select by foreign key group_fk
@@ -113,5 +111,13 @@ public class ShoppingItemDAO {
             }
         }
         return rows;
+    }
+
+    public ArrayList<ShoppingItem> getShoppingItems() {
+        return shoppingItems;
+    }
+
+    public void setShoppingItems(ArrayList<ShoppingItem> shoppingItems) {
+        this.shoppingItems = shoppingItems;
     }
 }

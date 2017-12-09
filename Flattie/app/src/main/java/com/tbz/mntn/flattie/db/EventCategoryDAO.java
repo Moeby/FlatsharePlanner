@@ -117,4 +117,12 @@ public class EventCategoryDAO {
             return null;
         }
     }
+
+    public ArrayList<EventCategory> getEventCategories() {
+        return eventCategories;
+    }
+
+    public void setEventCategories(ArrayList<EventCategory> eventCategories) {
+        this.eventCategories = eventCategories;
+    }
 }

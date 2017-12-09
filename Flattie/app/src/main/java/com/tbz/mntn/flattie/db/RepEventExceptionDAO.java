@@ -112,4 +112,12 @@ public class RepEventExceptionDAO {
         }
         return rows;
     }
+
+    public ArrayList<RepEventException> getRepEventExceptions() {
+        return repEventExceptions;
+    }
+
+    public void setRepEventExceptions(ArrayList<RepEventException> repEventExceptions) {
+        this.repEventExceptions = repEventExceptions;
+    }
 }
