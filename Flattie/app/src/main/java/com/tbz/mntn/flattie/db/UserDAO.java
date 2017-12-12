@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class UserDAO {
@@ -80,8 +81,56 @@ public class UserDAO {
         return rows;
     }
 
-    public void selectByUsername(String username) {
+    // TESTME: #44
+    // return null if not found
+    public User selectByUsername(String username) {
         // TODO: #44 implement method
+        User user               = null;
+        Connection con          = null;
+        PreparedStatement stmt  = null;
+        ResultSet result        = null;
+        try {
+            stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + GROUP_FK + " FROM " + TABLE
+                    + " WHERE " + USERNAME + " = ?;");
+            stmt.setString(1, username);
+            result = stmt.executeQuery();
+            if (result.next()) {
+                for (User savedUser : users) {
+                    if (username == savedUser.getUsername()) {
+                        user = savedUser;
+                        break;
+                    }
+                }
+                if (user == null) {
+                    user = new User();
+
+                    // testme: #44 does group callback?
+                    GroupDAO dao = DAOFactory.getGroupDAO();
+                    user.setGroup(dao.selectById(result.getInt(GROUP_FK)));
+
+                    users.add(user);
+                }
+                user.setUsername(username);
+                user.setId(result.getInt(ID));
+                user.setEmail(result.getString(EMAIL));
+                user.setPassword(result.getString(PASSWORD));
+                user.setRemovalDate(result.getDate(REMOVAL_DATE));
+            }
+        } catch (SQLException e) {
+            // TODO: #44 implement errorhandling
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException e) {
+                // TODO: #44 implement errorhandling
+                System.out.println("Statement or result close failed");
+            }
+        }
+        return user;
     }
 
     public void selectByEmail(String email) {
@@ -89,14 +138,98 @@ public class UserDAO {
         // at the moment no required feature!
     }
 
-    public void selectAllByGroupId(Group group) {
-        // TODO: #44 implement method
-        // select by foreign key group_fk
+    // TESTME: #44
+    // return null if not found
+    public List<User> selectAllByGroupId(Group group) {
+        List<User> userList     = new ArrayList();
+        int groupFk             = group.getId();
+        Connection con          = null;
+        PreparedStatement stmt  = null;
+        ResultSet result        = null;
+        try {
+            stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + USERNAME + " FROM " + TABLE
+                    + " WHERE " + GROUP_FK + " = ?;");
+            stmt.setInt(1, groupFk);
+            result = stmt.executeQuery();
+            while (result.next()) {
+                int id = result.getInt(ID);
+                User user = null;
+                for (User savedUser : users) {
+                    if (groupFk == savedUser.getGroup().getId()) {
+                        user = savedUser;
+                        break;
+                    }
+                }
+                if (user == null) {
+                    user = new User();
+                    users.add(user);
+                }
+                user.setId(result.getInt(ID));
+                user.setEmail(result.getString(EMAIL));
+                user.setUsername(result.getString(USERNAME));
+                user.setPassword(result.getString(PASSWORD));
+                user.setRemovalDate(result.getDate(REMOVAL_DATE));
+                user.setGroup(group);
+
+                userList.add(user);
+            }
+
+        } catch (SQLException e) {
+            // TODO: #44 implement errorhandling
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException e) {
+                // TODO: #44 implement errorhandling
+                System.out.println("Statement or result close failed");
+            }
+        }
+        if (!userList.isEmpty()) {
+            return userList;
+        } else {
+            return null;
+        }
     }
 
-    public void updateGroup(Group group) {
-        // TODO: #44 implement method
-        // update group_fk when user is removed from / added to its group
+    // TESTME: #44
+    public int updateGroup(User user) {
+        Group group             = user.getGroup();
+        int rows                = -1;
+        Connection con          = null;
+        PreparedStatement stmt  = null;
+        ResultSet result        = null;
+        try {
+            stmt = con.prepareStatement("UPDATE " + TABLE
+                    + " SET " + GROUP_FK + " = ?"
+                    + " WHERE " + ID + " = ?;");
+            if(group != null){
+                stmt.setInt(1,  group.getId());
+            } else {
+                stmt.setNull(1, Types.INTEGER);
+            }
+            stmt.setInt(2,  user.getId());
+
+            rows = stmt.executeUpdate();
+            
+        } catch (SQLException e) {
+            // TODO: #44 implement errorhandling
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException e) {
+                // TODO: #44 implement errorhandling
+                System.out.println("Statement or result close failed");
+            }
+        }
+        return rows;
     }
 
     // TESTME: #44
