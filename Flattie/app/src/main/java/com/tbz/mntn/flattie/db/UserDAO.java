@@ -155,7 +155,7 @@ public class UserDAO {
                 int id = result.getInt(ID);
                 User user = null;
                 for (User savedUser : users) {
-                    if (groupFk == savedUser.getGroup().getId()) {
+                    if (id == savedUser.getId()) {
                         user = savedUser;
                         break;
                     }
@@ -164,7 +164,7 @@ public class UserDAO {
                     user = new User();
                     users.add(user);
                 }
-                user.setId(result.getInt(ID));
+                user.setId(id);
                 user.setEmail(result.getString(EMAIL));
                 user.setUsername(result.getString(USERNAME));
                 user.setPassword(result.getString(PASSWORD));
@@ -214,7 +214,7 @@ public class UserDAO {
             stmt.setInt(2,  user.getId());
 
             rows = stmt.executeUpdate();
-            
+
         } catch (SQLException e) {
             // TODO: #44 implement errorhandling
         } finally {
