@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class ShoppingItemDAO {
@@ -75,9 +76,59 @@ public class ShoppingItemDAO {
         return rows;
     }
 
-    public void selectAllByGroupId() {
-        // TODO: #44 implement method
-        // select by foreign key group_fk
+    // TESTME: #44
+    // return null if not found
+    public List<ShoppingItem> selectAllByGroupId(Group group) {
+        List<ShoppingItem> itemList = new ArrayList();
+        int groupFk                 = group.getId();
+        Connection con              = null;
+        PreparedStatement stmt      = null;
+        ResultSet result            = null;
+        try {
+            stmt = con.prepareStatement("SELECT " + ID + "," + NAME + "," + BOUGHT + " FROM " + TABLE
+                    + " WHERE " + GROUP_FK + " = ?;");
+            stmt.setInt(1, groupFk);
+            result = stmt.executeQuery();
+            while (result.next()) {
+                int id = result.getInt(ID);
+                ShoppingItem item = null;
+                for (ShoppingItem savedItem : shoppingItems) {
+                    if (id == savedItem.getId()) {
+                        item = savedItem;
+                        break;
+                    }
+                }
+                if (item == null) {
+                    item = new ShoppingItem();
+                    shoppingItems.add(item);
+                }
+                item.setId(id);
+                item.setName(result.getString(NAME));
+                item.setBought(result.getBoolean(BOUGHT));
+                item.setGroup(group);
+
+                itemList.add(item);
+            }
+
+        } catch (SQLException e) {
+            // TODO: #44 implement errorhandling
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException e) {
+                // TODO: #44 implement errorhandling
+                System.out.println("Statement or result close failed");
+            }
+        }
+        if (!itemList.isEmpty()) {
+            return itemList;
+        } else {
+            return null;
+        }
     }
 
     // TESTME: #44

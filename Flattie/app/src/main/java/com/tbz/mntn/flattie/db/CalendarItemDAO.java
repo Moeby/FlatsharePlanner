@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class CalendarItemDAO {
@@ -74,14 +75,121 @@ public class CalendarItemDAO {
         return rows;
     }
 
-    public void selectAllByGroupId() {
-        // TODO: #44 implement method
-        // select by foreign key group_fk
+    // TESTME: #44
+    // return null if not found
+    public List<CalendarItem> selectAllByGroupId(Group group) {
+        List<CalendarItem> itemList = new ArrayList();
+        int groupFk                 = group.getId();
+        Connection con              = null;
+        PreparedStatement stmt      = null;
+        ResultSet result            = null;
+        try {
+            stmt = con.prepareStatement("SELECT " + ID + "," + DESCRIPTION + "," + REPEATABLE + "," + START + "," + END + "," + EVENT_CATEGORY_FK + " FROM " + TABLE
+                    + " WHERE " + GROUP_FK + " = ?;");
+            stmt.setInt(1, groupFk);
+            result = stmt.executeQuery();
+            while (result.next()) {
+                int id = result.getInt(ID);
+                CalendarItem item = null;
+                for (CalendarItem savedItem : calendarItems) {
+                    if (id == savedItem.getId()) {
+                        item = savedItem;
+                        break;
+                    }
+                }
+                if (item == null) {
+                    item = new CalendarItem();
+                    calendarItems.add(item);
+                }
+                item.setId(id);
+                item.setDescription(result.getString(DESCRIPTION));
+                item.setRepeatable(Repeatable.toRepeatable(result.getString(REPEATABLE)));
+                item.setStartDatetime(result.getDate(START));
+                item.setEndDatetime(result.getDate(END));
+
+                EventCategoryDAO dao = DAOFactory.getEventCategoryDAO();
+                item.setEventCategory(dao.selectById(result.getInt(EVENT_CATEGORY_FK)));
+
+                item.setGroup(group);
+
+                itemList.add(item);
+            }
+
+        } catch (SQLException e) {
+            // TODO: #44 implement errorhandling
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException e) {
+                // TODO: #44 implement errorhandling
+                System.out.println("Statement or result close failed");
+            }
+        }
+        if (!itemList.isEmpty()) {
+            return itemList;
+        } else {
+            return null;
+        }
     }
 
-    public void update() {
-        // TODO: #44 implement method
-        // what do with exceptions?
+    // TESTME: #44
+    // exceptions get deleted by calling this method
+    public int update(CalendarItem calendarItem) {
+        int rows                = -1;
+        Connection con          = null;
+        PreparedStatement stmt  = null;
+        ResultSet result        = null;
+        try {
+            RepEventExceptionDAO dao = DAOFactory.getRepEventExeptionDAO();
+            int check = dao.deleteAllByCalendarItem(calendarItem);
+
+            /*
+            if(check xx) {
+                maybe do something
+            }
+             */
+
+            stmt = con.prepareStatement("UPDATE " + TABLE
+                    + " SET "   + DESCRIPTION       + " = ?,"
+                                + REPEATABLE        + " = ?,"
+                                + START             + " = ?,"
+                                + END               + " = ?,"
+                                + GROUP_FK          + " = ?,"
+                                + EVENT_CATEGORY_FK + " = ?"
+                    + " WHERE " + ID + " = ?;");
+            stmt.setString(1,   calendarItem.getDescription());
+            stmt.setString(2,   calendarItem.getRepeatable().toString());
+            stmt.setDate(3,     calendarItem.getStartDatetime());
+            stmt.setDate(4,     calendarItem.getEndDatetime());
+            stmt.setInt(5,      calendarItem.getGroup().getId());
+            stmt.setInt(6,      calendarItem.getEventCategory().getId());
+
+            rows = stmt.executeUpdate();
+
+            /*
+            if (rows > 0) {
+                maybe do something
+            }
+            */
+        } catch (SQLException e) {
+            // TODO: #44 implement errorhandling
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException e) {
+                // TODO: #44 implement errorhandling
+                System.out.println("Statement or result close failed");
+            }
+        }
+        return rows;
     }
 
     // TESTME: #44
