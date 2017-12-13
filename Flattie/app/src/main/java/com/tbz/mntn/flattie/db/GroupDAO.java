@@ -123,10 +123,7 @@ public class GroupDAO {
 
             rows = stmt.executeUpdate();
             if (rows > 0) {
-                // TODO: #44 check if needed
-                groups.remove(group);
                 group.setRemovalDate(removalDate);
-                groups.add(group);
             }
 
         } catch (SQLException e) {
@@ -146,7 +143,7 @@ public class GroupDAO {
         return rows;
     }
 
-    public void reactivate(Group group) {
+    private void reactivate(Group group) {
         // TODO: someday implement method
         // #44 at the moment no required feature!
     }

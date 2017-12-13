@@ -76,11 +76,6 @@ public class ShoppingItemDAO {
         return rows;
     }
 
-    public void selectAllByGroupId() {
-        // TODO: #44 implement method
-        // select by foreign key group_fk
-    }
-
     // TESTME: #44
     // return null if not found
     public List<ShoppingItem> selectAllByGroupId(Group group) {

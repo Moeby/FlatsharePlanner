@@ -248,10 +248,7 @@ public class UserDAO {
 
             rows = stmt.executeUpdate();
             if (rows > 0) {
-                // TODO: #44 check if needed
-                users.remove(user);
                 user.setRemovalDate(removalDate);
-                users.add(user);
             }
         } catch (SQLException e) {
             // TODO: #44 implement errorhandling

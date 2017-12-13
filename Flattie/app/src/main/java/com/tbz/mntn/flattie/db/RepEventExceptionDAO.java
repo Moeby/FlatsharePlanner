@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class RepEventExceptionDAO {
@@ -72,12 +73,105 @@ public class RepEventExceptionDAO {
         return rows;
     }
 
-    public void selectByCalendarItem() {
-        // TODO: #44 implement method
+    // TESTME: #44
+    // return null if not found
+    public List<RepEventException> selectAllByCalendarItem(CalendarItem calendarItem) {
+        List<RepEventException> itemList    = new ArrayList();
+        int calendarItemFk                  = calendarItem.getId();
+        Connection con                      = null;
+        PreparedStatement stmt              = null;
+        ResultSet result                    = null;
+        try {
+            stmt = con.prepareStatement("SELECT " + ID + "," + START + "," + END + "," + SKIPPED + " FROM " + TABLE
+                    + " WHERE " + CALENDAR_ITEM_FK + " = ?;");
+            stmt.setInt(1, calendarItemFk);
+
+            result = stmt.executeQuery();
+            while (result.next()) {
+                int id = result.getInt(ID);
+                RepEventException exception = null;
+                for (RepEventException savedException : repEventExceptions) {
+                    if (id == savedException.getId()) {
+                        exception = savedException;
+                        break;
+                    }
+                }
+                if (exception == null) {
+                    exception = new RepEventException();
+                    repEventExceptions.add(exception);
+                }
+                exception.setId(id);
+                exception.setStartDatetime(result.getDate(START));
+                exception.setEndDatetime(result.getDate(END));
+
+                exception.setSkipped(result.getBoolean(SKIPPED));
+                exception.setCalendarItem(calendarItem);
+
+                itemList.add(exception);
+            }
+
+        } catch (SQLException e) {
+            // TODO: #44 implement errorhandling
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException e) {
+                // TODO: #44 implement errorhandling
+                System.out.println("Statement or result close failed");
+            }
+        }
+        if (!itemList.isEmpty()) {
+            return itemList;
+        } else {
+            return null;
+        }
     }
 
-    public void update() {
-        // TODO: #44 implement method
+    // TESTME: #44
+    public int update(RepEventException exception) {
+        int rows                = -1;
+        Connection con          = null;
+        PreparedStatement stmt  = null;
+        ResultSet result        = null;
+        try {
+
+            stmt = con.prepareStatement("UPDATE " + TABLE
+                    + " SET "   + START             + " = ?,"
+                                + END               + " = ?,"
+                                + SKIPPED           + " = ?,"
+                                + CALENDAR_ITEM_FK  + " = ?"
+                    + " WHERE " + ID + " = ?;");
+            stmt.setDate(1,     exception.getStartDatetime());
+            stmt.setDate(2,     exception.getEndDatetime());
+            stmt.setBoolean(3,  exception.isSkipped());
+            stmt.setInt(4,      exception.getCalendarItem().getId());
+
+            rows = stmt.executeUpdate();
+
+            /*
+            if (rows > 0) {
+                maybe do something
+            }
+            */
+        } catch (SQLException e) {
+            // TODO: #44 implement errorhandling
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException e) {
+                // TODO: #44 implement errorhandling
+                System.out.println("Statement or result close failed");
+            }
+        }
+        return rows;
     }
 
     // TESTME: #44
@@ -112,6 +206,21 @@ public class RepEventExceptionDAO {
         }
         return rows;
     }
+
+    // TESTME: #44
+    public int deleteAllByCalendarItem(CalendarItem calendarItem) {
+        int deleted = -1;
+        List<RepEventException> exceptions = selectAllByCalendarItem(calendarItem);
+        for(RepEventException exception: exceptions){
+            int check = delete(exception);
+            if(check > 0){
+                deleted += check;
+            }
+        }
+
+        return deleted;
+    }
+
 
     public ArrayList<RepEventException> getRepEventExceptions() {
         return repEventExceptions;
