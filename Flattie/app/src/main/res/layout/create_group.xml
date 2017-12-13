@@ -35,7 +35,7 @@
                 android:id="@+id/input_create_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:ems="20"
                 android:hint="Groupname"/>
         </android.support.design.widget.TextInputLayout>
 
