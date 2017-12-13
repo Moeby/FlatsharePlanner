@@ -36,7 +36,7 @@
                 android:id="@+id/signup_input_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:ems="20"
                 android:hint="Name"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -50,7 +50,7 @@
                 android:id="@+id/signup_input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:ems="20"
                 android:inputType="textEmailAddress"
                 android:hint="Email" />
         </android.support.design.widget.TextInputLayout>
@@ -65,7 +65,7 @@
                 android:id="@+id/signup_input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:ems="20"
                 android:inputType="textPassword"
                 android:hint="Password" />
         </android.support.design.widget.TextInputLayout>
@@ -80,7 +80,7 @@
                 android:id="@+id/signup_rep_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:ems="20"
                 android:inputType="textPassword"
                 android:hint="Repeat Password" />
         </android.support.design.widget.TextInputLayout>
