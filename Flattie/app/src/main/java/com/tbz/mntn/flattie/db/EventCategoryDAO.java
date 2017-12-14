@@ -52,6 +52,7 @@ public class EventCategoryDAO extends DAO {
                 category.setName(result.getString(NAME));
             }
         } catch (SQLException e) {
+            logSQLError("selectById EventCategory", e);
             category = null;
         } finally {
             try {
@@ -61,8 +62,7 @@ public class EventCategoryDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure selectById EventCategory", e);
             }
         }
         return category;
@@ -97,6 +97,7 @@ public class EventCategoryDAO extends DAO {
                 categories.add(category);
             }
         } catch (SQLException e) {
+            logSQLError("selectAll EventCategory", e);
             categories = null;
         } finally {
             try {
@@ -106,8 +107,7 @@ public class EventCategoryDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure selectAll EventCategory", e);
             }
         }
         if (!categories.isEmpty()) {

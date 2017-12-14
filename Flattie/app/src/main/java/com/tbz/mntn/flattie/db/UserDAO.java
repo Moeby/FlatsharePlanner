@@ -64,7 +64,7 @@ public class UserDAO extends DAO {
                 users.add(user);
 
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("insert User", e);
         } finally {
             try {
                 // free resources
@@ -73,8 +73,7 @@ public class UserDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure insert User", e);
             }
         }
         return rows;
@@ -83,7 +82,6 @@ public class UserDAO extends DAO {
     // TESTME: #44
     // return null if not found
     public User selectByUsername(String username) {
-        // TODO: #44 implement method
         User user               = null;
         Connection con          = MysqlConnector.getConnection();
         PreparedStatement stmt  = null;
@@ -118,6 +116,7 @@ public class UserDAO extends DAO {
                 user.setRemovalDate(result.getDate(REMOVAL_DATE));
             }
         } catch (SQLException e) {
+            logSQLError("selectByUsername User", e);
             user = null;
         } finally {
             try {
@@ -127,8 +126,7 @@ public class UserDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure selectByUsername User", e);
             }
         }
         return user;
@@ -176,6 +174,7 @@ public class UserDAO extends DAO {
             }
 
         } catch (SQLException e) {
+            logSQLError("selectAllByGroupId User", e);
             userList = null;
         } finally {
             try {
@@ -185,8 +184,7 @@ public class UserDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure selectAllByGroupId User", e);
             }
         }
         if (!userList.isEmpty()) {
@@ -217,7 +215,7 @@ public class UserDAO extends DAO {
             rows = stmt.executeUpdate();
 
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("updateGroup User", e);
         } finally {
             try {
                 // free resources
@@ -226,8 +224,7 @@ public class UserDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure update User", e);
             }
         }
         return rows;
@@ -252,7 +249,7 @@ public class UserDAO extends DAO {
                 user.setRemovalDate(removalDate);
             }
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("remove User", e);
         } finally {
             try {
                 // free resources
@@ -261,8 +258,7 @@ public class UserDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure remove User", e);
             }
         }
         return rows;

@@ -53,7 +53,7 @@ public class RepEventExceptionDAO extends DAO {
                 repEventExceptions.add(repEventException);
 
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("insert RepEventException", e);
         } finally {
             try {
                 // free resources
@@ -62,8 +62,7 @@ public class RepEventExceptionDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure insert RepEventException", e);
             }
         }
         return rows;
@@ -107,6 +106,7 @@ public class RepEventExceptionDAO extends DAO {
             }
 
         } catch (SQLException e) {
+            logSQLError("selectAllByCalendarItem RepEventException", e);
             itemList = null;
         } finally {
             try {
@@ -116,8 +116,7 @@ public class RepEventExceptionDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure selectAllByCalendarItem RepEventException", e);
             }
         }
         if (!itemList.isEmpty()) {
@@ -154,7 +153,7 @@ public class RepEventExceptionDAO extends DAO {
             }
             */
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("update RepEventException", e);
         } finally {
             try {
                 // free resources
@@ -163,8 +162,7 @@ public class RepEventExceptionDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure update RepEventException", e);
             }
         }
         return rows;
@@ -187,7 +185,7 @@ public class RepEventExceptionDAO extends DAO {
                 repEventExceptions.remove(repEventException);
 
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("delete RepEventException", e);
         } finally {
             try {
                 // free resources
@@ -196,8 +194,7 @@ public class RepEventExceptionDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure delete RepEventException", e);
             }
         }
         return rows;

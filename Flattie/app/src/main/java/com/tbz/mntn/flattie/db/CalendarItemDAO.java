@@ -55,7 +55,7 @@ public class CalendarItemDAO extends DAO {
             if (rows > 0)
                 calendarItems.add(calendarItem);
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("insert CalendarItem", e);
         } finally {
             try {
                 // free resources
@@ -64,8 +64,7 @@ public class CalendarItemDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure insert CalendarItem", e);
             }
         }
         return rows;
@@ -108,6 +107,7 @@ public class CalendarItemDAO extends DAO {
 
             }
         } catch (SQLException e) {
+            logSQLError("selectById CalendarItem", e);
             item = null;
         } finally {
             try {
@@ -117,8 +117,7 @@ public class CalendarItemDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure selectById CalendarItem", e);
             }
         }
         return item;
@@ -165,6 +164,7 @@ public class CalendarItemDAO extends DAO {
             }
 
         } catch (SQLException e) {
+            logSQLError("selectAllByGroupId CalendarItem", e);
             itemList = null;
         } finally {
             try {
@@ -174,8 +174,7 @@ public class CalendarItemDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure selectAllByGroupId CalendarItem", e);
             }
         }
         if (!itemList.isEmpty()) {
@@ -225,7 +224,7 @@ public class CalendarItemDAO extends DAO {
             }
             */
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("update CalendarItem", e);
         } finally {
             try {
                 // free resources
@@ -234,8 +233,7 @@ public class CalendarItemDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure update CalendarItem", e);
             }
         }
         return rows;
@@ -266,7 +264,7 @@ public class CalendarItemDAO extends DAO {
             if (rows > 0)
                 calendarItems.remove(calendarItem);
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("delete CalendarItem", e);
         } finally {
             try {
                 // free resources
@@ -275,8 +273,7 @@ public class CalendarItemDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure delete CalendarItem", e);
             }
         }
         return rows;

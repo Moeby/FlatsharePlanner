@@ -45,7 +45,7 @@ public class GroupDAO extends DAO {
                 groups.add(group);
 
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("insert Group", e);
         } finally {
             try {
                 // free resources
@@ -54,8 +54,7 @@ public class GroupDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure insert Group", e);
             }
         }
         return rows;
@@ -88,6 +87,7 @@ public class GroupDAO extends DAO {
                 group.setName(result.getString(NAME));
             }
         } catch (SQLException e) {
+            logSQLError("selectById Group", e);
             group = null;
         } finally {
             try {
@@ -97,8 +97,7 @@ public class GroupDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure selectById Group", e);
             }
         }
         return group;
@@ -124,7 +123,7 @@ public class GroupDAO extends DAO {
             }
 
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("remove Group", e);
         } finally {
             try {
                 // free resources
@@ -133,8 +132,7 @@ public class GroupDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure remove Group", e);
             }
         }
         return rows;

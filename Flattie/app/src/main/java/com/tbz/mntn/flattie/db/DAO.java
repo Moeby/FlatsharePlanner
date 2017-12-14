@@ -1,10 +1,17 @@
 package com.tbz.mntn.flattie.db;
 
 
+import android.util.Log;
+
+import java.sql.SQLException;
+
+import static android.content.ContentValues.TAG;
+
 public abstract class DAO {
 
     /**
      * change sqlCode in internal error codes for easier error handling
+     * log error message
      * @param sqlCode
      * @return -999 for unknown error
      * -100 for not found
@@ -16,7 +23,9 @@ public abstract class DAO {
      * -502 for values to long
      * -600 for wrong SQLQueries (should not occur in production)
      */
-    public int switchSQLError(int sqlCode) {
+    protected int switchSQLError(String method, SQLException e) {
+        logSQLError(method, e);
+        int sqlCode = e.getErrorCode();
         switch (sqlCode){
             /*
             case notFound:      return -100;
@@ -39,5 +48,9 @@ public abstract class DAO {
         1054
         1064 wrong value
         */
+    }
+
+    protected void logSQLError(String method, SQLException e){
+        Log.w(TAG, method+": ", e);
     }
 }

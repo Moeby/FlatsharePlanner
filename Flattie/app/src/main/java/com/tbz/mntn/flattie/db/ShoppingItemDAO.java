@@ -56,7 +56,7 @@ public class ShoppingItemDAO extends DAO {
                 shoppingItems.add(shoppingItem);
 
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("insert ShoppingItem", e);
         } finally {
             try {
                 // free resources
@@ -65,8 +65,7 @@ public class ShoppingItemDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure insert ShoppingItem", e);
             }
         }
         return rows;
@@ -107,6 +106,7 @@ public class ShoppingItemDAO extends DAO {
             }
 
         } catch (SQLException e) {
+            logSQLError("selectAllByGroupId", e);
             itemList = null;
         } finally {
             try {
@@ -116,8 +116,7 @@ public class ShoppingItemDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure selectAllByGroupId ShoppingItem", e);
             }
         }
         if (!itemList.isEmpty()) {
@@ -144,7 +143,7 @@ public class ShoppingItemDAO extends DAO {
                 shoppingItems.remove(shoppingItem);
 
         } catch (SQLException e) {
-            rows = switchSQLError(e.getErrorCode());
+            rows = switchSQLError("delete ShoppingItem", e);
         } finally {
             try {
                 // free resources
@@ -153,8 +152,7 @@ public class ShoppingItemDAO extends DAO {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure delete ShoppingItem", e);
             }
         }
         return rows;
