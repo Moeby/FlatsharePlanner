@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class RepEventExceptionDAO {
+public class RepEventExceptionDAO extends DAO {
     private static RepEventExceptionDAO instance            = new RepEventExceptionDAO();
     private ArrayList<RepEventException> repEventExceptions = new ArrayList();
 
@@ -45,19 +45,15 @@ public class RepEventExceptionDAO {
             stmt.setInt(4,      repEventException.getCalendarItem().getId());
 
             rows = stmt.executeUpdate();
-            try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next())
-                    repEventException.setId(generatedKeys.getInt(1));
-            } catch (SQLException e){
-                // TODO: #44 implement errorhandling
-            }
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next())
+                repEventException.setId(generatedKeys.getInt(1));
 
             if (rows > 0)
                 repEventExceptions.add(repEventException);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(e.getErrorCode());
         } finally {
             try {
                 // free resources
@@ -111,7 +107,7 @@ public class RepEventExceptionDAO {
             }
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            itemList = null;
         } finally {
             try {
                 // free resources
@@ -158,7 +154,7 @@ public class RepEventExceptionDAO {
             }
             */
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(e.getErrorCode());
         } finally {
             try {
                 // free resources
@@ -191,7 +187,7 @@ public class RepEventExceptionDAO {
                 repEventExceptions.remove(repEventException);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(e.getErrorCode());
         } finally {
             try {
                 // free resources

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class ShoppingItemDAO {
+public class ShoppingItemDAO extends DAO {
     private static ShoppingItemDAO instance         = new ShoppingItemDAO();
     private ArrayList<ShoppingItem> shoppingItems   = new ArrayList();
 
@@ -48,19 +48,15 @@ public class ShoppingItemDAO {
             }
 
             rows = stmt.executeUpdate();
-            try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next())
-                    shoppingItem.setId(generatedKeys.getInt(1));
-            } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-            }
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next())
+                shoppingItem.setId(generatedKeys.getInt(1));
 
             if (rows > 0)
                 shoppingItems.add(shoppingItem);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(e.getErrorCode());
         } finally {
             try {
                 // free resources
@@ -111,7 +107,7 @@ public class ShoppingItemDAO {
             }
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            itemList = null;
         } finally {
             try {
                 // free resources
@@ -148,7 +144,7 @@ public class ShoppingItemDAO {
                 shoppingItems.remove(shoppingItem);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(e.getErrorCode());
         } finally {
             try {
                 // free resources

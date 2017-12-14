@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.db;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class UserDAO {
+public class UserDAO extends DAO {
     private static UserDAO instance = new UserDAO();
     private ArrayList<User> users   = new ArrayList();
 
@@ -34,7 +36,7 @@ public class UserDAO {
     // TESTME: #44
     public int insert(User user) {
         int rows = -1;
-        Connection con = null;
+        Connection con = MysqlConnector.getConnection();
         PreparedStatement stmt = null;
         ResultSet result = null;
         try {
@@ -53,19 +55,16 @@ public class UserDAO {
             }
 
             rows = stmt.executeUpdate();
-            try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next())
-                    user.setId(generatedKeys.getInt(1));
-            }catch (SQLException e){
-                // TODO: #44 implement errorhandling
-            }
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next())
+                user.setId(generatedKeys.getInt(1));
+
 
             if (rows > 0)
                 users.add(user);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(e.getErrorCode());
         } finally {
             try {
                 // free resources
@@ -86,7 +85,7 @@ public class UserDAO {
     public User selectByUsername(String username) {
         // TODO: #44 implement method
         User user               = null;
-        Connection con          = null;
+        Connection con          = MysqlConnector.getConnection();
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -104,10 +103,12 @@ public class UserDAO {
                 if (user == null) {
                     user = new User();
 
-                    // testme: #44 does group callback?
-                    GroupDAO dao = DAOFactory.getGroupDAO();
-                    user.setGroup(dao.selectById(result.getInt(GROUP_FK)));
-
+                    int groupFK = result.getInt(GROUP_FK);
+                    if(groupFK != 0) {
+                        // testme: #44 does group callback?
+                        GroupDAO dao = DAOFactory.getGroupDAO();
+                        user.setGroup(dao.selectById(groupFK));
+                    }
                     users.add(user);
                 }
                 user.setUsername(username);
@@ -117,7 +118,7 @@ public class UserDAO {
                 user.setRemovalDate(result.getDate(REMOVAL_DATE));
             }
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            user = null;
         } finally {
             try {
                 // free resources
@@ -175,7 +176,7 @@ public class UserDAO {
             }
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            userList = null;
         } finally {
             try {
                 // free resources
@@ -216,7 +217,7 @@ public class UserDAO {
             rows = stmt.executeUpdate();
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(e.getErrorCode());
         } finally {
             try {
                 // free resources
@@ -251,7 +252,7 @@ public class UserDAO {
                 user.setRemovalDate(removalDate);
             }
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(e.getErrorCode());
         } finally {
             try {
                 // free resources

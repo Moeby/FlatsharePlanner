@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class EventCategoryDAO {
+public class EventCategoryDAO extends DAO {
     private static EventCategoryDAO instance            = new EventCategoryDAO();
     private ArrayList<EventCategory> eventCategories    = new ArrayList();
 
@@ -46,14 +46,13 @@ public class EventCategoryDAO {
                 }
                 if (category == null) {
                     category = new EventCategory();
-                    category.setId(id);
-                    category.setName(result.getString(NAME));
-
                     eventCategories.add(category);
                 }
+                category.setId(id);
+                category.setName(result.getString(NAME));
             }
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            category = null;
         } finally {
             try {
                 // free resources
@@ -90,15 +89,15 @@ public class EventCategoryDAO {
                 }
                 if (category == null) {
                     category = new EventCategory();
-                    category.setId(id);
-                    category.setName(result.getString(NAME));
-
                     eventCategories.add(category);
                 }
+                category.setId(id);
+                category.setName(result.getString(NAME));
+
                 categories.add(category);
             }
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            categories = null;
         } finally {
             try {
                 // free resources

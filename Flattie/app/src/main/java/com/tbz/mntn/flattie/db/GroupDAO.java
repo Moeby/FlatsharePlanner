@@ -1,10 +1,12 @@
 package com.tbz.mntn.flattie.db;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
 import java.sql.*;
 import java.util.ArrayList;
 
 // TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class GroupDAO {
+public class GroupDAO extends DAO {
     private static GroupDAO instance    = new GroupDAO();
     private ArrayList<Group> groups     = new ArrayList();
 
@@ -24,7 +26,7 @@ public class GroupDAO {
     // TESTME: #44
     public int insert(Group group) {
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = MysqlConnector.getConnection();
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -35,19 +37,15 @@ public class GroupDAO {
             stmt.setDate(2,     group.getRemovalDate());
 
             rows = stmt.executeUpdate();
-            try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next())
-                    group.setId(generatedKeys.getInt(1));
-            } catch (SQLException e){
-                // TODO: #44 implement errorhandling
-            }
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next())
+                group.setId(generatedKeys.getInt(1));
 
             if (rows > 0)
                 groups.add(group);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(e.getErrorCode());
         } finally {
             try {
                 // free resources
@@ -67,7 +65,7 @@ public class GroupDAO {
     // return null if not found
     public Group selectById(int id) {
         Group group             = null;
-        Connection con          = null;
+        Connection con          = MysqlConnector.getConnection();
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -84,14 +82,13 @@ public class GroupDAO {
                 }
                 if (group == null) {
                     group = new Group();
-                    group.setId(id);
-                    group.setName(result.getString(NAME));
-
                     groups.add(group);
                 }
+                group.setId(id);
+                group.setName(result.getString(NAME));
             }
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            group = null;
         } finally {
             try {
                 // free resources
@@ -127,7 +124,7 @@ public class GroupDAO {
             }
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(e.getErrorCode());
         } finally {
             try {
                 // free resources
