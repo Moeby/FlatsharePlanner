@@ -30,8 +30,9 @@ public class ShoppingItemDAO extends DAO {
 
     // TESTME: #44
     public int insert(ShoppingItem shoppingItem) {
+        String method = "insert " + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -56,7 +57,7 @@ public class ShoppingItemDAO extends DAO {
                 shoppingItems.add(shoppingItem);
 
         } catch (SQLException e) {
-            rows = switchSQLError("insert ShoppingItem", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -64,8 +65,10 @@ public class ShoppingItemDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure insert ShoppingItem", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -74,9 +77,10 @@ public class ShoppingItemDAO extends DAO {
     // TESTME: #44
     // return null if not found
     public List<ShoppingItem> selectAllByGroupId(Group group) {
+        String method = "selectAllByGroupId " + TABLE;
         List<ShoppingItem> itemList = new ArrayList();
         int groupFk                 = group.getId();
-        Connection con              = null;
+        Connection con              = getConnection(method);
         PreparedStatement stmt      = null;
         ResultSet result            = null;
         try {
@@ -106,7 +110,7 @@ public class ShoppingItemDAO extends DAO {
             }
 
         } catch (SQLException e) {
-            logSQLError("selectAllByGroupId", e);
+            logSQLError(method, e);
             itemList = null;
         } finally {
             try {
@@ -115,8 +119,10 @@ public class ShoppingItemDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure selectAllByGroupId ShoppingItem", e);
+                logSQLError("closure " + method, e);
             }
         }
         if (!itemList.isEmpty()) {
@@ -128,8 +134,9 @@ public class ShoppingItemDAO extends DAO {
 
     // TESTME: #44
     public int delete(ShoppingItem shoppingItem) {
+        Stirng method = "delete " + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -143,7 +150,7 @@ public class ShoppingItemDAO extends DAO {
                 shoppingItems.remove(shoppingItem);
 
         } catch (SQLException e) {
-            rows = switchSQLError("delete ShoppingItem", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -151,8 +158,10 @@ public class ShoppingItemDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure delete ShoppingItem", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
