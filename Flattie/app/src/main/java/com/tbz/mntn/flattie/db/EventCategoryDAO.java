@@ -27,8 +27,9 @@ public class EventCategoryDAO extends DAO {
     // TESTME: #44
     // return null if not found
     public EventCategory selectById(int id) {
+        String method = "selectById " + TABLE;
         EventCategory category  = null;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -51,8 +52,8 @@ public class EventCategoryDAO extends DAO {
                 category.setId(id);
                 category.setName(result.getString(NAME));
             }
-        } catch (SQLException e) {
-            logSQLError("selectById EventCategory", e);
+        } catch (SQLException e) {         
+            logSQLError(method, e);
             category = null;
         } finally {
             try {
@@ -61,8 +62,10 @@ public class EventCategoryDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure selectById EventCategory", e);
+                logSQLError("closure " + method, e);
             }
         }
         return category;
@@ -71,8 +74,9 @@ public class EventCategoryDAO extends DAO {
     // TESTME: #44
     // return null if not found
     public List<EventCategory> selectAll() {
+        String method = "selectAll " + TABLE;
         List<EventCategory> categories  = new ArrayList();
-        Connection con                  = null;
+        Connection con                  = getConnection(method);
         PreparedStatement stmt          = null;
         ResultSet result                = null;
         try {
@@ -97,7 +101,7 @@ public class EventCategoryDAO extends DAO {
                 categories.add(category);
             }
         } catch (SQLException e) {
-            logSQLError("selectAll EventCategory", e);
+            logSQLError(method, e);
             categories = null;
         } finally {
             try {
@@ -106,8 +110,10 @@ public class EventCategoryDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure selectAll EventCategory", e);
+                logSQLError("closure " + method, e);
             }
         }
         if (!categories.isEmpty()) {
