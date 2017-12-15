@@ -88,7 +88,8 @@ public class UserDAO extends DAO {
         ResultSet result        = null;
         try {
             stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + GROUP_FK + " FROM " + TABLE
-                    + " WHERE " + USERNAME + " = ?;");
+                    + " WHERE " + USERNAME + " = ?"
+                    + " AND " + REMOVAL_DATE + " = NULL;");
             stmt.setString(1, username);
             result = stmt.executeQuery();
             if (result.next()) {
@@ -147,7 +148,8 @@ public class UserDAO extends DAO {
         ResultSet result        = null;
         try {
             stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + USERNAME + " FROM " + TABLE
-                    + " WHERE " + GROUP_FK + " = ?;");
+                    + " WHERE " + GROUP_FK + " = ?"
+                    + " AND " + REMOVAL_DATE + " = NULL;");
             stmt.setInt(1, groupFk);
             result = stmt.executeQuery();
             while (result.next()) {
@@ -204,7 +206,8 @@ public class UserDAO extends DAO {
         try {
             stmt = con.prepareStatement("UPDATE " + TABLE
                     + " SET " + GROUP_FK + " = ?"
-                    + " WHERE " + ID + " = ?;");
+                    + " WHERE " + ID + " = ?"
+                    + " AND " + REMOVAL_DATE + " = NULL;");
             if(group != null){
                 stmt.setInt(1,  group.getId());
             } else {

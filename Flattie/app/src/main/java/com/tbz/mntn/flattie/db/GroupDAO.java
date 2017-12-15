@@ -69,7 +69,8 @@ public class GroupDAO extends DAO {
         ResultSet result        = null;
         try {
             stmt = con.prepareStatement("SELECT " + NAME + " FROM " + TABLE
-                                        + " WHERE " + ID + " = ?;");
+                                        + " WHERE " + ID + " = ?"
+                                        + " AND " + REMOVAL_DATE + " = NULL;");
             stmt.setInt(1, id);
             result = stmt.executeQuery();
             if (result.next()) {
