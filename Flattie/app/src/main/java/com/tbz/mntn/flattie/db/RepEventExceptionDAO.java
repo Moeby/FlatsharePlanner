@@ -31,8 +31,9 @@ public class RepEventExceptionDAO extends DAO {
 
     // TESTME: #44
     public int insert(RepEventException repEventException) {
+        String method = "insert " + TABLE;
         int rows = -1;
-        Connection con = null;
+        Connection con = getConnection(method);
         PreparedStatement stmt = null;
         ResultSet result = null;
         try {
@@ -53,7 +54,7 @@ public class RepEventExceptionDAO extends DAO {
                 repEventExceptions.add(repEventException);
 
         } catch (SQLException e) {
-            rows = switchSQLError("insert RepEventException", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -61,8 +62,10 @@ public class RepEventExceptionDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure insert RepEventException", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -71,9 +74,10 @@ public class RepEventExceptionDAO extends DAO {
     // TESTME: #44
     // return null if not found
     public List<RepEventException> selectAllByCalendarItem(CalendarItem calendarItem) {
+        String method = "selectAllByCalendarItem" + TABLE;
         List<RepEventException> itemList    = new ArrayList();
         int calendarItemFk                  = calendarItem.getId();
-        Connection con                      = null;
+        Connection con                      = getConnection(method);
         PreparedStatement stmt              = null;
         ResultSet result                    = null;
         try {
@@ -106,7 +110,7 @@ public class RepEventExceptionDAO extends DAO {
             }
 
         } catch (SQLException e) {
-            logSQLError("selectAllByCalendarItem RepEventException", e);
+            logSQLError(method, e);
             itemList = null;
         } finally {
             try {
@@ -115,8 +119,10 @@ public class RepEventExceptionDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure selectAllByCalendarItem RepEventException", e);
+                logSQLError("closure " + method, e);
             }
         }
         if (!itemList.isEmpty()) {
@@ -128,6 +134,7 @@ public class RepEventExceptionDAO extends DAO {
 
     // TESTME: #44
     public int update(RepEventException exception) {
+        String method = "update " + TABLE;
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -153,7 +160,7 @@ public class RepEventExceptionDAO extends DAO {
             }
             */
         } catch (SQLException e) {
-            rows = switchSQLError("update RepEventException", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -161,8 +168,10 @@ public class RepEventExceptionDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure update RepEventException", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -170,6 +179,7 @@ public class RepEventExceptionDAO extends DAO {
 
     // TESTME: #44
     public int delete(RepEventException repEventException) {
+        String method = "delete" + TABLE;
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -185,7 +195,7 @@ public class RepEventExceptionDAO extends DAO {
                 repEventExceptions.remove(repEventException);
 
         } catch (SQLException e) {
-            rows = switchSQLError("delete RepEventException", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -193,8 +203,10 @@ public class RepEventExceptionDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure delete RepEventException", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -209,6 +221,7 @@ public class RepEventExceptionDAO extends DAO {
             if(check > 0){
                 deleted += check;
             }
+            // todo: errorhandling
         }
 
         return deleted;
