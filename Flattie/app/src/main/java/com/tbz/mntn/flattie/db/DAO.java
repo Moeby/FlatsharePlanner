@@ -3,16 +3,36 @@ package com.tbz.mntn.flattie.db;
 
 import android.util.Log;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import static android.content.ContentValues.TAG;
 
 public abstract class DAO {
 
+    protected boolean closeCon;
+
+    protected Connection getConnection(String method) {
+        Connection con = MysqlConnector.getConnection();
+        closeCon = false;
+        try {
+            if (con.isClosed()) {
+                MysqlConnector.connect();
+                closeCon = true;
+            }
+        } catch (SQLException e) {
+            logSQLError(method, e);
+        }
+        return con;
+    }
+
     /**
      * change sqlCode in internal error codes for easier error handling
      * log error message
-     * @param sqlCode
+     * @param method
+     * @param e
      * @return -999 for unknown error
      * -100 for not found
      * -200 for duplicates

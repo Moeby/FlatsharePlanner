@@ -12,7 +12,6 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class UserDAO extends DAO {
     private static UserDAO instance = new UserDAO();
     private ArrayList<User> users   = new ArrayList();
@@ -35,8 +34,9 @@ public class UserDAO extends DAO {
 
     // TESTME: #44
     public int insert(User user) {
+        String method = "insert " + TABLE;
         int rows = -1;
-        Connection con = MysqlConnector.getConnection();
+        Connection con = getConnection(method);
         PreparedStatement stmt = null;
         ResultSet result = null;
         try {
@@ -48,23 +48,21 @@ public class UserDAO extends DAO {
             stmt.setString(3,   user.getPassword());
             stmt.setDate(4,     user.getRemovalDate());
             Group group = user.getGroup();
-            if (group != null) {
+            if (group != null)
                 stmt.setInt(5, group.getId());
-            } else {
+             else
                 stmt.setNull(5, Types.INTEGER);
-            }
 
             rows = stmt.executeUpdate();
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next())
                 user.setId(generatedKeys.getInt(1));
 
-
             if (rows > 0)
                 users.add(user);
 
         } catch (SQLException e) {
-            rows = switchSQLError("insert User", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -72,8 +70,11 @@ public class UserDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon){
+                    con.close();
+                }
             } catch (SQLException e) {
-                logSQLError("closure insert User", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -82,8 +83,10 @@ public class UserDAO extends DAO {
     // TESTME: #44
     // return null if not found
     public User selectByUsername(String username) {
+        String method = "selectByUsername " + TABLE;
+        int rows = -1;
         User user               = null;
-        Connection con          = MysqlConnector.getConnection();
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -117,7 +120,7 @@ public class UserDAO extends DAO {
                 user.setRemovalDate(result.getDate(REMOVAL_DATE));
             }
         } catch (SQLException e) {
-            logSQLError("selectByUsername User", e);
+            logSQLError(method, e);
             user = null;
         } finally {
             try {
@@ -126,8 +129,10 @@ public class UserDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure selectByUsername User", e);
+                logSQLError("closure selectByUsername " + TABLE, e);
             }
         }
         return user;
@@ -141,9 +146,10 @@ public class UserDAO extends DAO {
     // TESTME: #44
     // return null if not found
     public List<User> selectAllByGroupId(Group group) {
+        String method = "selectAllByGroupId " + TABLE;
         List<User> userList     = new ArrayList();
         int groupFk             = group.getId();
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -176,7 +182,7 @@ public class UserDAO extends DAO {
             }
 
         } catch (SQLException e) {
-            logSQLError("selectAllByGroupId User", e);
+            logSQLError(method, e);
             userList = null;
         } finally {
             try {
@@ -185,8 +191,10 @@ public class UserDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure selectAllByGroupId User", e);
+                logSQLError("closure "+ method, e);
             }
         }
         if (!userList.isEmpty()) {
@@ -198,9 +206,10 @@ public class UserDAO extends DAO {
 
     // TESTME: #44
     public int updateGroup(User user) {
+        String method = "updateGroup " + TABLE;
         Group group             = user.getGroup();
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -218,7 +227,7 @@ public class UserDAO extends DAO {
             rows = stmt.executeUpdate();
 
         } catch (SQLException e) {
-            rows = switchSQLError("updateGroup User", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -226,8 +235,10 @@ public class UserDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure update User", e);
+                logSQLError("closure "+method, e);
             }
         }
         return rows;
@@ -235,9 +246,10 @@ public class UserDAO extends DAO {
 
     // TESTME: #44
     public int remove(User user) {
+        String method = "remove " + TABLE;
         Date removalDate        = new Date(new java.util.Date().getTime());
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -252,7 +264,7 @@ public class UserDAO extends DAO {
                 user.setRemovalDate(removalDate);
             }
         } catch (SQLException e) {
-            rows = switchSQLError("remove User", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -260,8 +272,10 @@ public class UserDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure remove User", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;

@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.db;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,8 +34,9 @@ public class CalendarItemDAO extends DAO {
 
     // TESTME: #44
     public int insert(CalendarItem calendarItem) {
+        String method = "insert " + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -55,7 +58,7 @@ public class CalendarItemDAO extends DAO {
             if (rows > 0)
                 calendarItems.add(calendarItem);
         } catch (SQLException e) {
-            rows = switchSQLError("insert CalendarItem", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -63,8 +66,10 @@ public class CalendarItemDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure insert CalendarItem", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -73,8 +78,9 @@ public class CalendarItemDAO extends DAO {
     // TESTME: #44
     // return null if not found
     public CalendarItem selectById(int id) {
+        String method = "selectById " + TABLE;
         CalendarItem item       = null;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -107,7 +113,7 @@ public class CalendarItemDAO extends DAO {
 
             }
         } catch (SQLException e) {
-            logSQLError("selectById CalendarItem", e);
+            logSQLError(method, e);
             item = null;
         } finally {
             try {
@@ -116,8 +122,10 @@ public class CalendarItemDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure selectById CalendarItem", e);
+                logSQLError("closure " + method, e);
             }
         }
         return item;
@@ -126,9 +134,10 @@ public class CalendarItemDAO extends DAO {
     // TESTME: #44
     // return null if not found
     public List<CalendarItem> selectAllByGroupId(Group group) {
+        String method = "selectAllByGroupId" + TABLE;
         List<CalendarItem> itemList = new ArrayList();
         int groupFk                 = group.getId();
-        Connection con              = null;
+        Connection con              = getConnection(method);
         PreparedStatement stmt      = null;
         ResultSet result            = null;
         try {
@@ -164,7 +173,7 @@ public class CalendarItemDAO extends DAO {
             }
 
         } catch (SQLException e) {
-            logSQLError("selectAllByGroupId CalendarItem", e);
+            logSQLError(method, e);
             itemList = null;
         } finally {
             try {
@@ -173,8 +182,10 @@ public class CalendarItemDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure selectAllByGroupId CalendarItem", e);
+                logSQLError("closure " + method, e);
             }
         }
         if (!itemList.isEmpty()) {
@@ -187,8 +198,9 @@ public class CalendarItemDAO extends DAO {
     // TESTME: #44
     // exceptions get deleted by calling this method
     public int update(CalendarItem calendarItem) {
+        String method = "update" + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -224,7 +236,7 @@ public class CalendarItemDAO extends DAO {
             }
             */
         } catch (SQLException e) {
-            rows = switchSQLError("update CalendarItem", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -232,8 +244,10 @@ public class CalendarItemDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure update CalendarItem", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -241,6 +255,7 @@ public class CalendarItemDAO extends DAO {
 
     // TESTME: #44
     public int delete(CalendarItem calendarItem) {
+        String method = "delete " + TABLE;
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -264,7 +279,7 @@ public class CalendarItemDAO extends DAO {
             if (rows > 0)
                 calendarItems.remove(calendarItem);
         } catch (SQLException e) {
-            rows = switchSQLError("delete CalendarItem", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -272,8 +287,10 @@ public class CalendarItemDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure delete CalendarItem", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
