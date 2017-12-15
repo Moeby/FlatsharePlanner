@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.db;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,7 +11,6 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class ShoppingItemDAO extends DAO {
     private static ShoppingItemDAO instance         = new ShoppingItemDAO();
     private ArrayList<ShoppingItem> shoppingItems   = new ArrayList();
@@ -134,7 +135,7 @@ public class ShoppingItemDAO extends DAO {
 
     // TESTME: #44
     public int delete(ShoppingItem shoppingItem) {
-        Stirng method = "delete " + TABLE;
+        String method = "delete " + TABLE;
         int rows                = -1;
         Connection con          = getConnection(method);
         PreparedStatement stmt  = null;

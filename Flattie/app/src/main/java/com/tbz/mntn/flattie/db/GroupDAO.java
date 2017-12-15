@@ -5,7 +5,6 @@ import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
 import java.sql.*;
 import java.util.ArrayList;
 
-// TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class GroupDAO extends DAO {
     private static GroupDAO instance    = new GroupDAO();
     private ArrayList<Group> groups     = new ArrayList();

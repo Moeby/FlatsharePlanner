@@ -10,7 +10,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: #44 INSERT CONNECTION IN ALL METHODS
 public class CalendarItemDAO extends DAO {
     private static CalendarItemDAO instance         = new CalendarItemDAO();
     private ArrayList<CalendarItem> calendarItems   = new ArrayList();
