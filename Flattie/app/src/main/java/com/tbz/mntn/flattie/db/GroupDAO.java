@@ -25,8 +25,9 @@ public class GroupDAO extends DAO {
 
     // TESTME: #44
     public int insert(Group group) {
+        String method = "insert " + TABLE;
         int rows                = -1;
-        Connection con          = MysqlConnector.getConnection();
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -45,7 +46,7 @@ public class GroupDAO extends DAO {
                 groups.add(group);
 
         } catch (SQLException e) {
-            rows = switchSQLError("insert Group", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -53,8 +54,10 @@ public class GroupDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure insert Group", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -63,8 +66,9 @@ public class GroupDAO extends DAO {
     // TESTME: #44
     // return null if not found
     public Group selectById(int id) {
+        String method = "selectById " + TABLE;
         Group group             = null;
-        Connection con          = MysqlConnector.getConnection();
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -88,7 +92,7 @@ public class GroupDAO extends DAO {
                 group.setName(result.getString(NAME));
             }
         } catch (SQLException e) {
-            logSQLError("selectById Group", e);
+            logSQLError(method, e);
             group = null;
         } finally {
             try {
@@ -97,8 +101,10 @@ public class GroupDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure selectById Group", e);
+                logSQLError("closure " + method, e);
             }
         }
         return group;
@@ -106,9 +112,10 @@ public class GroupDAO extends DAO {
 
     // TESTME: #44
     public int remove(Group group) {
+        String method = "remove " + TABLE;
         Date removalDate = new Date(new java.util.Date().getTime());
         int rows = -1;
-        Connection con = null;
+        Connection con = getConnection(method);
         PreparedStatement stmt = null;
         ResultSet result = null;
         try {
@@ -124,7 +131,7 @@ public class GroupDAO extends DAO {
             }
 
         } catch (SQLException e) {
-            rows = switchSQLError("remove Group", e);
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -132,8 +139,10 @@ public class GroupDAO extends DAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                logSQLError("closure remove Group", e);
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
