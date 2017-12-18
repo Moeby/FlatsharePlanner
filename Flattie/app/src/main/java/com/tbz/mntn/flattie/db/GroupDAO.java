@@ -22,6 +22,10 @@ public class GroupDAO extends DAO {
         return instance;
     }
 
+    /**
+     * @param group required values: name <br>possible nullable: removal_date
+     * @return
+     */
     public int insert(Group group) {
         String method = "insert " + TABLE;
         int rows                = -1;
@@ -65,7 +69,10 @@ public class GroupDAO extends DAO {
         return rows;
     }
 
-    // return null if not found
+    /**
+     * @param id
+     * @return group from database or null if not found / an error occurred <br>ignores removed groups
+     */
     public Group selectById(int id) {
         String method = "selectById " + TABLE;
         Group group             = null;
@@ -111,6 +118,11 @@ public class GroupDAO extends DAO {
         return group;
     }
 
+    /**
+     * update removal_date to current date - this group will be ignored by future selects
+     * @param group required values: id <br>ignored values: removal date
+     * @return
+     */
     public int remove(Group group) {
         String method = "remove " + TABLE;
         Date removalDate = new Date(new java.util.Date().getTime());
