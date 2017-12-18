@@ -31,6 +31,10 @@ public class RepEventExceptionDAO extends DAO {
     }
 
     // TESTME: #44
+    /**
+     * @param repEventException Required values: start datetime, end datetime, skipped, calendar item with id
+     * @return
+     */
     public int insert(RepEventException repEventException) {
         String method = "insert " + TABLE;
         int rows = -1;
@@ -73,7 +77,10 @@ public class RepEventExceptionDAO extends DAO {
     }
 
     // TESTME: #44
-    // return null if not found
+    /**
+     * @param calendarItem Required values: id
+     * @return list of RepEventException from database or null if not found / an error occurred
+     */
     public List<RepEventException> selectAllByCalendarItem(CalendarItem calendarItem) {
         String method = "selectAllByCalendarItem" + TABLE;
         List<RepEventException> itemList    = new ArrayList();
@@ -134,6 +141,10 @@ public class RepEventExceptionDAO extends DAO {
     }
 
     // TESTME: #44
+    /**
+     * @param exception Required values: start datetime, end datetime, skipped<br>Ignored values: CalendarItem
+     * @return
+     */
     public int update(RepEventException exception) {
         String method = "update " + TABLE;
         int rows                = -1;
@@ -146,12 +157,10 @@ public class RepEventExceptionDAO extends DAO {
                     + " SET "   + START             + " = ?,"
                                 + END               + " = ?,"
                                 + SKIPPED           + " = ?,"
-                                + CALENDAR_ITEM_FK  + " = ?"
                     + " WHERE " + ID + " = ?;");
             stmt.setDate(1,     exception.getStartDatetime());
             stmt.setDate(2,     exception.getEndDatetime());
             stmt.setBoolean(3,  exception.isSkipped());
-            stmt.setInt(4,      exception.getCalendarItem().getId());
 
             rows = stmt.executeUpdate();
 
@@ -179,6 +188,10 @@ public class RepEventExceptionDAO extends DAO {
     }
 
     // TESTME: #44
+    /**
+     * @param repEventException
+     * @return
+     */
     public int delete(RepEventException repEventException) {
         String method = "delete" + TABLE;
         int rows                = -1;
@@ -214,6 +227,10 @@ public class RepEventExceptionDAO extends DAO {
     }
 
     // TESTME: #44
+    /**
+     * @param calendarItem Required values: id
+     * @return
+     */
     public int deleteAllByCalendarItem(CalendarItem calendarItem) {
         int deleted = -1;
         List<RepEventException> exceptions = selectAllByCalendarItem(calendarItem);

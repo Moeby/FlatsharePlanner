@@ -33,6 +33,11 @@ public class UserDAO extends DAO {
     }
 
     // TESTME: #44
+
+    /**
+     * @param user Required values: email, username, password <br>possible nullable: removal date and group with id
+     * @return
+     */
     public int insert(User user) {
         String method = "insert " + TABLE;
         int rows = -1;
@@ -81,10 +86,13 @@ public class UserDAO extends DAO {
     }
 
     // TESTME: #44
-    // return null if not found
+    /**
+     * @param username
+     * @return user from database or null if not found / an error occurred <br>ignores removed user
+     */
     public User selectByUsername(String username) {
         String method = "selectByUsername " + TABLE;
-        int rows = -1;
+
         User user               = null;
         Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
@@ -138,13 +146,16 @@ public class UserDAO extends DAO {
         return user;
     }
 
-    public void selectByEmail(String email) {
+    private void selectByEmail(String email) {
         // TODO: someday implement method
         // at the moment no required feature!
     }
 
     // TESTME: #44
-    // return null if not found
+    /**
+     * @param group needs to contain at least the id
+     * @return list of users from database or null if not found / an error occurred <br>ignores removed user
+     */
     public List<User> selectAllByGroupId(Group group) {
         String method = "selectAllByGroupId " + TABLE;
         List<User> userList     = new ArrayList();
@@ -205,6 +216,11 @@ public class UserDAO extends DAO {
     }
 
     // TESTME: #44
+    /**
+     * update group_fk in user
+     * @param user needs to contain at least the id and a group with an id
+     * @return
+     */
     public int updateGroup(User user) {
         String method = "updateGroup " + TABLE;
         Group group             = user.getGroup();
@@ -245,6 +261,10 @@ public class UserDAO extends DAO {
     }
 
     // TESTME: #44
+    /**
+     * @param user needs to contain at least the id
+     * @return
+     */
     public int remove(User user) {
         String method = "remove " + TABLE;
         Date removalDate        = new Date(new java.util.Date().getTime());
