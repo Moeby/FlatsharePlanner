@@ -33,7 +33,7 @@ public class GroupDAOTest extends Assert {
         System.out.println("insert");
         group.setRemovalDate(null);
 
-        dao.insert(group);
+        result = dao.insert(group);
 
         assertEquals(1,result);
         assertEquals(newID,group.getId());
@@ -46,16 +46,28 @@ public class GroupDAOTest extends Assert {
 
         assertEquals(newID,group.getId());
         assertEquals(1,dao.getGroups().size());
+
+        // check double-select
+        dao.selectById(1);
+        assertEquals(1,dao.getGroups().size());
     }
 
     @Test
     public void remove() throws Exception {
         System.out.println("remove");
 
+        group.setId(1);
         result = dao.remove(group);
 
         assertEquals(1,result);
         assertEquals(0,dao.getGroups().size());
     }
 
+    @Test
+    public void selectByIdAfterRemove() throws Exception {
+        System.out.println("selectById - after remove");
+        Group group = dao.selectById(1);
+
+        assertEquals(null,group);
+        assertEquals(0,dao.getGroups().size());}
 }

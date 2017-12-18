@@ -10,7 +10,7 @@ public class GroupDAO extends DAO {
     private ArrayList<Group> groups     = new ArrayList();
 
     // table constants
-    private static final String TABLE           = "group";
+    private static final String TABLE           = "moebych_Flattie.group";
     private static final String ID              = "id";
     private static final String NAME            = "name";
     private static final String REMOVAL_DATE    = "removal_date";
@@ -22,7 +22,6 @@ public class GroupDAO extends DAO {
         return instance;
     }
 
-    // TESTME: #44
     public int insert(Group group) {
         String method = "insert " + TABLE;
         int rows                = -1;
@@ -30,11 +29,15 @@ public class GroupDAO extends DAO {
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
-            stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + NAME + "," + REMOVAL_DATE + ")"
-                                        + " VALUES( ?, ?);"
+            stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + NAME + ", " + REMOVAL_DATE + ")"
+                                        + " VALUES(?, ?);"
                                         , Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,   group.getName());
-            stmt.setDate(2,     group.getRemovalDate());
+            Date removalDate = group.getRemovalDate();
+            if(removalDate != null)
+                stmt.setDate(2,     removalDate);
+            else
+                stmt.setNull(2, Types.DATE);
 
             rows = stmt.executeUpdate();
             ResultSet generatedKeys = stmt.getGeneratedKeys();
@@ -62,7 +65,6 @@ public class GroupDAO extends DAO {
         return rows;
     }
 
-    // TESTME: #44
     // return null if not found
     public Group selectById(int id) {
         String method = "selectById " + TABLE;
@@ -73,7 +75,7 @@ public class GroupDAO extends DAO {
         try {
             stmt = con.prepareStatement("SELECT " + NAME + " FROM " + TABLE
                                         + " WHERE " + ID + " = ?"
-                                        + " AND " + REMOVAL_DATE + " = NULL;");
+                                        + " AND " + REMOVAL_DATE + " IS NULL;");
             stmt.setInt(1, id);
             result = stmt.executeQuery();
             if (result.next()) {
@@ -109,7 +111,6 @@ public class GroupDAO extends DAO {
         return group;
     }
 
-    // TESTME: #44
     public int remove(Group group) {
         String method = "remove " + TABLE;
         Date removalDate = new Date(new java.util.Date().getTime());

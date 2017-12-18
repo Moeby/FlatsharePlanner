@@ -1,14 +1,10 @@
 package com.tbz.mntn.flattie.db;
 
 
-import android.util.Log;
-
 import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
-import static android.content.ContentValues.TAG;
 
 public abstract class DAO {
 
@@ -18,8 +14,8 @@ public abstract class DAO {
         Connection con = MysqlConnector.getConnection();
         closeCon = false;
         try {
-            if (con.isClosed()) {
-                MysqlConnector.connect();
+            if (con == null || con.isClosed()) {
+                con = MysqlConnector.connect();
                 closeCon = true;
             }
         } catch (SQLException e) {
@@ -71,6 +67,8 @@ public abstract class DAO {
     }
 
     protected void logSQLError(String method, SQLException e){
-        Log.w(TAG, method+": ", e);
+        //todo: get Log.w back!
+//        Log.w(TAG, method+": ", e);
+        System.out.println(method+": "+e);
     }
 }
