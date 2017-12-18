@@ -1,15 +1,18 @@
 package com.tbz.mntn.flattie.db;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
 import java.sql.*;
 import java.util.ArrayList;
 
-// TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class GroupDAO {
+public class GroupDAO extends DAO {
     private static GroupDAO instance    = new GroupDAO();
     private ArrayList<Group> groups     = new ArrayList();
 
+    // todo: fill arraylists in group...
+
     // table constants
-    private static final String TABLE           = "group";
+    private static final String TABLE           = "moebych_Flattie.group";
     private static final String ID              = "id";
     private static final String NAME            = "name";
     private static final String REMOVAL_DATE    = "removal_date";
@@ -21,33 +24,37 @@ public class GroupDAO {
         return instance;
     }
 
-    // TESTME: #44
+    /**
+     * @param group required values: name <br>possible nullable: removal_date
+     * @return
+     */
     public int insert(Group group) {
+        String method = "insert " + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
-            stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + NAME + "," + REMOVAL_DATE + ")"
-                                        + " VALUES( ?, ?);"
+            stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + NAME + ", " + REMOVAL_DATE + ")"
+                                        + " VALUES(?, ?);"
                                         , Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,   group.getName());
-            stmt.setDate(2,     group.getRemovalDate());
+            Date removalDate = group.getRemovalDate();
+            if(removalDate != null)
+                stmt.setDate(2,     removalDate);
+            else
+                stmt.setNull(2, Types.DATE);
 
             rows = stmt.executeUpdate();
-            try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next())
-                    group.setId(generatedKeys.getInt(1));
-            } catch (SQLException e){
-                // TODO: #44 implement errorhandling
-            }
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next())
+                group.setId(generatedKeys.getInt(1));
 
             if (rows > 0)
                 groups.add(group);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -55,24 +62,29 @@ public class GroupDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
     }
 
-    // TESTME: #44
-    // return null if not found
+    /**
+     * @param id
+     * @return group from database or null if not found / an error occurred <br>ignores removed groups
+     */
     public Group selectById(int id) {
+        String method = "selectById " + TABLE;
         Group group             = null;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
             stmt = con.prepareStatement("SELECT " + NAME + " FROM " + TABLE
-                                        + " WHERE " + ID + " = ?;");
+                                        + " WHERE " + ID + " = ?"
+                                        + " AND " + REMOVAL_DATE + " IS NULL;");
             stmt.setInt(1, id);
             result = stmt.executeQuery();
             if (result.next()) {
@@ -84,14 +96,14 @@ public class GroupDAO {
                 }
                 if (group == null) {
                     group = new Group();
-                    group.setId(id);
-                    group.setName(result.getString(NAME));
-
                     groups.add(group);
                 }
+                group.setId(id);
+                group.setName(result.getString(NAME));
             }
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            logSQLError(method, e);
+            group = null;
         } finally {
             try {
                 // free resources
@@ -99,19 +111,25 @@ public class GroupDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return group;
     }
 
-    // TESTME: #44
+    /**
+     * update removal_date to current date - this group will be ignored by future selects
+     * @param group required values: id <br>ignored values: removal date
+     * @return
+     */
     public int remove(Group group) {
+        String method = "remove " + TABLE;
         Date removalDate = new Date(new java.util.Date().getTime());
         int rows = -1;
-        Connection con = null;
+        Connection con = getConnection(method);
         PreparedStatement stmt = null;
         ResultSet result = null;
         try {
@@ -127,7 +145,7 @@ public class GroupDAO {
             }
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -135,9 +153,10 @@ public class GroupDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;

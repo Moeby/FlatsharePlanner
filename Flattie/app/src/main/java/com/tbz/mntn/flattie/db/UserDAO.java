@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.db;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -10,8 +12,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class UserDAO {
+public class UserDAO extends DAO {
     private static UserDAO instance = new UserDAO();
     private ArrayList<User> users   = new ArrayList();
 
@@ -31,10 +32,14 @@ public class UserDAO {
         return instance;
     }
 
-    // TESTME: #44
+    /**
+     * @param user required values: email, username, password <br>possible nullable: removal date and group with id
+     * @return
+     */
     public int insert(User user) {
+        String method = "insert " + TABLE;
         int rows = -1;
-        Connection con = null;
+        Connection con = getConnection(method);
         PreparedStatement stmt = null;
         ResultSet result = null;
         try {
@@ -46,26 +51,21 @@ public class UserDAO {
             stmt.setString(3,   user.getPassword());
             stmt.setDate(4,     user.getRemovalDate());
             Group group = user.getGroup();
-            if (group != null) {
+            if (group != null)
                 stmt.setInt(5, group.getId());
-            } else {
+             else
                 stmt.setNull(5, Types.INTEGER);
-            }
 
             rows = stmt.executeUpdate();
-            try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next())
-                    user.setId(generatedKeys.getInt(1));
-            }catch (SQLException e){
-                // TODO: #44 implement errorhandling
-            }
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next())
+                user.setId(generatedKeys.getInt(1));
 
             if (rows > 0)
                 users.add(user);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -73,25 +73,31 @@ public class UserDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon){
+                    con.close();
+                }
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
     }
 
-    // TESTME: #44
-    // return null if not found
+    /**
+     * @param username
+     * @return user from database or null if not found / an error occurred <br>ignores removed users
+     */
     public User selectByUsername(String username) {
-        // TODO: #44 implement method
+        String method = "selectByUsername " + TABLE;
+
         User user               = null;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
             stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + GROUP_FK + " FROM " + TABLE
-                    + " WHERE " + USERNAME + " = ?;");
+                    + " WHERE " + USERNAME + " = ?"
+                    + " AND " + REMOVAL_DATE + " IS NULL;");
             stmt.setString(1, username);
             result = stmt.executeQuery();
             if (result.next()) {
@@ -104,10 +110,12 @@ public class UserDAO {
                 if (user == null) {
                     user = new User();
 
-                    // testme: #44 does group callback?
-                    GroupDAO dao = DAOFactory.getGroupDAO();
-                    user.setGroup(dao.selectById(result.getInt(GROUP_FK)));
-
+                    int groupFK = result.getInt(GROUP_FK);
+                    if(groupFK != 0) {
+                        // testme: #44 does group callback?
+                        GroupDAO dao = DAOFactory.getGroupDAO();
+                        user.setGroup(dao.selectById(groupFK));
+                    }
                     users.add(user);
                 }
                 user.setUsername(username);
@@ -117,7 +125,8 @@ public class UserDAO {
                 user.setRemovalDate(result.getDate(REMOVAL_DATE));
             }
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            logSQLError(method, e);
+            user = null;
         } finally {
             try {
                 // free resources
@@ -125,30 +134,35 @@ public class UserDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure selectByUsername " + TABLE, e);
             }
         }
         return user;
     }
 
-    public void selectByEmail(String email) {
+    private void selectByEmail(String email) {
         // TODO: someday implement method
         // at the moment no required feature!
     }
 
-    // TESTME: #44
-    // return null if not found
+    /**
+     * @param group required values: id
+     * @return list of users from database or null if not found / an error occurred <br>ignores removed user
+     */
     public List<User> selectAllByGroupId(Group group) {
+        String method = "selectAllByGroupId " + TABLE;
         List<User> userList     = new ArrayList();
         int groupFk             = group.getId();
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
             stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + USERNAME + " FROM " + TABLE
-                    + " WHERE " + GROUP_FK + " = ?;");
+                    + " WHERE " + GROUP_FK + " = ?"
+                    + " AND " + REMOVAL_DATE + " IS NULL;");
             stmt.setInt(1, groupFk);
             result = stmt.executeQuery();
             while (result.next()) {
@@ -175,7 +189,8 @@ public class UserDAO {
             }
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            logSQLError(method, e);
+            userList = null;
         } finally {
             try {
                 // free resources
@@ -183,9 +198,10 @@ public class UserDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure "+ method, e);
             }
         }
         if (!userList.isEmpty()) {
@@ -195,28 +211,37 @@ public class UserDAO {
         }
     }
 
-    // TESTME: #44
+    /**
+     * update group_fk in user
+     * @param user needs to contain at least the id and a group with an id
+     * @return
+     */
     public int updateGroup(User user) {
+        String method = "updateGroup " + TABLE;
         Group group             = user.getGroup();
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
             stmt = con.prepareStatement("UPDATE " + TABLE
                     + " SET " + GROUP_FK + " = ?"
-                    + " WHERE " + ID + " = ?;");
-            if(group != null){
-                stmt.setInt(1,  group.getId());
-            } else {
+                    + " WHERE " + ID + " = ?"
+                    + " AND " + REMOVAL_DATE + " IS NULL;");
+            if(group != null)
+                if (group.getId() != 0)
+                    stmt.setInt(1,  group.getId());
+                else
+                    stmt.setNull(1, Types.INTEGER);
+            else
                 stmt.setNull(1, Types.INTEGER);
-            }
+
             stmt.setInt(2,  user.getId());
 
             rows = stmt.executeUpdate();
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -224,19 +249,25 @@ public class UserDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure "+method, e);
             }
         }
         return rows;
     }
 
-    // TESTME: #44
+    /**
+     * update removal_date to current date - this user will be ignored by future selects
+     * @param user required values: id, group with id <br>ignored values: everything else
+     * @return
+     */
     public int remove(User user) {
+        String method = "remove " + TABLE;
         Date removalDate        = new Date(new java.util.Date().getTime());
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -249,9 +280,13 @@ public class UserDAO {
             rows = stmt.executeUpdate();
             if (rows > 0) {
                 user.setRemovalDate(removalDate);
+                Group group = user.getGroup();
+                if(group != null && group.getId() != 0)
+                    if(selectAllByGroupId(group) == null)
+                        DAOFactory.getGroupDAO().remove(group);
             }
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -259,9 +294,10 @@ public class UserDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;

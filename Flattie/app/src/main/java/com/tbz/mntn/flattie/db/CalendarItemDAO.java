@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.db;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,8 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class CalendarItemDAO {
+public class CalendarItemDAO extends DAO {
     private static CalendarItemDAO instance         = new CalendarItemDAO();
     private ArrayList<CalendarItem> calendarItems   = new ArrayList();
 
@@ -32,8 +33,9 @@ public class CalendarItemDAO {
 
     // TESTME: #44
     public int insert(CalendarItem calendarItem) {
+        String method = "insert " + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -48,18 +50,14 @@ public class CalendarItemDAO {
             stmt.setInt(6,      calendarItem.getEventCategory().getId());
 
             rows = stmt.executeUpdate();
-            try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next())
-                    calendarItem.setId(generatedKeys.getInt(1));
-            } catch (SQLException e){
-                // TODO: #44 implement errorhandling
-            }
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next())
+                calendarItem.setId(generatedKeys.getInt(1));
 
             if (rows > 0)
                 calendarItems.add(calendarItem);
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -67,9 +65,10 @@ public class CalendarItemDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -77,10 +76,67 @@ public class CalendarItemDAO {
 
     // TESTME: #44
     // return null if not found
+    public CalendarItem selectById(int id) {
+        String method = "selectById " + TABLE;
+        CalendarItem item       = null;
+        Connection con          = getConnection(method);
+        PreparedStatement stmt  = null;
+        ResultSet result        = null;
+        try {
+            stmt = con.prepareStatement("SELECT " + DESCRIPTION + "," + REPEATABLE + "," + START + "," + END + "," + EVENT_CATEGORY_FK + "," + GROUP_FK + " FROM " + TABLE
+                    + " WHERE " + ID + " = ?;");
+            stmt.setInt(1, id);
+
+            result = stmt.executeQuery();
+            if (result.next()) {
+                for (CalendarItem calendarItem: calendarItems) {
+                    if (id == calendarItem.getId()) {
+                        item = calendarItem;
+                        break;
+                    }
+                }
+                if (item == null) {
+                    item = new CalendarItem();
+                    calendarItems.add(item);
+                }
+                item.setId(id);
+                item.setDescription(result.getString(DESCRIPTION));
+                item.setRepeatable(Repeatable.toRepeatable(result.getString(REPEATABLE)));
+                item.setStartDatetime(result.getDate(START));
+                item.setEndDatetime(result.getDate(END));
+
+                EventCategoryDAO dao = DAOFactory.getEventCategoryDAO();
+                item.setEventCategory(dao.selectById(result.getInt(EVENT_CATEGORY_FK)));
+
+                item.setGroup(DAOFactory.getGroupDAO().selectById(result.getInt(GROUP_FK)));
+
+            }
+        } catch (SQLException e) {
+            logSQLError(method, e);
+            item = null;
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
+            } catch (SQLException e) {
+                logSQLError("closure " + method, e);
+            }
+        }
+        return item;
+    }
+
+    // TESTME: #44
+    // return null if not found
     public List<CalendarItem> selectAllByGroupId(Group group) {
+        String method = "selectAllByGroupId" + TABLE;
         List<CalendarItem> itemList = new ArrayList();
         int groupFk                 = group.getId();
-        Connection con              = null;
+        Connection con              = getConnection(method);
         PreparedStatement stmt      = null;
         ResultSet result            = null;
         try {
@@ -116,7 +172,8 @@ public class CalendarItemDAO {
             }
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            logSQLError(method, e);
+            itemList = null;
         } finally {
             try {
                 // free resources
@@ -124,9 +181,10 @@ public class CalendarItemDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         if (!itemList.isEmpty()) {
@@ -139,8 +197,9 @@ public class CalendarItemDAO {
     // TESTME: #44
     // exceptions get deleted by calling this method
     public int update(CalendarItem calendarItem) {
+        String method = "update" + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -176,7 +235,7 @@ public class CalendarItemDAO {
             }
             */
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -184,9 +243,10 @@ public class CalendarItemDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -194,6 +254,7 @@ public class CalendarItemDAO {
 
     // TESTME: #44
     public int delete(CalendarItem calendarItem) {
+        String method = "delete " + TABLE;
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -217,7 +278,7 @@ public class CalendarItemDAO {
             if (rows > 0)
                 calendarItems.remove(calendarItem);
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -225,9 +286,10 @@ public class CalendarItemDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;

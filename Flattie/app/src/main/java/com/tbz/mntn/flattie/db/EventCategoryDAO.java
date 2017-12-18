@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.db;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,8 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class EventCategoryDAO {
+public class EventCategoryDAO extends DAO {
     private static EventCategoryDAO instance            = new EventCategoryDAO();
     private ArrayList<EventCategory> eventCategories    = new ArrayList();
 
@@ -27,8 +28,9 @@ public class EventCategoryDAO {
     // TESTME: #44
     // return null if not found
     public EventCategory selectById(int id) {
+        String method = "selectById " + TABLE;
         EventCategory category  = null;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -46,14 +48,14 @@ public class EventCategoryDAO {
                 }
                 if (category == null) {
                     category = new EventCategory();
-                    category.setId(id);
-                    category.setName(result.getString(NAME));
-
                     eventCategories.add(category);
                 }
+                category.setId(id);
+                category.setName(result.getString(NAME));
             }
-        } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+        } catch (SQLException e) {         
+            logSQLError(method, e);
+            category = null;
         } finally {
             try {
                 // free resources
@@ -61,9 +63,10 @@ public class EventCategoryDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return category;
@@ -72,8 +75,9 @@ public class EventCategoryDAO {
     // TESTME: #44
     // return null if not found
     public List<EventCategory> selectAll() {
+        String method = "selectAll " + TABLE;
         List<EventCategory> categories  = new ArrayList();
-        Connection con                  = null;
+        Connection con                  = getConnection(method);
         PreparedStatement stmt          = null;
         ResultSet result                = null;
         try {
@@ -90,15 +94,16 @@ public class EventCategoryDAO {
                 }
                 if (category == null) {
                     category = new EventCategory();
-                    category.setId(id);
-                    category.setName(result.getString(NAME));
-
                     eventCategories.add(category);
                 }
+                category.setId(id);
+                category.setName(result.getString(NAME));
+
                 categories.add(category);
             }
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            logSQLError(method, e);
+            categories = null;
         } finally {
             try {
                 // free resources
@@ -106,9 +111,10 @@ public class EventCategoryDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         if (!categories.isEmpty()) {

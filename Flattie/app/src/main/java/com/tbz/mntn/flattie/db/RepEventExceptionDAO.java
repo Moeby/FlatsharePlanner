@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.db;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,8 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class RepEventExceptionDAO {
+public class RepEventExceptionDAO extends DAO {
     private static RepEventExceptionDAO instance            = new RepEventExceptionDAO();
     private ArrayList<RepEventException> repEventExceptions = new ArrayList();
 
@@ -30,9 +31,14 @@ public class RepEventExceptionDAO {
     }
 
     // TESTME: #44
+    /**
+     * @param repEventException Required values: start datetime, end datetime, skipped, calendar item with id
+     * @return
+     */
     public int insert(RepEventException repEventException) {
+        String method = "insert " + TABLE;
         int rows = -1;
-        Connection con = null;
+        Connection con = getConnection(method);
         PreparedStatement stmt = null;
         ResultSet result = null;
         try {
@@ -45,19 +51,15 @@ public class RepEventExceptionDAO {
             stmt.setInt(4,      repEventException.getCalendarItem().getId());
 
             rows = stmt.executeUpdate();
-            try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next())
-                    repEventException.setId(generatedKeys.getInt(1));
-            } catch (SQLException e){
-                // TODO: #44 implement errorhandling
-            }
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next())
+                repEventException.setId(generatedKeys.getInt(1));
 
             if (rows > 0)
                 repEventExceptions.add(repEventException);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -65,20 +67,25 @@ public class RepEventExceptionDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
     }
 
     // TESTME: #44
-    // return null if not found
+    /**
+     * @param calendarItem Required values: id
+     * @return list of RepEventException from database or null if not found / an error occurred
+     */
     public List<RepEventException> selectAllByCalendarItem(CalendarItem calendarItem) {
+        String method = "selectAllByCalendarItem" + TABLE;
         List<RepEventException> itemList    = new ArrayList();
         int calendarItemFk                  = calendarItem.getId();
-        Connection con                      = null;
+        Connection con                      = getConnection(method);
         PreparedStatement stmt              = null;
         ResultSet result                    = null;
         try {
@@ -111,7 +118,8 @@ public class RepEventExceptionDAO {
             }
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            logSQLError(method, e);
+            itemList = null;
         } finally {
             try {
                 // free resources
@@ -119,9 +127,10 @@ public class RepEventExceptionDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         if (!itemList.isEmpty()) {
@@ -132,7 +141,12 @@ public class RepEventExceptionDAO {
     }
 
     // TESTME: #44
+    /**
+     * @param exception Required values: start datetime, end datetime, skipped<br>Ignored values: CalendarItem
+     * @return
+     */
     public int update(RepEventException exception) {
+        String method = "update " + TABLE;
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -143,12 +157,10 @@ public class RepEventExceptionDAO {
                     + " SET "   + START             + " = ?,"
                                 + END               + " = ?,"
                                 + SKIPPED           + " = ?,"
-                                + CALENDAR_ITEM_FK  + " = ?"
                     + " WHERE " + ID + " = ?;");
             stmt.setDate(1,     exception.getStartDatetime());
             stmt.setDate(2,     exception.getEndDatetime());
             stmt.setBoolean(3,  exception.isSkipped());
-            stmt.setInt(4,      exception.getCalendarItem().getId());
 
             rows = stmt.executeUpdate();
 
@@ -158,7 +170,7 @@ public class RepEventExceptionDAO {
             }
             */
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -166,16 +178,22 @@ public class RepEventExceptionDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
     }
 
     // TESTME: #44
+    /**
+     * @param repEventException
+     * @return
+     */
     public int delete(RepEventException repEventException) {
+        String method = "delete" + TABLE;
         int rows                = -1;
         Connection con          = null;
         PreparedStatement stmt  = null;
@@ -191,7 +209,7 @@ public class RepEventExceptionDAO {
                 repEventExceptions.remove(repEventException);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -199,15 +217,20 @@ public class RepEventExceptionDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
     }
 
     // TESTME: #44
+    /**
+     * @param calendarItem Required values: id
+     * @return
+     */
     public int deleteAllByCalendarItem(CalendarItem calendarItem) {
         int deleted = -1;
         List<RepEventException> exceptions = selectAllByCalendarItem(calendarItem);
@@ -216,6 +239,7 @@ public class RepEventExceptionDAO {
             if(check > 0){
                 deleted += check;
             }
+            // todo: errorhandling
         }
 
         return deleted;

@@ -1,16 +1,16 @@
 package com.tbz.mntn.flattie.db;
 
+import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: #44 INSERT CONNECTION IN ALL METHODS
-public class ShoppingItemDAO {
+public class ShoppingItemDAO extends DAO {
     private static ShoppingItemDAO instance         = new ShoppingItemDAO();
     private ArrayList<ShoppingItem> shoppingItems   = new ArrayList();
 
@@ -28,10 +28,14 @@ public class ShoppingItemDAO {
         return instance;
     }
 
-    // TESTME: #44
+    /**
+     * @param shoppingItem required values: name, group with id <br> default: bought = false, can also be set to true
+     * @return
+     */
     public int insert(ShoppingItem shoppingItem) {
+        String method = "insert " + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -41,26 +45,19 @@ public class ShoppingItemDAO {
             stmt.setString(1,   shoppingItem.getName());
             stmt.setBoolean(2,  shoppingItem.isBought());
             Group group = shoppingItem.getGroup();
-            if (group != null) {
+            if (group != null && group.getId() != 0)
                 stmt.setInt(3, group.getId());
-            } else {
-                stmt.setNull(5, Types.INTEGER);
-            }
 
             rows = stmt.executeUpdate();
-            try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next())
-                    shoppingItem.setId(generatedKeys.getInt(1));
-            } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-            }
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next())
+                shoppingItem.setId(generatedKeys.getInt(1));
 
             if (rows > 0)
                 shoppingItems.add(shoppingItem);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -68,9 +65,10 @@ public class ShoppingItemDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
@@ -79,9 +77,10 @@ public class ShoppingItemDAO {
     // TESTME: #44
     // return null if not found
     public List<ShoppingItem> selectAllByGroupId(Group group) {
+        String method = "selectAllByGroupId " + TABLE;
         List<ShoppingItem> itemList = new ArrayList();
         int groupFk                 = group.getId();
-        Connection con              = null;
+        Connection con              = getConnection(method);
         PreparedStatement stmt      = null;
         ResultSet result            = null;
         try {
@@ -111,7 +110,8 @@ public class ShoppingItemDAO {
             }
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            logSQLError(method, e);
+            itemList = null;
         } finally {
             try {
                 // free resources
@@ -119,9 +119,10 @@ public class ShoppingItemDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         if (!itemList.isEmpty()) {
@@ -131,10 +132,49 @@ public class ShoppingItemDAO {
         }
     }
 
+    //TESTME: #44
+    /**
+     * @param item required values: id, bought <br> ignored values: everything else
+     * @return
+     */
+    public int updateBought(ShoppingItem item){
+        String method = "updateBought " + TABLE;
+        int rows                = -1;
+        Connection con          = getConnection(method);
+        PreparedStatement stmt  = null;
+        ResultSet result        = null;
+        try {
+            stmt = con.prepareStatement("UPDATE " + TABLE
+                    + " SET " + BOUGHT + " = ?"
+                    + " WHERE " + ID + " = ?;");
+            stmt.setBoolean(1,  item.isBought());
+            stmt.setInt(2,      item.getId());
+
+            rows = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            rows = switchSQLError(method, e);
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
+            } catch (SQLException e) {
+                logSQLError("closure "+method, e);
+            }
+        }
+        return rows;
+    }
+
     // TESTME: #44
     public int delete(ShoppingItem shoppingItem) {
+        String method = "delete " + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -148,7 +188,7 @@ public class ShoppingItemDAO {
                 shoppingItems.remove(shoppingItem);
 
         } catch (SQLException e) {
-            // TODO: #44 implement errorhandling
+            rows = switchSQLError(method, e);
         } finally {
             try {
                 // free resources
@@ -156,9 +196,10 @@ public class ShoppingItemDAO {
                     result.close();
                 if (stmt != null)
                     stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
             } catch (SQLException e) {
-                // TODO: #44 implement errorhandling
-                System.out.println("Statement or result close failed");
+                logSQLError("closure " + method, e);
             }
         }
         return rows;
