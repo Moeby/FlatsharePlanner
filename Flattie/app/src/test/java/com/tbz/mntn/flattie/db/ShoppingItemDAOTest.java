@@ -62,14 +62,23 @@ public class ShoppingItemDAOTest extends Assert {
     }
 
     @Test
+    public void updateBought() throws Exception {
+        System.out.println("updateBought");
+
+        item.setBought(true);
+        item.setId(1);
+        result = dao.updateBought(item);
+
+        assertEquals(1,result);
+    }
+
+    @Test
     public void delete() throws Exception {
         System.out.println("delete");
 
+        item.setId(1);
         result = dao.delete(item);
 
         assertEquals(1,result);
-        assertEquals(0,dao.getShoppingItems().size());
-        assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
     }
-
 }

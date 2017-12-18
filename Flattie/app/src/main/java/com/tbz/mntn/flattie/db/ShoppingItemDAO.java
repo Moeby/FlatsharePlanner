@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,10 @@ public class ShoppingItemDAO extends DAO {
         return instance;
     }
 
-    // TESTME: #44
+    /**
+     * @param shoppingItem required values: name, group with id <br> default: bought = false, can also be set to true
+     * @return
+     */
     public int insert(ShoppingItem shoppingItem) {
         String method = "insert " + TABLE;
         int rows                = -1;
@@ -43,11 +45,8 @@ public class ShoppingItemDAO extends DAO {
             stmt.setString(1,   shoppingItem.getName());
             stmt.setBoolean(2,  shoppingItem.isBought());
             Group group = shoppingItem.getGroup();
-            if (group != null) {
+            if (group != null && group.getId() != 0)
                 stmt.setInt(3, group.getId());
-            } else {
-                stmt.setNull(5, Types.INTEGER);
-            }
 
             rows = stmt.executeUpdate();
             ResultSet generatedKeys = stmt.getGeneratedKeys();
@@ -131,6 +130,44 @@ public class ShoppingItemDAO extends DAO {
         } else {
             return null;
         }
+    }
+
+    //TESTME: #44
+    /**
+     * @param item required values: id, bought <br> ignored values: everything else
+     * @return
+     */
+    public int updateBought(ShoppingItem item){
+        String method = "updateBought " + TABLE;
+        int rows                = -1;
+        Connection con          = getConnection(method);
+        PreparedStatement stmt  = null;
+        ResultSet result        = null;
+        try {
+            stmt = con.prepareStatement("UPDATE " + TABLE
+                    + " SET " + BOUGHT + " = ?"
+                    + " WHERE " + ID + " = ?;");
+            stmt.setBoolean(1,  item.isBought());
+            stmt.setInt(2,      item.getId());
+
+            rows = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            rows = switchSQLError(method, e);
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
+            } catch (SQLException e) {
+                logSQLError("closure "+method, e);
+            }
+        }
+        return rows;
     }
 
     // TESTME: #44
