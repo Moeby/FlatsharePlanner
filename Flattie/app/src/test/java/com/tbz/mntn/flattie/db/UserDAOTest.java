@@ -43,6 +43,15 @@ public class UserDAOTest extends Assert{
     public void tearDown() throws Exception {
     }
 
+    /*
+    public void testAll() throws Exception {
+        insertGroupNull();
+        insert();
+        insertDuplicateEmail();
+        insertDuplicateUsername();
+        insertWrongValue();
+    } */
+
     @Test
     public void insertGroupNull() throws Exception {
         System.out.println("insert - group null");

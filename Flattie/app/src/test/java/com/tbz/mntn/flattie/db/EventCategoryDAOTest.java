@@ -11,6 +11,7 @@ public class EventCategoryDAOTest extends Assert {
     private EventCategoryDAO dao;
 
     private int newID = 1;
+    private String name = "event";
 
     @Before
     public void setUp() throws Exception {
@@ -28,6 +29,7 @@ public class EventCategoryDAOTest extends Assert {
         EventCategory category = dao.selectById(newID);
 
         assertEquals(newID,category.getId());
+        assertEquals(name,category.getName());
         assertEquals(1,dao.getEventCategories().size());
     }
 
@@ -37,7 +39,8 @@ public class EventCategoryDAOTest extends Assert {
 
         List<EventCategory> categories = dao.selectAll();
 
-        assertEquals(1,categories);
-        assertEquals(1,dao.getEventCategories().size());
+        assertEquals(newID,categories.get(0).getId());
+        assertEquals(name,categories.get(0).getName());
+        assertEquals(3,dao.getEventCategories().size());
     }
 }

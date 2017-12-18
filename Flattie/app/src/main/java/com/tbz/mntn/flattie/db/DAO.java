@@ -29,10 +29,10 @@ public abstract class DAO {
      * log error message
      * @param method
      * @param e
-     * @return -999 for unknown error
+     * @return -999 for unknown / unhandled errors
      * -100 for not found
      * -200 for duplicates
-     * -300 for foreign key locks
+     * -300 for foreign keys --> does your fk exist in db? is it possible to update it?
      * -400 for other locks --> try it later again
      * -500 for wrong values (typically nullable errors)
      * -600 for wrong SQLQueries (should not occur in production)
@@ -42,15 +42,11 @@ public abstract class DAO {
         int sqlCode = e.getErrorCode();
         switch (sqlCode){
             case 1062:          return -200;
+            case 1452:          return -300;
             case 1048:          return -500;
             /*
             case notFound:      return -100;
-            case duplicate:     return -200;
-            case foreignKeys:   return -300;
             case locks:         return -400;
-            case wrongVal:      return -500;
-            case nullable:      return -501;
-            case toLong:        return -502;
             case SQLQuery:      return -600;
             */
             default:            return -999;
@@ -59,7 +55,6 @@ public abstract class DAO {
         1062 duplicate
         1022 duplicate
         1165 table locked
-        1452 referenced information --> key problem
         */
     }
 
