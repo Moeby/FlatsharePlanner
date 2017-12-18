@@ -32,10 +32,8 @@ public class UserDAO extends DAO {
         return instance;
     }
 
-    // TESTME: #44
-
     /**
-     * @param user Required values: email, username, password <br>possible nullable: removal date and group with id
+     * @param user required values: email, username, password <br>possible nullable: removal date and group with id
      * @return
      */
     public int insert(User user) {
@@ -85,10 +83,9 @@ public class UserDAO extends DAO {
         return rows;
     }
 
-    // TESTME: #44
     /**
      * @param username
-     * @return user from database or null if not found / an error occurred <br>ignores removed user
+     * @return user from database or null if not found / an error occurred <br>ignores removed users
      */
     public User selectByUsername(String username) {
         String method = "selectByUsername " + TABLE;
@@ -100,7 +97,7 @@ public class UserDAO extends DAO {
         try {
             stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + GROUP_FK + " FROM " + TABLE
                     + " WHERE " + USERNAME + " = ?"
-                    + " AND " + REMOVAL_DATE + " = NULL;");
+                    + " AND " + REMOVAL_DATE + " IS NULL;");
             stmt.setString(1, username);
             result = stmt.executeQuery();
             if (result.next()) {
@@ -151,9 +148,8 @@ public class UserDAO extends DAO {
         // at the moment no required feature!
     }
 
-    // TESTME: #44
     /**
-     * @param group needs to contain at least the id
+     * @param group required values: id
      * @return list of users from database or null if not found / an error occurred <br>ignores removed user
      */
     public List<User> selectAllByGroupId(Group group) {
@@ -166,7 +162,7 @@ public class UserDAO extends DAO {
         try {
             stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + USERNAME + " FROM " + TABLE
                     + " WHERE " + GROUP_FK + " = ?"
-                    + " AND " + REMOVAL_DATE + " = NULL;");
+                    + " AND " + REMOVAL_DATE + " IS NULL;");
             stmt.setInt(1, groupFk);
             result = stmt.executeQuery();
             while (result.next()) {
@@ -215,7 +211,6 @@ public class UserDAO extends DAO {
         }
     }
 
-    // TESTME: #44
     /**
      * update group_fk in user
      * @param user needs to contain at least the id and a group with an id
@@ -232,12 +227,15 @@ public class UserDAO extends DAO {
             stmt = con.prepareStatement("UPDATE " + TABLE
                     + " SET " + GROUP_FK + " = ?"
                     + " WHERE " + ID + " = ?"
-                    + " AND " + REMOVAL_DATE + " = NULL;");
-            if(group != null){
-                stmt.setInt(1,  group.getId());
-            } else {
+                    + " AND " + REMOVAL_DATE + " IS NULL;");
+            if(group != null)
+                if (group.getId() != 0)
+                    stmt.setInt(1,  group.getId());
+                else
+                    stmt.setNull(1, Types.INTEGER);
+            else
                 stmt.setNull(1, Types.INTEGER);
-            }
+
             stmt.setInt(2,  user.getId());
 
             rows = stmt.executeUpdate();
@@ -260,9 +258,9 @@ public class UserDAO extends DAO {
         return rows;
     }
 
-    // TESTME: #44
     /**
-     * @param user needs to contain at least the id
+     * update removal_date to current date - this user will be ignored by future selects
+     * @param user required values: id, group with id <br>ignored values: everything else
      * @return
      */
     public int remove(User user) {
@@ -282,6 +280,10 @@ public class UserDAO extends DAO {
             rows = stmt.executeUpdate();
             if (rows > 0) {
                 user.setRemovalDate(removalDate);
+                Group group = user.getGroup();
+                if(group != null && group.getId() != 0)
+                    if(selectAllByGroupId(group) == null)
+                        DAOFactory.getGroupDAO().remove(group);
             }
         } catch (SQLException e) {
             rows = switchSQLError(method, e);

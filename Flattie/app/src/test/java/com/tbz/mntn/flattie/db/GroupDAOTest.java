@@ -69,5 +69,6 @@ public class GroupDAOTest extends Assert {
         Group group = dao.selectById(1);
 
         assertEquals(null,group);
-        assertEquals(0,dao.getGroups().size());}
+        assertEquals(0,dao.getGroups().size());
+    }
 }

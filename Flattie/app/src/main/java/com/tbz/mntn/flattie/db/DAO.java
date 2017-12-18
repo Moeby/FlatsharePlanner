@@ -34,15 +34,15 @@ public abstract class DAO {
      * -200 for duplicates
      * -300 for foreign key locks
      * -400 for other locks --> try it later again
-     * -500 for wrong values
-     * -501 for nullable errors
-     * -502 for values to long
+     * -500 for wrong values (typically nullable errors)
      * -600 for wrong SQLQueries (should not occur in production)
      */
     protected int switchSQLError(String method, SQLException e) {
         logSQLError(method, e);
         int sqlCode = e.getErrorCode();
         switch (sqlCode){
+            case 1062:          return -200;
+            case 1048:          return -500;
             /*
             case notFound:      return -100;
             case duplicate:     return -200;
@@ -60,9 +60,6 @@ public abstract class DAO {
         1022 duplicate
         1165 table locked
         1452 referenced information --> key problem
-        1406 value to long
-        1054
-        1064 wrong value
         */
     }
 
@@ -70,5 +67,6 @@ public abstract class DAO {
         //todo: get Log.w back!
 //        Log.w(TAG, method+": ", e);
         System.out.println(method+": "+e);
+        System.out.println(e.getErrorCode() + ", " + e.getSQLState());
     }
 }

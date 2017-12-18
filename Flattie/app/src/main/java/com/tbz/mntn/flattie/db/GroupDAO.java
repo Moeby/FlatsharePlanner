@@ -9,6 +9,8 @@ public class GroupDAO extends DAO {
     private static GroupDAO instance    = new GroupDAO();
     private ArrayList<Group> groups     = new ArrayList();
 
+    // todo: fill arraylists in group...
+
     // table constants
     private static final String TABLE           = "moebych_Flattie.group";
     private static final String ID              = "id";
