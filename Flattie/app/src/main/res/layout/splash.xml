@@ -19,11 +19,9 @@
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/splash"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
         android:color="@color/title"
-        android:elevation="5dp"
         android:indeterminate="true"
         android:indeterminateTint="@color/title"
         android:indeterminateTintMode="src_atop" />
