@@ -7,7 +7,7 @@
         android:paddingRight="20dp"
         android:orientation="vertical"
         android:scrollbars="vertical"
-        tools:context="com.tbz.mntn.flattie.MainActivity">
+        tools:context="com.tbz.mntn.flattie.activity.MainActivity">
 
         <TextView
             android:text="Login"
