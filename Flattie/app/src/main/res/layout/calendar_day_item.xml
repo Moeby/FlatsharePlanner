@@ -73,5 +73,7 @@
 
             <!-- photo von mülleimer und stift in drawable einfügen-->
         </RelativeLayout>
+
     <!--</android.support.v7.widget.CardView>-->
+
 </LinearLayout>
