@@ -31,6 +31,12 @@ public class EventCategoryDAOTest extends Assert {
         assertEquals(newID,category.getId());
         assertEquals(name,category.getName());
         assertEquals(1,dao.getEventCategories().size());
+        
+        // double selects
+        category = dao.selectById(newID);
+        assertEquals(newID,category.getId());
+        assertEquals(name,category.getName());
+        assertEquals(1,dao.getEventCategories().size());
     }
 
     @Test
@@ -39,6 +45,12 @@ public class EventCategoryDAOTest extends Assert {
 
         List<EventCategory> categories = dao.selectAll();
 
+        assertEquals(newID,categories.get(0).getId());
+        assertEquals(name,categories.get(0).getName());
+        assertEquals(3,dao.getEventCategories().size());
+    
+        // double selects
+        categories = dao.selectAll();
         assertEquals(newID,categories.get(0).getId());
         assertEquals(name,categories.get(0).getName());
         assertEquals(3,dao.getEventCategories().size());

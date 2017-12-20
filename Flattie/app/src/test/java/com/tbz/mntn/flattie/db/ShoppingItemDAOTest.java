@@ -24,7 +24,8 @@ public class ShoppingItemDAOTest extends Assert {
 
         name = "name";
         bought = false;
-        group = DAOFactory.getGroupDAO().selectById(newID);
+        group = new Group();
+        group.setId(newID);
 
         item = new ShoppingItem();
 
@@ -58,7 +59,11 @@ public class ShoppingItemDAOTest extends Assert {
 
         assertEquals(newID,items.get(0).getId());
         assertEquals(1,dao.getShoppingItems().size());
-        assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
+        
+        // double select
+        items = dao.selectAllByGroupId(group);
+        assertEquals(newID,items.get(0).getId());
+        assertEquals(1,dao.getShoppingItems().size());
     }
 
     @Test

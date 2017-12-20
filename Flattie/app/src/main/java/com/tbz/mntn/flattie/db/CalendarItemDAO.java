@@ -31,7 +31,10 @@ public class CalendarItemDAO extends DAO {
         return instance;
     }
 
-    // TESTME: #44
+    /**
+     * @param calendarItem required values: description, repeatable, start, end, group, eventCategory with id
+     * @return
+     */
     public int insert(CalendarItem calendarItem) {
         String method = "insert " + TABLE;
         int rows                = -1;
@@ -40,14 +43,16 @@ public class CalendarItemDAO extends DAO {
         ResultSet result        = null;
         try {
             stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + DESCRIPTION + "," + REPEATABLE + "," + START + "," + END + "," + GROUP_FK + "," + EVENT_CATEGORY_FK + ")"
-                                        + " VALUES( ?, ?, ?, ?, ?);"
+                                        + " VALUES( ?, ?, ?, ?, ?, ?);"
                                         , Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,   calendarItem.getDescription());
             stmt.setString(2,   calendarItem.getRepeatable().toString());
             stmt.setDate(3,     calendarItem.getStartDatetime());
             stmt.setDate(4,     calendarItem.getEndDatetime());
             stmt.setInt(5,      calendarItem.getGroup().getId());
-            stmt.setInt(6,      calendarItem.getEventCategory().getId());
+            EventCategory category = calendarItem.getEventCategory();
+            if (category != null && category.getId() != 0)
+                stmt.setInt(6,      calendarItem.getEventCategory().getId());
 
             rows = stmt.executeUpdate();
             ResultSet generatedKeys = stmt.getGeneratedKeys();
@@ -75,7 +80,10 @@ public class CalendarItemDAO extends DAO {
     }
 
     // TESTME: #44
-    // return null if not found
+    /**
+     * @param id
+     * @return calendar item from database or null if not found / an error occurred
+     */
     public CalendarItem selectById(int id) {
         String method = "selectById " + TABLE;
         CalendarItem item       = null;
@@ -102,11 +110,13 @@ public class CalendarItemDAO extends DAO {
                 item.setId(id);
                 item.setDescription(result.getString(DESCRIPTION));
                 item.setRepeatable(Repeatable.toRepeatable(result.getString(REPEATABLE)));
-                item.setStartDatetime(result.getDate(START));
-                item.setEndDatetime(result.getDate(END));
+                // FIXME: handle timestamp / date / whatever!
+                //item.setStartDatetime(result.getDate(START));
+                //item.setEndDatetime(result.getDate(END));
 
-                EventCategoryDAO dao = DAOFactory.getEventCategoryDAO();
-                item.setEventCategory(dao.selectById(result.getInt(EVENT_CATEGORY_FK)));
+                item.setRepEventExceptions((ArrayList<RepEventException>) DAOFactory.getRepEventExeptionDAO().selectAllByCalendarItem(item));
+
+                item.setEventCategory(DAOFactory.getEventCategoryDAO().selectById(result.getInt(EVENT_CATEGORY_FK)));
 
                 item.setGroup(DAOFactory.getGroupDAO().selectById(result.getInt(GROUP_FK)));
 
@@ -131,7 +141,10 @@ public class CalendarItemDAO extends DAO {
     }
 
     // TESTME: #44
-    // return null if not found
+    /**
+     * @param group
+     * @return calendar items from database or null if not found / an error occurred
+     */
     public List<CalendarItem> selectAllByGroupId(Group group) {
         String method = "selectAllByGroupId" + TABLE;
         List<CalendarItem> itemList = new ArrayList();
@@ -160,13 +173,84 @@ public class CalendarItemDAO extends DAO {
                 item.setId(id);
                 item.setDescription(result.getString(DESCRIPTION));
                 item.setRepeatable(Repeatable.toRepeatable(result.getString(REPEATABLE)));
-                item.setStartDatetime(result.getDate(START));
-                item.setEndDatetime(result.getDate(END));
+                // FIXME: handle timestamp / date / whatever!
+                //item.setStartDatetime(result.getDate(START));
+                //item.setEndDatetime(result.getDate(END));
 
-                EventCategoryDAO dao = DAOFactory.getEventCategoryDAO();
-                item.setEventCategory(dao.selectById(result.getInt(EVENT_CATEGORY_FK)));
+                item.setRepEventExceptions((ArrayList<RepEventException>) DAOFactory.getRepEventExeptionDAO().selectAllByCalendarItem(item));
+
+                item.setEventCategory(DAOFactory.getEventCategoryDAO().selectById(result.getInt(EVENT_CATEGORY_FK)));
 
                 item.setGroup(group);
+
+                itemList.add(item);
+            }
+
+        } catch (SQLException e) {
+            logSQLError(method, e);
+            itemList = null;
+        } finally {
+            try {
+                // free resources
+                if (result != null)
+                    result.close();
+                if (stmt != null)
+                    stmt.close();
+                if (closeCon)
+                    MysqlConnector.close();
+            } catch (SQLException e) {
+                logSQLError("closure " + method, e);
+            }
+        }
+        if (itemList != null && !itemList.isEmpty()) {
+            return itemList;
+        } else {
+            return null;
+        }
+    }
+
+    // TESTME: #44
+    /**
+     * @param category
+     * @return calendar items from database or null if not found / an error occurred
+     */
+    public List<CalendarItem> selectAllByEventCategory(EventCategory category) {
+        String method = "selectAllByGroupId" + TABLE;
+        List<CalendarItem> itemList = new ArrayList();
+        int categoryFK              = category.getId();
+        Connection con              = getConnection(method);
+        PreparedStatement stmt      = null;
+        ResultSet result            = null;
+        try {
+            stmt = con.prepareStatement("SELECT " + ID + "," + DESCRIPTION + "," + REPEATABLE + "," + START + "," + END + "," + GROUP_FK + " FROM " + TABLE
+                    + " WHERE " + EVENT_CATEGORY_FK + " = ?;");
+            stmt.setInt(1, categoryFK);
+            result = stmt.executeQuery();
+            while (result.next()) {
+                int id = result.getInt(ID);
+                CalendarItem item = null;
+                for (CalendarItem savedItem : calendarItems) {
+                    if (id == savedItem.getId()) {
+                        item = savedItem;
+                        break;
+                    }
+                }
+                if (item == null) {
+                    item = new CalendarItem();
+                    calendarItems.add(item);
+                }
+                item.setId(id);
+                item.setDescription(result.getString(DESCRIPTION));
+                item.setRepeatable(Repeatable.toRepeatable(result.getString(REPEATABLE)));
+                // FIXME: handle timestamp / date / whatever!
+                //item.setStartDatetime(result.getDate(START));
+                //item.setEndDatetime(result.getDate(END));
+
+                item.setRepEventExceptions((ArrayList<RepEventException>) DAOFactory.getRepEventExeptionDAO().selectAllByCalendarItem(item));
+
+                item.setEventCategory(category);
+
+                item.setGroup(DAOFactory.getGroupDAO().selectById(result.getInt(GROUP_FK)));
 
                 itemList.add(item);
             }
@@ -195,7 +279,11 @@ public class CalendarItemDAO extends DAO {
     }
 
     // TESTME: #44
-    // exceptions get deleted by calling this method
+    /**
+     * Calendar item gets updated. <strong>All exceptions will get deleted by calling this method!</strong>
+     * @param calendarItem
+     * @return
+     */
     public int update(CalendarItem calendarItem) {
         String method = "update" + TABLE;
         int rows                = -1;
@@ -226,7 +314,7 @@ public class CalendarItemDAO extends DAO {
             stmt.setDate(4,     calendarItem.getEndDatetime());
             stmt.setInt(5,      calendarItem.getGroup().getId());
             stmt.setInt(6,      calendarItem.getEventCategory().getId());
-
+            stmt.setInt(7,      calendarItem.getId());
             rows = stmt.executeUpdate();
 
             /*
@@ -253,20 +341,26 @@ public class CalendarItemDAO extends DAO {
     }
 
     // TESTME: #44
+    /**
+     * Calendar item gets deleted. <strong>All exceptions will get deleted as well by calling this method!</strong>
+     * @param calendarItem
+     * @return
+     */
     public int delete(CalendarItem calendarItem) {
         String method = "delete " + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
             boolean repeatable  = (calendarItem.getRepeatable() != Repeatable.NONE);
             if (repeatable) {
-                // TOREMEMBER: ask first if the user wants to delete the whole repeatable event
                 RepEventExceptionDAO handleExceptions           = DAOFactory.getRepEventExeptionDAO();
                 ArrayList<RepEventException> repEventExceptions  = calendarItem.getRepEventExceptions();
-                for (RepEventException repEventException : repEventExceptions)
-                    handleExceptions.delete(repEventException);
+                if(repEventExceptions != null){
+                    for (RepEventException repEventException : repEventExceptions)
+                        handleExceptions.delete(repEventException);
+                }
             }
 
             stmt = con.prepareStatement("DELETE FROM " + TABLE

@@ -42,8 +42,11 @@ public abstract class DAO {
         int sqlCode = e.getErrorCode();
         switch (sqlCode){
             case 1062:          return -200;
+            case 1451:
             case 1452:          return -300;
             case 1048:          return -500;
+            
+            //1146 table doesnt exist
             /*
             case notFound:      return -100;
             case locks:         return -400;

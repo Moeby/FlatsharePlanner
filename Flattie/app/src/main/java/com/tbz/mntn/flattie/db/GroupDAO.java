@@ -9,8 +9,6 @@ public class GroupDAO extends DAO {
     private static GroupDAO instance    = new GroupDAO();
     private ArrayList<Group> groups     = new ArrayList();
 
-    // todo: fill arraylists in group...
-
     // table constants
     private static final String TABLE           = "moebych_Flattie.group";
     private static final String ID              = "id";
@@ -100,6 +98,11 @@ public class GroupDAO extends DAO {
                 }
                 group.setId(id);
                 group.setName(result.getString(NAME));
+
+                //testme: #44 do they callback? --> they do!
+                //group.setUsers((ArrayList<User>) DAOFactory.getUserDAO().selectAllByGroupId(group));
+                //group.setShoppingItems((ArrayList<ShoppingItem>) DAOFactory.getShoppingItemDAO().selectAllByGroupId(group));
+                //group.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByGroupId(group));
             }
         } catch (SQLException e) {
             logSQLError(method, e);

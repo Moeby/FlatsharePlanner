@@ -51,7 +51,8 @@ public class UserDAO extends DAO {
             stmt.setString(3,   user.getPassword());
             stmt.setDate(4,     user.getRemovalDate());
             Group group = user.getGroup();
-            if (group != null)
+            //Testme: #44
+            if (group != null && group.getId() != 0)
                 stmt.setInt(5, group.getId());
              else
                 stmt.setNull(5, Types.INTEGER);
@@ -111,11 +112,10 @@ public class UserDAO extends DAO {
                     user = new User();
 
                     int groupFK = result.getInt(GROUP_FK);
-                    if(groupFK != 0) {
+                    if(groupFK != 0)
                         // testme: #44 does group callback?
-                        GroupDAO dao = DAOFactory.getGroupDAO();
-                        user.setGroup(dao.selectById(groupFK));
-                    }
+                        user.setGroup(DAOFactory.getGroupDAO().selectById(groupFK));
+
                     users.add(user);
                 }
                 user.setUsername(username);
@@ -228,11 +228,11 @@ public class UserDAO extends DAO {
                     + " SET " + GROUP_FK + " = ?"
                     + " WHERE " + ID + " = ?"
                     + " AND " + REMOVAL_DATE + " IS NULL;");
-            if(group != null)
-                if (group.getId() != 0)
+            // TESTME: #44
+            if(group != null && group.getId() != 0)
                     stmt.setInt(1,  group.getId());
-                else
-                    stmt.setNull(1, Types.INTEGER);
+//                else
+//                    stmt.setNull(1, Types.INTEGER);
             else
                 stmt.setNull(1, Types.INTEGER);
 

@@ -14,8 +14,10 @@ public class RepEventExceptionDAO extends DAO {
     private static RepEventExceptionDAO instance            = new RepEventExceptionDAO();
     private ArrayList<RepEventException> repEventExceptions = new ArrayList();
 
+    // todo: change dates to other format / get real time into db..
+    
     // table constants
-    private static final String TABLE               = "rep_event_exeption";
+    private static final String TABLE               = "rep_event_exception";
     private static final String ID                  = "id";
     private static final String START               = "start_datetime";
     private static final String END                 = "end_datetime";
@@ -148,19 +150,19 @@ public class RepEventExceptionDAO extends DAO {
     public int update(RepEventException exception) {
         String method = "update " + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
-
             stmt = con.prepareStatement("UPDATE " + TABLE
                     + " SET "   + START             + " = ?,"
                                 + END               + " = ?,"
-                                + SKIPPED           + " = ?,"
+                                + SKIPPED           + " = ?"
                     + " WHERE " + ID + " = ?;");
             stmt.setDate(1,     exception.getStartDatetime());
             stmt.setDate(2,     exception.getEndDatetime());
             stmt.setBoolean(3,  exception.isSkipped());
+            stmt.setInt(4,      exception.getId());
 
             rows = stmt.executeUpdate();
 
@@ -195,7 +197,7 @@ public class RepEventExceptionDAO extends DAO {
     public int delete(RepEventException repEventException) {
         String method = "delete" + TABLE;
         int rows                = -1;
-        Connection con          = null;
+        Connection con          = getConnection(method);
         PreparedStatement stmt  = null;
         ResultSet result        = null;
         try {
@@ -232,14 +234,20 @@ public class RepEventExceptionDAO extends DAO {
      * @return
      */
     public int deleteAllByCalendarItem(CalendarItem calendarItem) {
-        int deleted = -1;
+        // todo: transaction
+        int deleted = 0;
         List<RepEventException> exceptions = selectAllByCalendarItem(calendarItem);
-        for(RepEventException exception: exceptions){
-            int check = delete(exception);
-            if(check > 0){
-                deleted += check;
+        if(exceptions != null){
+            for(RepEventException exception: exceptions){
+                int check = delete(exception);
+                if(check > 0)
+                    deleted += check;
+                else {
+                    deleted = check;
+                    // todo: errorhandling, rollback
+                    break;
+                }
             }
-            // todo: errorhandling
         }
 
         return deleted;

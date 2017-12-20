@@ -27,7 +27,8 @@ public class RepEventExceptionDAOTest extends Assert {
         skipped = true;
         startDate = new Date(new java.util.Date().getTime());
         endDate = new Date(startDate.getTime()+50000);
-        calendarItem = DAOFactory.getCalendarItemDAO().selectById(newID);
+        calendarItem = new CalendarItem();
+        calendarItem.setId(newID);
 
         exception = new RepEventException();
         exception.setStartDatetime(startDate);
@@ -59,33 +60,35 @@ public class RepEventExceptionDAOTest extends Assert {
 
         assertEquals(newID,exceptions.get(0).getId());
         assertEquals(1,dao.getRepEventExceptions().size());
-        assertEquals(1,DAOFactory.getCalendarItemDAO().getCalendarItems().size());
-
+    
+        // double select
+        exceptions = dao.selectAllByCalendarItem(item);
+        assertEquals(newID,exceptions.get(0).getId());
+        assertEquals(1,dao.getRepEventExceptions().size());
     }
 
     @Test
     public void update() throws Exception {
-        System.out.println("remove");
+        System.out.println("update");
 
         skipped = false;
         exception.setSkipped(skipped);
+        exception.setId(1);
 
         result = dao.update(exception);
 
         assertEquals(1,result);
-        assertEquals(1,dao.getRepEventExceptions().size());
-        assertEquals(1,DAOFactory.getCalendarItemDAO().getCalendarItems().size());
     }
 
     @Test
     public void delete() throws Exception {
         System.out.println("delete");
-
+        exception.setId(1);
+    
         result = dao.delete(exception);
 
         assertEquals(1,result);
         assertEquals(0,dao.getRepEventExceptions().size());
-        assertEquals(1,DAOFactory.getCalendarItemDAO().getCalendarItems().size());
     }
 
     @Test
@@ -96,7 +99,6 @@ public class RepEventExceptionDAOTest extends Assert {
 
         assertEquals(1,result);
         assertEquals(0,dao.getRepEventExceptions().size());
-        assertEquals(1,DAOFactory.getCalendarItemDAO().getCalendarItems().size());
 
     }
 

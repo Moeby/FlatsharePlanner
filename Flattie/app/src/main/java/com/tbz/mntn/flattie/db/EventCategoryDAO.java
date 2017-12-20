@@ -26,7 +26,10 @@ public class EventCategoryDAO extends DAO {
     }
 
     // TESTME: #44
-    // return null if not found
+    /**
+     * @param id
+     * @return event category from database or null if not found / an error occurred
+     */
     public EventCategory selectById(int id) {
         String method = "selectById " + TABLE;
         EventCategory category  = null;
@@ -52,6 +55,9 @@ public class EventCategoryDAO extends DAO {
                 }
                 category.setId(id);
                 category.setName(result.getString(NAME));
+
+                category.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByEventCategory(category));
+
             }
         } catch (SQLException e) {         
             logSQLError(method, e);
@@ -73,7 +79,9 @@ public class EventCategoryDAO extends DAO {
     }
 
     // TESTME: #44
-    // return null if not found
+    /**
+     * @return all event categories from database or null if an error occurred
+     */
     public List<EventCategory> selectAll() {
         String method = "selectAll " + TABLE;
         List<EventCategory> categories  = new ArrayList();
@@ -98,6 +106,8 @@ public class EventCategoryDAO extends DAO {
                 }
                 category.setId(id);
                 category.setName(result.getString(NAME));
+
+                category.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByEventCategory(category));
 
                 categories.add(category);
             }

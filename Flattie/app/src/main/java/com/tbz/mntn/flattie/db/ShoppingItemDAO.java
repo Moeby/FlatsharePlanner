@@ -74,8 +74,10 @@ public class ShoppingItemDAO extends DAO {
         return rows;
     }
 
-    // TESTME: #44
-    // return null if not found
+    /**
+     * @param group required values: id
+     * @return list of shopping items from database or null if not found / an error occurred
+     */
     public List<ShoppingItem> selectAllByGroupId(Group group) {
         String method = "selectAllByGroupId " + TABLE;
         List<ShoppingItem> itemList = new ArrayList();
@@ -132,7 +134,6 @@ public class ShoppingItemDAO extends DAO {
         }
     }
 
-    //TESTME: #44
     /**
      * @param item required values: id, bought <br> ignored values: everything else
      * @return
@@ -170,7 +171,10 @@ public class ShoppingItemDAO extends DAO {
         return rows;
     }
 
-    // TESTME: #44
+    /**
+     * @param shoppingItem required values: id
+     * @return
+     */
     public int delete(ShoppingItem shoppingItem) {
         String method = "delete " + TABLE;
         int rows                = -1;

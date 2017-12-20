@@ -129,13 +129,25 @@ public class UserDAOTest extends Assert{
         assertEquals(newID,user.getId());
         assertEquals(1,dao.getUsers().size());
         assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
+        
+        // double select
+        user = dao.selectByUsername(username);
+        assertEquals(newID,user.getId());
+        assertEquals(1,dao.getUsers().size());
+        assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
     }
 
     @Test
     public void selectByUsernameHasNoGroup() throws Exception {
         System.out.println("selectByUsername - HasNoGroup");
         User user = dao.selectByUsername(username2);
-
+    
+        assertEquals(2,user.getId());
+        assertEquals(1,dao.getUsers().size());
+        assertEquals(0,DAOFactory.getGroupDAO().getGroups().size());
+    
+        // double select
+        user = dao.selectByUsername(username2);
         assertEquals(2,user.getId());
         assertEquals(1,dao.getUsers().size());
         assertEquals(0,DAOFactory.getGroupDAO().getGroups().size());
@@ -147,7 +159,12 @@ public class UserDAOTest extends Assert{
         Group group = new Group();
         group.setId(1);
         List<User> users = dao.selectAllByGroupId(group);
-
+    
+        assertEquals(newID,users.get(0).getId());
+        assertEquals(1,dao.getUsers().size());
+        
+        // double select
+        users = dao.selectAllByGroupId(group);
         assertEquals(newID,users.get(0).getId());
         assertEquals(1,dao.getUsers().size());
     }
@@ -158,7 +175,12 @@ public class UserDAOTest extends Assert{
         Group group = new Group();
         group.setId(0);
         List<User> users = dao.selectAllByGroupId(group);
-
+    
+        assertEquals(null,users);
+        assertEquals(0,dao.getUsers().size());
+    
+        // double select
+        users = dao.selectAllByGroupId(group);
         assertEquals(null,users);
         assertEquals(0,dao.getUsers().size());
     }
@@ -190,8 +212,8 @@ public class UserDAOTest extends Assert{
 
     @Test
     public void removeNoGroup() throws Exception {
-        user.setId(1);
         System.out.println("remove - no group");
+        user.setId(1);
 
         result = dao.remove(user);
 
