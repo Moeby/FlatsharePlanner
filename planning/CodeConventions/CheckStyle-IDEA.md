@@ -5,7 +5,7 @@ This plugin contains two default configuration files for style checks.
 - Google
 
 It is possible to enable another configuration but it is hard to find one which fits and is possible to compile.
-(maybe this one: [checkstyle_checks](https://github.com/checkstyle/checkstyle/blob/da2bf5965502515635eedea39211b50b05ef7cb0/config/checkstyle_checks.xml))
+(maybe this one: [checkstyle](https://github.com/checkstyle/checkstyle/blob/da2bf5965502515635eedea39211b50b05ef7cb0/config/checkstyle_checks.xml) or this one [picasso](https://github.com/square/picasso/blob/master/checkstyle.xml))
 
 ### SUN
 Advantages | Disadventages
