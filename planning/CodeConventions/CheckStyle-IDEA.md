@@ -5,7 +5,7 @@ This plugin contains two default configuration files for style checks.
 - Google
 
 It is possible to enable another configuration but it is hard to find one which fits and is possible to compile.
-(maybe this one: [checkstyle](https://github.com/checkstyle/checkstyle/blob/da2bf5965502515635eedea39211b50b05ef7cb0/config/checkstyle_checks.xml) or this one [picasso](https://github.com/square/picasso/blob/master/checkstyle.xml))
+(maybe this one: [checkstyle](https://github.com/checkstyle/checkstyle/blob/da2bf5965502515635eedea39211b50b05ef7cb0/config/checkstyle_checks.xml) or this one [picasso](https://github.com/square/picasso/blob/master/checkstyle.xml), [stackoverflow](https://stackoverflow.com/questions/39551492/checkstyle-how-to-disable-missing-package-info-java-file))
 
 ### SUN
 Advantages | Disadventages
