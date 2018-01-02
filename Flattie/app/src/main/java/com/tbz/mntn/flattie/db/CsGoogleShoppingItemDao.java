@@ -126,7 +126,7 @@ public class CsGoogleShoppingItemDao extends DAO {
       }
 
     } catch (SQLException e) {
-      logSQLError(method, e);
+      logSQLError(method, e);            MysqlConnector.close();
       itemList = null;
     } finally {
       try {
