@@ -38,7 +38,7 @@ public class GroupDAO extends DAO {
                                         , Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,   group.getName());
             Date removalDate = group.getRemovalDate();
-            if(removalDate != null)
+            if (removalDate != null)
                 stmt.setDate(2,     removalDate);
             else
                 stmt.setNull(2, Types.DATE);
@@ -70,10 +70,21 @@ public class GroupDAO extends DAO {
     }
 
     /**
+     * calls selectById with calendarItem = default null
+     *
      * @param id
      * @return group from database or null if not found / an error occurred <br>ignores removed groups
      */
     public Group selectById(int id) {
+        return selectById(id, null);
+    }
+
+    /**
+     * @param id
+     * @param callerCalendarItem
+     * @return group from database or null if not found / an error occurred <br>ignores removed groups
+     */
+    public Group selectById(int id, CalendarItem callerCalendarItem) {
         String method = "selectById " + TABLE;
         Group group             = null;
         Connection con          = getConnection(method);
@@ -99,13 +110,12 @@ public class GroupDAO extends DAO {
                 group.setId(id);
                 group.setName(result.getString(NAME));
 
-                //testme: #44 do they callback? --> they do!
-                //group.setUsers((ArrayList<User>) DAOFactory.getUserDAO().selectAllByGroupId(group));
-                //group.setShoppingItems((ArrayList<ShoppingItem>) DAOFactory.getShoppingItemDAO().selectAllByGroupId(group));
-                //group.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByGroupId(group));
+                group.setUsers((ArrayList<User>) DAOFactory.getUserDAO().selectAllByGroupId(group));
+                group.setShoppingItems((ArrayList<ShoppingItem>) DAOFactory.getShoppingItemDAO().selectAllByGroupId(group));
+                group.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByGroupId(group, callerCalendarItem));
             }
         } catch (SQLException e) {
-            logSQLError(method, e);
+            logSQLError(method, e);            MysqlConnector.close();
             group = null;
         } finally {
             try {

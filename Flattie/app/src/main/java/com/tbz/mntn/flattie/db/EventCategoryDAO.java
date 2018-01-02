@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventCategoryDAO extends DAO {
-    private static EventCategoryDAO instance            = new EventCategoryDAO();
-    private ArrayList<EventCategory> eventCategories    = new ArrayList();
+    private static EventCategoryDAO instance = new EventCategoryDAO();
+    private ArrayList<EventCategory> eventCategories = new ArrayList();
 
     // table constants
-    private static final String TABLE   = "event_category";
-    private static final String ID      = "id";
-    private static final String NAME    = "name";
+    private static final String TABLE = "event_category";
+    private static final String ID = "id";
+    private static final String NAME = "name";
 
     private EventCategoryDAO() {
     }
@@ -25,20 +25,30 @@ public class EventCategoryDAO extends DAO {
         return instance;
     }
 
-    // TESTME: #44
     /**
+     * calls selectById with calendarItem = default null
+     *
      * @param id
      * @return event category from database or null if not found / an error occurred
      */
     public EventCategory selectById(int id) {
+        return selectById(id, null);
+    }
+
+    /**
+     * @param id
+     * @param callerCalendarItem
+     * @return event category from database or null if not found / an error occurred
+     */
+    public EventCategory selectById(int id, CalendarItem callerCalendarItem) {
         String method = "selectById " + TABLE;
-        EventCategory category  = null;
-        Connection con          = getConnection(method);
-        PreparedStatement stmt  = null;
-        ResultSet result        = null;
+        EventCategory category = null;
+        Connection con = getConnection(method);
+        PreparedStatement stmt = null;
+        ResultSet result = null;
         try {
             stmt = con.prepareStatement("SELECT " + NAME + " FROM " + TABLE
-                                        + " WHERE " + ID + " = ?;");
+                    + " WHERE " + ID + " = ?;");
             stmt.setInt(1, id);
 
             result = stmt.executeQuery();
@@ -56,11 +66,10 @@ public class EventCategoryDAO extends DAO {
                 category.setId(id);
                 category.setName(result.getString(NAME));
 
-                category.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByEventCategory(category));
-
+                category.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByEventCategory(category, callerCalendarItem));
             }
-        } catch (SQLException e) {         
-            logSQLError(method, e);
+        } catch (SQLException e) {
+            logSQLError(method, e);            MysqlConnector.close();
             category = null;
         } finally {
             try {
@@ -78,22 +87,21 @@ public class EventCategoryDAO extends DAO {
         return category;
     }
 
-    // TESTME: #44
     /**
      * @return all event categories from database or null if an error occurred
      */
     public List<EventCategory> selectAll() {
         String method = "selectAll " + TABLE;
-        List<EventCategory> categories  = new ArrayList();
-        Connection con                  = getConnection(method);
-        PreparedStatement stmt          = null;
-        ResultSet result                = null;
+        List<EventCategory> categories = new ArrayList();
+        Connection con = getConnection(method);
+        PreparedStatement stmt = null;
+        ResultSet result = null;
         try {
-            stmt    = con.prepareStatement("SELECT " + ID + ", " + NAME + " FROM " + TABLE + ";");
-            result  = stmt.executeQuery();
+            stmt = con.prepareStatement("SELECT " + ID + ", " + NAME + " FROM " + TABLE + ";");
+            result = stmt.executeQuery();
             while (result.next()) {
-                int id                  = result.getInt(ID);
-                EventCategory category  = null;
+                int id = result.getInt(ID);
+                EventCategory category = null;
                 for (EventCategory eventCategory : eventCategories) {
                     if (id == eventCategory.getId()) {
                         category = eventCategory;
@@ -107,12 +115,12 @@ public class EventCategoryDAO extends DAO {
                 category.setId(id);
                 category.setName(result.getString(NAME));
 
-                category.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByEventCategory(category));
+                category.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByEventCategory(category, null));
 
                 categories.add(category);
             }
         } catch (SQLException e) {
-            logSQLError(method, e);
+            logSQLError(method, e);            MysqlConnector.close();
             categories = null;
         } finally {
             try {

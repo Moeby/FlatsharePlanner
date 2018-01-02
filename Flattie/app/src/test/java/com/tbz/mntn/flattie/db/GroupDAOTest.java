@@ -47,14 +47,14 @@ public class GroupDAOTest extends Assert {
         assertEquals(newID,group.getId());
         assertEquals(1,dao.getGroups().size());
         assertEquals(1,group.getUsers().size());
-        assertEquals(1,group.getCalendarItems().size());
+        assertEquals(2,group.getCalendarItems().size());
         assertEquals(1,group.getShoppingItems().size());
         
         // double select
         dao.selectById(1);
         assertEquals(1,dao.getGroups().size());
         assertEquals(1,group.getUsers().size());
-        assertEquals(1,group.getCalendarItems().size());
+        assertEquals(2,group.getCalendarItems().size());
         assertEquals(1,group.getShoppingItems().size());
     }
 

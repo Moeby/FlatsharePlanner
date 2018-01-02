@@ -32,7 +32,6 @@ public class RepEventExceptionDAO extends DAO {
         return instance;
     }
 
-    // TESTME: #44
     /**
      * @param repEventException Required values: start datetime, end datetime, skipped, calendar item with id
      * @return
@@ -78,7 +77,6 @@ public class RepEventExceptionDAO extends DAO {
         return rows;
     }
 
-    // TESTME: #44
     /**
      * @param calendarItem Required values: id
      * @return list of RepEventException from database or null if not found / an error occurred
@@ -120,7 +118,7 @@ public class RepEventExceptionDAO extends DAO {
             }
 
         } catch (SQLException e) {
-            logSQLError(method, e);
+            logSQLError(method, e);            MysqlConnector.close();
             itemList = null;
         } finally {
             try {
@@ -142,7 +140,6 @@ public class RepEventExceptionDAO extends DAO {
         }
     }
 
-    // TESTME: #44
     /**
      * @param exception Required values: start datetime, end datetime, skipped<br>Ignored values: CalendarItem
      * @return
@@ -189,7 +186,6 @@ public class RepEventExceptionDAO extends DAO {
         return rows;
     }
 
-    // TESTME: #44
     /**
      * @param repEventException
      * @return
@@ -228,7 +224,6 @@ public class RepEventExceptionDAO extends DAO {
         return rows;
     }
 
-    // TESTME: #44
     /**
      * @param calendarItem Required values: id
      * @return

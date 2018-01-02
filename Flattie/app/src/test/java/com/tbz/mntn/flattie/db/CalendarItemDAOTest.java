@@ -83,9 +83,9 @@ public class CalendarItemDAOTest extends Assert {
         CalendarItem item = dao.selectById(newID);
 
         assertEquals(newID,item.getId());
-        assertEquals(1,dao.getCalendarItems().size());
+        assertEquals(2,dao.getCalendarItems().size());
         assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
-        assertEquals(0,DAOFactory.getEventCategoryDAO().getEventCategories().size());
+        assertEquals(1,DAOFactory.getEventCategoryDAO().getEventCategories().size());
     }
 
     @Test
@@ -115,13 +115,11 @@ public class CalendarItemDAOTest extends Assert {
     
         assertEquals(newID,items.get(0).getId());
         assertEquals(2,dao.getCalendarItems().size());
-        assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
-        
+
         // double selects
         items = dao.selectAllByGroupId(group);
         assertEquals(newID,items.get(0).getId());
         assertEquals(2,dao.getCalendarItems().size());
-        assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
     }
 
     @Test
