@@ -3,6 +3,7 @@ package com.tbz.mntn.flattie.db;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Date;
@@ -44,6 +45,7 @@ public class CalendarItemDAOTest extends Assert {
     public void tearDown() throws Exception {
     }
 
+    @Ignore
     @Test
     public void insert() throws Exception {
         System.out.println("insert");
@@ -61,6 +63,7 @@ public class CalendarItemDAOTest extends Assert {
         assertEquals(newID,item.getId());
     }
 
+    @Ignore
     @Test
     public void insertNullableValues() throws Exception {
         System.out.println("insert - nullable");
@@ -77,6 +80,7 @@ public class CalendarItemDAOTest extends Assert {
         assertEquals(2,item.getId());
     }
 
+    @Ignore
     @Test
     public void selectByIdHasNoCategory() throws Exception {
         System.out.println("selectById - HasNoCategory");
@@ -88,6 +92,7 @@ public class CalendarItemDAOTest extends Assert {
         assertEquals(1,DAOFactory.getEventCategoryDAO().getEventCategories().size());
     }
 
+    @Ignore
     @Test
     public void selectById() throws Exception {
         System.out.println("selectById");
@@ -105,7 +110,8 @@ public class CalendarItemDAOTest extends Assert {
         assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
         assertEquals(1,DAOFactory.getEventCategoryDAO().getEventCategories().size());
     }
-    
+
+    @Ignore
     @Test
     public void selectAllByGroupId() throws Exception {
         System.out.println("selectAllByGroupId");
@@ -122,6 +128,7 @@ public class CalendarItemDAOTest extends Assert {
         assertEquals(2,dao.getCalendarItems().size());
     }
 
+    @Ignore
     @Test
     public void update() throws Exception {
         System.out.println("update");
@@ -144,6 +151,7 @@ public class CalendarItemDAOTest extends Assert {
         assertEquals(1,result);
     }
 
+    @Ignore
     @Test
     public void delete() throws Exception {
         System.out.println("delete");
@@ -155,8 +163,8 @@ public class CalendarItemDAOTest extends Assert {
         assertEquals(1,result);
         assertEquals(0,dao.getCalendarItems().size());
     }
-    
-    
+
+    @Ignore
     @Test
     public void deleteWithoutException() throws Exception {
         System.out.println("delete - no exceptions");
