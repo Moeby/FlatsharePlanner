@@ -1,7 +1,7 @@
-package com.tbz.mntn.flattie.db;
+package com.tbz.mntn.flattie.database.dao;
 
 
-import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+import com.tbz.mntn.flattie.database.databaseConnection.MysqlConnector;
 
 import java.sql.Connection;
 import java.sql.SQLException;

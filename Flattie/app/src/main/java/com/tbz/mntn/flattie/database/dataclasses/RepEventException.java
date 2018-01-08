@@ -1,4 +1,4 @@
-package com.tbz.mntn.flattie.db;
+package com.tbz.mntn.flattie.database.dataclasses;
 
 import android.support.annotation.Nullable;
 

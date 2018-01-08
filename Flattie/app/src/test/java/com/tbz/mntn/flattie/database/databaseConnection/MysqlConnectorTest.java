@@ -1,4 +1,4 @@
-package com.tbz.mntn.flattie.databaseConnection;
+package com.tbz.mntn.flattie.database.databaseConnection;
 
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.tbz.mntn.flattie.db;
+package com.tbz.mntn.flattie.database.dao;
 
 public class DAOFactory {
     static public UserDAO getUserDAO() {

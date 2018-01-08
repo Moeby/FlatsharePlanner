@@ -1,6 +1,10 @@
-package com.tbz.mntn.flattie.db;
+package com.tbz.mntn.flattie.database.dao;
 
-import com.tbz.mntn.flattie.databaseConnection.MysqlConnector;
+import com.tbz.mntn.flattie.database.databaseConnection.MysqlConnector;
+import com.tbz.mntn.flattie.database.dataclasses.CalendarItem;
+import com.tbz.mntn.flattie.database.dataclasses.Group;
+import com.tbz.mntn.flattie.database.dataclasses.ShoppingItem;
+import com.tbz.mntn.flattie.database.dataclasses.User;
 
 import java.sql.*;
 import java.util.ArrayList;

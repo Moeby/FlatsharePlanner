@@ -1,4 +1,7 @@
-package com.tbz.mntn.flattie.db;
+package com.tbz.mntn.flattie.database.dao;
+
+import com.tbz.mntn.flattie.database.dataclasses.Group;
+import com.tbz.mntn.flattie.database.dataclasses.User;
 
 import org.junit.After;
 import org.junit.Assert;
