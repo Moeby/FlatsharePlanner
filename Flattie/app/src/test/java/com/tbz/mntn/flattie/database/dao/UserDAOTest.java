@@ -6,6 +6,7 @@ import com.tbz.mntn.flattie.database.dataclasses.User;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -55,6 +56,7 @@ public class UserDAOTest extends Assert{
         insertWrongValue();
     } */
 
+    @Ignore
     @Test
     public void insertGroupNull() throws Exception {
         System.out.println("insert - group null");
@@ -70,6 +72,7 @@ public class UserDAOTest extends Assert{
         assertEquals(newID,user.getId());
     }
 
+    @Ignore
     @Test
     public void insert() throws Exception {
         System.out.println("insert");
@@ -85,6 +88,7 @@ public class UserDAOTest extends Assert{
         assertEquals(2,user.getId());
     }
 
+    @Ignore
     @Test
     public void insertDuplicateUsername() throws Exception {
         System.out.println("insert duplicate - username");
@@ -98,6 +102,7 @@ public class UserDAOTest extends Assert{
         assertEquals(duplicate,result);
     }
 
+    @Ignore
     @Test
     public void insertDuplicateEmail() throws Exception {
         System.out.println("insert duplicate - email");
@@ -111,6 +116,7 @@ public class UserDAOTest extends Assert{
         assertEquals(duplicate,result);
     }
 
+    @Ignore
     @Test
     public void insertWrongValue() throws Exception {
         System.out.println("insert wrong value");
@@ -124,6 +130,7 @@ public class UserDAOTest extends Assert{
         assertEquals(notNull,result);
     }
 
+    @Ignore
     @Test
     public void selectByUsername() throws Exception {
         System.out.println("selectByUsername");
@@ -140,6 +147,7 @@ public class UserDAOTest extends Assert{
         assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
     }
 
+    @Ignore
     @Test
     public void selectByUsernameHasNoGroup() throws Exception {
         System.out.println("selectByUsername - HasNoGroup");
@@ -156,6 +164,7 @@ public class UserDAOTest extends Assert{
         assertEquals(0,DAOFactory.getGroupDAO().getGroups().size());
     }
 
+    @Ignore
     @Test
     public void selectAllByGroupId() throws Exception {
         System.out.println("selectAllByGroupId");
@@ -172,6 +181,7 @@ public class UserDAOTest extends Assert{
         assertEquals(1,dao.getUsers().size());
     }
 
+    @Ignore
     @Test
     public void selectAllByGroupIdNotFound() throws Exception {
         System.out.println("selectAllByGroupId - not found");
@@ -188,6 +198,7 @@ public class UserDAOTest extends Assert{
         assertEquals(0,dao.getUsers().size());
     }
 
+    @Ignore
     @Test
     public void updateGroup() throws Exception {
         System.out.println("updateGroup");
@@ -201,6 +212,7 @@ public class UserDAOTest extends Assert{
         assertEquals(1,result);
     }
 
+    @Ignore
     @Test
     public void updateGroupToNullable() throws Exception {
         System.out.println("updateGroup - null value");
@@ -213,6 +225,7 @@ public class UserDAOTest extends Assert{
         assertEquals(1,result);
     }
 
+    @Ignore
     @Test
     public void removeNoGroup() throws Exception {
         System.out.println("remove - no group");
@@ -223,6 +236,7 @@ public class UserDAOTest extends Assert{
         assertEquals(1,result);
     }
 
+    @Ignore
     @Test
     public void removeWithGroup() throws Exception {
         System.out.println("remove - with Group");
@@ -240,6 +254,7 @@ public class UserDAOTest extends Assert{
         assertEquals(1,result);
     }
 
+    @Ignore
     @Test
     public void removeLastOfGroup() throws Exception {
         System.out.println("remove - last of Group");
@@ -255,6 +270,7 @@ public class UserDAOTest extends Assert{
         assertEquals(null, DAOFactory.getGroupDAO().selectById(1));
     }
 
+    @Ignore
     @Test
     public void selectByIdAfterRemove() throws Exception {
         System.out.println("selectById - after remove");

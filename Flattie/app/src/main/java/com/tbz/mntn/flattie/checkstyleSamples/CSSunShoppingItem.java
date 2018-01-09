@@ -1,4 +1,4 @@
-package com.tbz.mntn.flattie.database.dao;
+package com.tbz.mntn.flattie.checkstyleSamples;
 
 import android.support.annotation.Nullable;
 

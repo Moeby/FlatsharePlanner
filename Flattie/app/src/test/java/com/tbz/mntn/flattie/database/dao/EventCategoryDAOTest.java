@@ -5,6 +5,7 @@ import com.tbz.mntn.flattie.database.dataclasses.EventCategory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class EventCategoryDAOTest extends Assert {
     public void tearDown() throws Exception {
     }
 
+    @Ignore
     @Test
     public void selectById() throws Exception {
         System.out.println("selectById");
@@ -41,6 +43,7 @@ public class EventCategoryDAOTest extends Assert {
         assertEquals(1,dao.getEventCategories().size());
     }
 
+    @Ignore
     @Test
     public void selectAll() throws Exception {
         System.out.println("selectById");

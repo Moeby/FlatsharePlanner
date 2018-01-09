@@ -1,6 +1,4 @@
 /**
- * This package contains everything what has to do with the database.
- * - all DAO classes and its factory
- * - package with all data classes
- */
+* I am trying to fix a checkstyle error and write a package wide comment for javadoc
+*/
 package com.tbz.mntn.flattie.database.dao;

@@ -6,6 +6,7 @@ import com.tbz.mntn.flattie.database.dataclasses.RepEventException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Date;
@@ -44,6 +45,7 @@ public class RepEventExceptionDAOTest extends Assert {
     public void tearDown() throws Exception {
     }
 
+    @Ignore
     @Test
     public void insert() throws Exception {
         System.out.println("insert");
@@ -54,6 +56,7 @@ public class RepEventExceptionDAOTest extends Assert {
         assertEquals(newID,exception.getId());
     }
 
+    @Ignore
     @Test
     public void selectAllByCalendarItem() throws Exception {
         System.out.println("selectAllByCalendarItem");
@@ -70,6 +73,7 @@ public class RepEventExceptionDAOTest extends Assert {
         assertEquals(1,dao.getRepEventExceptions().size());
     }
 
+    @Ignore
     @Test
     public void update() throws Exception {
         System.out.println("update");
@@ -83,6 +87,7 @@ public class RepEventExceptionDAOTest extends Assert {
         assertEquals(1,result);
     }
 
+    @Ignore
     @Test
     public void delete() throws Exception {
         System.out.println("delete");
@@ -94,6 +99,7 @@ public class RepEventExceptionDAOTest extends Assert {
         assertEquals(0,dao.getRepEventExceptions().size());
     }
 
+    @Ignore
     @Test
     public void deleteAllByCalendarItem() throws Exception {
         System.out.println("deleteAllByCalendarItem");

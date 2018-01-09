@@ -1,5 +1,6 @@
-package com.tbz.mntn.flattie.database.dao;
+package com.tbz.mntn.flattie.checkstyleSamples;
 
+import com.tbz.mntn.flattie.database.dao.DAO;
 import com.tbz.mntn.flattie.database.databaseConnection.MysqlConnector;
 import com.tbz.mntn.flattie.database.dataclasses.Group;
 import com.tbz.mntn.flattie.database.dataclasses.ShoppingItem;
