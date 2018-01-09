@@ -37,4 +37,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife:6.1.0'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
+    compile group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
 }

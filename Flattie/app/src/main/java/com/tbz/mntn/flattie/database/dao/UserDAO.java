@@ -17,6 +17,7 @@ import java.util.List;
 public class UserDAO extends DAO {
     private static UserDAO instance = new UserDAO();
     private ArrayList<User> users = new ArrayList();
+    private User user;
 
     // table constants
     private static final String TABLE = "user";
@@ -89,59 +90,71 @@ public class UserDAO extends DAO {
      * @param username
      * @return user from database or null if not found / an error occurred <br>ignores removed users
      */
-    public User selectByUsername(String username) {
-        String method = "selectByUsername " + TABLE;
+    public User selectByUsername(final String username) {
+        Thread thread = new Thread(
+                new Runnable() {
+                    public void run() {
+                        String method = "selectByUsername " + TABLE;
 
-        User user = null;
-        Connection con = getConnection(method);
-        PreparedStatement stmt = null;
-        ResultSet result = null;
+                        Connection con = getConnection(method);
+                        PreparedStatement stmt = null;
+                        ResultSet result = null;
+                        try {
+                            stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + GROUP_FK + " FROM " + TABLE
+                                    + " WHERE " + USERNAME + " = ?"
+                                    + " AND " + REMOVAL_DATE + " IS NULL;");
+                            stmt.setString(1, username);
+                            result = stmt.executeQuery();
+                            if (result.next()) {
+                                for (User savedUser : users) {
+                                    if (username == savedUser.getUsername()) {
+                                        setUser(savedUser);
+                                        break;
+                                    }
+                                }
+                                if (user == null) {
+                                    setUser(new User());
+
+                                    int groupFK = result.getInt(GROUP_FK);
+                                    if (groupFK != 0)
+                                        user.setGroup(DAOFactory.getGroupDAO().selectById(groupFK));
+                                    else {
+                                        users.add(user);
+                                    }
+                                }
+                                user.setUsername(username);
+                                user.setId(result.getInt(ID));
+                                user.setEmail(result.getString(EMAIL));
+                                user.setPassword(result.getString(PASSWORD));
+                                user.setRemovalDate(result.getDate(REMOVAL_DATE));
+                            }
+                        } catch (SQLException e) {
+                            logSQLError(method, e);
+                            MysqlConnector.close();
+                            user = null;
+                        } finally {
+                            try {
+                                // free resources
+                                if (result != null)
+                                    result.close();
+                                if (stmt != null)
+                                    stmt.close();
+                                if (closeCon)
+                                    MysqlConnector.close();
+                            } catch (SQLException e) {
+                                logSQLError("closure selectByUsername " + TABLE, e);
+                            }
+                        }
+                    }
+                });
+
         try {
-            stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + GROUP_FK + " FROM " + TABLE
-                    + " WHERE " + USERNAME + " = ?"
-                    + " AND " + REMOVAL_DATE + " IS NULL;");
-            stmt.setString(1, username);
-            result = stmt.executeQuery();
-            if (result.next()) {
-                for (User savedUser : users) {
-                    if (username == savedUser.getUsername()) {
-                        user = savedUser;
-                        break;
-                    }
-                }
-                if (user == null) {
-                    user = new User();
-
-                    int groupFK = result.getInt(GROUP_FK);
-                    if (groupFK != 0)
-                        user.setGroup(DAOFactory.getGroupDAO().selectById(groupFK));
-                    else {
-                        users.add(user);
-                    }
-                }
-                user.setUsername(username);
-                user.setId(result.getInt(ID));
-                user.setEmail(result.getString(EMAIL));
-                user.setPassword(result.getString(PASSWORD));
-                user.setRemovalDate(result.getDate(REMOVAL_DATE));
-            }
-        } catch (SQLException e) {
-            logSQLError(method, e);
-            MysqlConnector.close();
-            user = null;
-        } finally {
-            try {
-                // free resources
-                if (result != null)
-                    result.close();
-                if (stmt != null)
-                    stmt.close();
-                if (closeCon)
-                    MysqlConnector.close();
-            } catch (SQLException e) {
-                logSQLError("closure selectByUsername " + TABLE, e);
-            }
+            thread.start();
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
         return user;
     }
 
@@ -315,5 +328,9 @@ public class UserDAO extends DAO {
 
     public void setUsers(ArrayList<User> users) {
         this.users = users;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -7,26 +7,36 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public abstract class DAO {
-
     protected boolean closeCon;
+    protected Connection con;
 
     protected Connection getConnection(String method) {
-        Connection con = MysqlConnector.getConnection();
-        closeCon = false;
+
+        Thread thread = new Thread(
+            new Runnable() {
+                public void run() {
+                    setCon(MysqlConnector.getConnection());
+                    setCloseCon(false);
+
+                    setCon(MysqlConnector.connect());
+                    setCloseCon(true);
+                }
+            });
+
         try {
-            if (con == null || con.isClosed()) {
-                con = MysqlConnector.connect();
-                closeCon = true;
-            }
-        } catch (SQLException e) {
-            logSQLError(method, e);
+            thread.start();
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
         return con;
     }
 
     /**
      * change sqlCode in internal error codes for easier error handling
      * log error message
+     *
      * @param method
      * @param e
      * @return -999 for unknown / unhandled errors
@@ -40,19 +50,23 @@ public abstract class DAO {
     protected int switchSQLError(String method, SQLException e) {
         logSQLError(method, e);
         int sqlCode = e.getErrorCode();
-        switch (sqlCode){
-            case 1062:          return -200;
+        switch (sqlCode) {
+            case 1062:
+                return -200;
             case 1451:
-            case 1452:          return -300;
-            case 1048:          return -500;
-            
+            case 1452:
+                return -300;
+            case 1048:
+                return -500;
+
             //1146 table doesnt exist
             /*
             case notFound:      return -100;
             case locks:         return -400;
             case SQLQuery:      return -600;
             */
-            default:            return -999;
+            default:
+                return -999;
         }
         /*
         1062 duplicate
@@ -61,10 +75,18 @@ public abstract class DAO {
         */
     }
 
-    protected void logSQLError(String method, SQLException e){
+    protected void logSQLError(String method, SQLException e) {
         //todo: get Log.w back!
 //        Log.w(TAG, method+": ", e);
-        System.out.println(method+": "+e);
+        System.out.println(method + ": " + e);
         System.out.println(e.getErrorCode() + ", " + e.getSQLState());
+    }
+
+    public void setCloseCon(boolean closeCon) {
+        this.closeCon = closeCon;
+    }
+
+    public void setCon(Connection con) {
+        this.con = con;
     }
 }
