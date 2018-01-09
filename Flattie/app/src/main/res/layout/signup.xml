@@ -92,9 +92,10 @@
             android:text="Sign up"
             android:background="@color/app_design"
             android:layout_marginTop="40dp"
-            android:textColor="@color/title"/>
+            android:textColor="@color/title"
+            android:onClick="checkSignUp"/>
 
-        <Button android:id="@+id/btn_link_forgot_pwd"
+        <Button android:id="@+id/btn_goto_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Login"
@@ -103,7 +104,8 @@
             android:textColor="@color/app_design"
             android:layout_marginRight="15dp"
             android:layout_marginLeft="15dp"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:onClick="launchMainActivity"/>
 
     </LinearLayout>
 </LinearLayout>
