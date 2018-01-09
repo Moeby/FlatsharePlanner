@@ -2,15 +2,15 @@ package com.tbz.mntn.flattie.database.dataclasses;
 
 import android.support.annotation.Nullable;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.sql.Date;
 
 public class CalendarItem {
     private int id;
     private String description;
     private Repeatable repeatable;
-    private Date startDatetime;
-    private Date endDatetime;
+    private Timestamp startDatetime;
+    private Timestamp endDatetime;
     private Group group;
     private EventCategory eventCategory;
     private User user;
@@ -28,15 +28,15 @@ public class CalendarItem {
      * @param eventCategory
      * @param user
      */
-    public CalendarItem(@Nullable String description, Repeatable repeatable, Date startDatetime, @Nullable Date endDatetime,
+    public CalendarItem(@Nullable String description, Repeatable repeatable, Timestamp startDatetime, @Nullable Timestamp endDatetime,
                         Group group, EventCategory eventCategory, @Nullable User user, @Nullable ArrayList<RepEventException> repEventExceptions) {
-        this.description        = description;
-        this.repeatable         = repeatable;
-        this.startDatetime      = startDatetime;
-        this.endDatetime        = endDatetime;
-        this.group              = group;
-        this.eventCategory      = eventCategory;
-        this.user               = user;
+        this.description = description;
+        this.repeatable = repeatable;
+        this.startDatetime = startDatetime;
+        this.endDatetime = endDatetime;
+        this.group = group;
+        this.eventCategory = eventCategory;
+        this.user = user;
         this.repEventExceptions = repEventExceptions;
     }
 
@@ -64,19 +64,19 @@ public class CalendarItem {
         this.repeatable = repeatable;
     }
 
-    public Date getStartDatetime() {
+    public Timestamp getStartDatetime() {
         return startDatetime;
     }
 
-    public void setStartDatetime(Date startDatetime) {
+    public void setStartDatetime(Timestamp startDatetime) {
         this.startDatetime = startDatetime;
     }
 
-    public Date getEndDatetime() {
+    public Timestamp getEndDatetime() {
         return endDatetime;
     }
 
-    public void setEndDatetime(@Nullable Date endDatetime) {
+    public void setEndDatetime(@Nullable Timestamp endDatetime) {
         this.endDatetime = endDatetime;
     }
 

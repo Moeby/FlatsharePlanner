@@ -2,13 +2,13 @@ package com.tbz.mntn.flattie.database.dataclasses;
 
 import android.support.annotation.Nullable;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class RepEventException {
 
     private int id;
-    private Date startDatetime;
-    private Date endDatetime;
+    private Timestamp startDatetime;
+    private Timestamp endDatetime;
     private boolean skipped;
     private CalendarItem calendarItem;
 
@@ -21,7 +21,7 @@ public class RepEventException {
      * @param skipped
      * @param calendarItem
      */
-    public RepEventException(Date startDatetime, @Nullable Date endDatetime, boolean skipped,
+    public RepEventException(Timestamp startDatetime, @Nullable Timestamp endDatetime, boolean skipped,
                              @Nullable CalendarItem calendarItem) {
         this.startDatetime  = startDatetime;
         this.endDatetime    = endDatetime;
@@ -37,19 +37,19 @@ public class RepEventException {
         this.id = id;
     }
 
-    public Date getStartDatetime() {
+    public Timestamp getStartDatetime() {
         return startDatetime;
     }
 
-    public void setStartDatetime(Date startDatetime) {
+    public void setStartDatetime(Timestamp startDatetime) {
         this.startDatetime = startDatetime;
     }
 
-    public Date getEndDatetime() {
+    public Timestamp getEndDatetime() {
         return endDatetime;
     }
 
-    public void setEndDatetime(@Nullable Date endDatetime) {
+    public void setEndDatetime(@Nullable Timestamp endDatetime) {
         this.endDatetime = endDatetime;
     }
 

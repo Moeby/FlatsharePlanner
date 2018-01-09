@@ -13,18 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepEventExceptionDAO extends DAO {
-    private static RepEventExceptionDAO instance            = new RepEventExceptionDAO();
+    private static RepEventExceptionDAO instance = new RepEventExceptionDAO();
     private ArrayList<RepEventException> repEventExceptions = new ArrayList();
 
     // todo: change dates to other format / get real time into db..
-    
+
     // table constants
-    private static final String TABLE               = "rep_event_exception";
-    private static final String ID                  = "id";
-    private static final String START               = "start_datetime";
-    private static final String END                 = "end_datetime";
-    private static final String SKIPPED             = "skipped";
-    private static final String CALENDAR_ITEM_FK    = "calendar_item_fk";
+    private static final String TABLE = "rep_event_exception";
+    private static final String ID = "id";
+    private static final String START = "start_datetime";
+    private static final String END = "end_datetime";
+    private static final String SKIPPED = "skipped";
+    private static final String CALENDAR_ITEM_FK = "calendar_item_fk";
 
 
     private RepEventExceptionDAO() {
@@ -46,12 +46,12 @@ public class RepEventExceptionDAO extends DAO {
         ResultSet result = null;
         try {
             stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + START + "," + END + "," + SKIPPED + "," + CALENDAR_ITEM_FK + ")"
-                                        + " VALUES( ?, ?, ?, ?);"
-                                        , Statement.RETURN_GENERATED_KEYS);
-            stmt.setDate(1,     repEventException.getStartDatetime());
-            stmt.setDate(2,     repEventException.getEndDatetime());
-            stmt.setBoolean(3,  repEventException.isSkipped());
-            stmt.setInt(4,      repEventException.getCalendarItem().getId());
+                            + " VALUES( ?, ?, ?, ?);"
+                    , Statement.RETURN_GENERATED_KEYS);
+            stmt.setTimestamp(1, repEventException.getStartDatetime());
+            stmt.setTimestamp(2, repEventException.getEndDatetime());
+            stmt.setBoolean(3, repEventException.isSkipped());
+            stmt.setInt(4, repEventException.getCalendarItem().getId());
 
             rows = stmt.executeUpdate();
             ResultSet generatedKeys = stmt.getGeneratedKeys();
@@ -85,11 +85,11 @@ public class RepEventExceptionDAO extends DAO {
      */
     public List<RepEventException> selectAllByCalendarItem(CalendarItem calendarItem) {
         String method = "selectAllByCalendarItem" + TABLE;
-        List<RepEventException> itemList    = new ArrayList();
-        int calendarItemFk                  = calendarItem.getId();
-        Connection con                      = getConnection(method);
-        PreparedStatement stmt              = null;
-        ResultSet result                    = null;
+        List<RepEventException> itemList = new ArrayList();
+        int calendarItemFk = calendarItem.getId();
+        Connection con = getConnection(method);
+        PreparedStatement stmt = null;
+        ResultSet result = null;
         try {
             stmt = con.prepareStatement("SELECT " + ID + "," + START + "," + END + "," + SKIPPED + " FROM " + TABLE
                     + " WHERE " + CALENDAR_ITEM_FK + " = ?;");
@@ -110,8 +110,8 @@ public class RepEventExceptionDAO extends DAO {
                     repEventExceptions.add(exception);
                 }
                 exception.setId(id);
-                exception.setStartDatetime(result.getDate(START));
-                exception.setEndDatetime(result.getDate(END));
+                exception.setStartDatetime(result.getTimestamp(START));
+                exception.setEndDatetime(result.getTimestamp(END));
 
                 exception.setSkipped(result.getBoolean(SKIPPED));
                 exception.setCalendarItem(calendarItem);
@@ -120,7 +120,8 @@ public class RepEventExceptionDAO extends DAO {
             }
 
         } catch (SQLException e) {
-            logSQLError(method, e);            MysqlConnector.close();
+            logSQLError(method, e);
+            MysqlConnector.close();
             itemList = null;
         } finally {
             try {
@@ -148,20 +149,20 @@ public class RepEventExceptionDAO extends DAO {
      */
     public int update(RepEventException exception) {
         String method = "update " + TABLE;
-        int rows                = -1;
-        Connection con          = getConnection(method);
-        PreparedStatement stmt  = null;
-        ResultSet result        = null;
+        int rows = -1;
+        Connection con = getConnection(method);
+        PreparedStatement stmt = null;
+        ResultSet result = null;
         try {
             stmt = con.prepareStatement("UPDATE " + TABLE
-                    + " SET "   + START             + " = ?,"
-                                + END               + " = ?,"
-                                + SKIPPED           + " = ?"
+                    + " SET " + START + " = ?,"
+                    + END + " = ?,"
+                    + SKIPPED + " = ?"
                     + " WHERE " + ID + " = ?;");
-            stmt.setDate(1,     exception.getStartDatetime());
-            stmt.setDate(2,     exception.getEndDatetime());
-            stmt.setBoolean(3,  exception.isSkipped());
-            stmt.setInt(4,      exception.getId());
+            stmt.setTimestamp(1, exception.getStartDatetime());
+            stmt.setTimestamp(2, exception.getEndDatetime());
+            stmt.setBoolean(3, exception.isSkipped());
+            stmt.setInt(4, exception.getId());
 
             rows = stmt.executeUpdate();
 
@@ -194,14 +195,14 @@ public class RepEventExceptionDAO extends DAO {
      */
     public int delete(RepEventException repEventException) {
         String method = "delete" + TABLE;
-        int rows                = -1;
-        Connection con          = getConnection(method);
-        PreparedStatement stmt  = null;
-        ResultSet result        = null;
+        int rows = -1;
+        Connection con = getConnection(method);
+        PreparedStatement stmt = null;
+        ResultSet result = null;
         try {
             stmt = con.prepareStatement("DELETE FROM " + TABLE
-                                        + " WHERE " + ID + " = ?;"
-                                        , Statement.RETURN_GENERATED_KEYS);
+                            + " WHERE " + ID + " = ?;"
+                    , Statement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, repEventException.getId());
 
             rows = stmt.executeUpdate();
@@ -234,10 +235,10 @@ public class RepEventExceptionDAO extends DAO {
         // todo: transaction
         int deleted = 0;
         List<RepEventException> exceptions = selectAllByCalendarItem(calendarItem);
-        if(exceptions != null){
-            for(RepEventException exception: exceptions){
+        if (exceptions != null) {
+            for (RepEventException exception : exceptions) {
                 int check = delete(exception);
-                if(check > 0)
+                if (check > 0)
                     deleted += check;
                 else {
                     deleted = check;

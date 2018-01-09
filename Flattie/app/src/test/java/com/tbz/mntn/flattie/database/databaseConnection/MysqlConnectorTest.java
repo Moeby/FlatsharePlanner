@@ -19,8 +19,9 @@ public class MysqlConnectorTest {
         try {
             MysqlConnector connector = new MysqlConnector();
             Connection con = connector.connect();
-            assertTrue(con.isClosed());
+            assertTrue(!con.isClosed());
             connector.close();
+            assertTrue(con.isClosed());
         } catch (SQLException e) {
             e.printStackTrace();
         }
