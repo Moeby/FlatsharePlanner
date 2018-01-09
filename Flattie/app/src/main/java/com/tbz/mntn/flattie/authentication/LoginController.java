@@ -23,7 +23,11 @@ public class LoginController {
         User user = userDAO.selectByUsername(username);
 
         if (!(user == null)){
-            return arePasswordsMatching(user.getPassword(), password);
+            if (arePasswordsMatching(user.getPassword(), password)){
+                LoggedInUser.setLoggedInUser(user);
+                return true;
+            }
+            return false;
         }
         return null;
     }
