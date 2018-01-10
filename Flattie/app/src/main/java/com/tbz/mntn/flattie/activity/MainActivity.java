@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     Button btnSignup = findViewById(R.id.btn_link_signup);
     Button btnLogin = findViewById(R.id.btn_login);
-    final TextInputLayout email = findViewById(R.id.login_input_layout_email);
+    final TextInputLayout email = findViewById(R.id.login_input_layout_name);
     final TextInputLayout password = findViewById(R.id.login_input_layout_password);
 
     btnLogin.setOnClickListener(new View.OnClickListener() {
