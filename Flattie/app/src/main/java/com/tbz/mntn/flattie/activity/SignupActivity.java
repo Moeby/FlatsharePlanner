@@ -20,51 +20,67 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private Button btnLogin;
-    private Button btnSignup;
+  private Button btnLogin;
+  private Button btnSignup;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.signup);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.signup);
 
-        btnSignup = (Button)findViewById(R.id.btn_link_forgot_pwd);
-        btnLogin  = (Button)findViewById(R.id.btn_goto_login);
-    }
+    btnSignup = (Button) findViewById(R.id.btn_link_forgot_pwd);
+    btnLogin = (Button) findViewById(R.id.btn_goto_login);
+    final TextInputLayout name = findViewById(R.id.signup_input_layout_name);
+    final TextInputLayout email = findViewById(R.id.signup_input_layout_email);
+    final TextInputLayout password = findViewById(R.id.signup_input_layout_password);
+    final TextInputLayout repPassword = findViewById(R.id.signup_rep_layout_password);
 
-    private void checkSignUp(View view){
-        final TextInputLayout name        = findViewById(R.id.signup_input_layout_name);
-        final TextInputLayout email       = findViewById(R.id.signup_input_layout_email);
-        final TextInputLayout password    = findViewById(R.id.signup_input_layout_password);
-        final TextInputLayout repPassword = findViewById(R.id.signup_rep_layout_password);
+    /**
+     *
+     */
+    btnSignup.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
         // Hash password
-        String salt             = BCrypt.gensalt();
-        String passwordCrypt    = BCrypt.hashpw(password.getEditText().getText().toString(), salt);
+        String salt = BCrypt.gensalt();
+        String passwordCrypt = BCrypt.hashpw(password.getEditText().getText().toString(), salt);
         String repPasswordCrypt = BCrypt.hashpw(repPassword.getEditText().getText().toString(), salt);
-        if(passwordCrypt.equals(repPasswordCrypt)) {
+        if (passwordCrypt.equals(repPasswordCrypt)) {
 
-            SignupController signupController = new SignupController();
-            Boolean signedUp = signupController.signup(name.getEditText().getText().toString(), email.getEditText().getText().toString(), passwordCrypt, salt);
-            if (signedUp == null) {
-                Snackbar.make(view, "Creation of a new user account failed.", 1000).show();
-            } else if (!signedUp){
-                Snackbar.make(view,"Name already in use. Please chose another one.", 1000).show();
-            } else{
-                launchCalendarActivity();
-            }
-        } else{
-            Snackbar.make(view, "The repeat password does not match your password.",1000).show();
+          SignupController signupController = new SignupController();
+          Boolean signedUp = signupController.signup(name.getEditText().getText().toString(), email.getEditText().getText().toString(), passwordCrypt, salt);
+          if (signedUp == null) {
+            Snackbar.make(view, "Creation of a new user account failed.", 1000).show();
+          } else if (!signedUp) {
+            Snackbar.make(view, "Name already in use. Please chose another one.", 1000).show();
+          } else {
+            launchCalendarActivity();
+          }
+        } else {
+          Snackbar.make(view, "The repeat password does not match your password.", 1000).show();
         }
-    }
+      }
+    });
 
-    private void launchMainActivity(View view){
-        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-        startActivity(intent);
-    }
+    /**
+     *
+     */
+    btnLogin.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        launchMainActivity(view);
+      }
+    });
+  }
 
-    //TODO: check if we could put it together with the function in MainActivity
-    private void launchCalendarActivity(){
-        Intent intent = new Intent(SignupActivity.this, CalendarActivity.class);
-        startActivity(intent);
-    }
+  private void launchMainActivity(View view) {
+    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+    startActivity(intent);
+  }
+
+  //TODO: check if we could put it together with the function in MainActivity
+  private void launchCalendarActivity() {
+    Intent intent = new Intent(SignupActivity.this, CalendarActivity.class);
+    startActivity(intent);
+  }
 }
