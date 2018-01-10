@@ -1,7 +1,5 @@
 package com.tbz.mntn.flattie.database.dao;
 
-//todo: look that we see everything, also when keyboard comes up
-
 import com.tbz.mntn.flattie.database.databaseConnection.MysqlConnector;
 import com.tbz.mntn.flattie.database.dataclasses.CalendarItem;
 import com.tbz.mntn.flattie.database.dataclasses.EventCategory;
