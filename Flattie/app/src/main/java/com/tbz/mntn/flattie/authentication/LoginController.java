@@ -20,6 +20,7 @@ public class LoginController {
    */
   public Boolean login(String username, String password) {
     UserDAO userDAO = DAOFactory.getUserDAO();
+    // TODO: #57 REVIEW this requires internet otherwise the app crashes: enter a internet connection check (look into ticket)
     User user = userDAO.selectByUsername(username);
 
     if (!(user == null)) {
