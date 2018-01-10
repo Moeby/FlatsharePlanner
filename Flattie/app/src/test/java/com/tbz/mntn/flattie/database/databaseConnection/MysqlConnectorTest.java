@@ -1,10 +1,7 @@
 package com.tbz.mntn.flattie.database.databaseConnection;
-<<<<<<< HEAD:Flattie/app/src/test/java/com/tbz/mntn/flattie/database/databaseConnection/MysqlConnectorTest.java
-=======
 
 import org.junit.Ignore;
 import org.junit.Test;
->>>>>>> 8594c53073daf5c08c66458c7e264a23b6bd76b1:Flattie/app/src/test/java/com/tbz/mntn/flattie/database/databaseConnection/MysqlConnectorTest.java
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,8 +19,9 @@ public class MysqlConnectorTest {
         try {
             MysqlConnector connector = new MysqlConnector();
             Connection con = connector.connect();
-            assertTrue(con.isClosed());
+            assertTrue(!con.isClosed());
             connector.close();
+            assertTrue(con.isClosed());
         } catch (SQLException e) {
             e.printStackTrace();
         }

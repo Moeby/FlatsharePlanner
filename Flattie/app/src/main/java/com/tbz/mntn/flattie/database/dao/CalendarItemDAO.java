@@ -52,8 +52,8 @@ public class CalendarItemDAO extends DAO {
                     , Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, calendarItem.getDescription());
             stmt.setString(2, calendarItem.getRepeatable().toString());
-            stmt.setDate(3, calendarItem.getStartDatetime());
-            stmt.setDate(4, calendarItem.getEndDatetime());
+            stmt.setTimestamp(3, calendarItem.getStartDatetime());
+            stmt.setTimestamp(4, calendarItem.getEndDatetime());
             stmt.setInt(5, calendarItem.getGroup().getId());
             EventCategory category = calendarItem.getEventCategory();
             if (category != null && category.getId() != 0)
@@ -117,8 +117,8 @@ public class CalendarItemDAO extends DAO {
                 item.setDescription(result.getString(DESCRIPTION));
                 item.setRepeatable(Repeatable.toRepeatable(result.getString(REPEATABLE)));
                 // FIXME: handle timestamp / date / whatever!
-                //item.setStartDatetime(result.getDate(START));
-                //item.setEndDatetime(result.getDate(END));
+                item.setStartDatetime(result.getTimestamp(START));
+                item.setEndDatetime(result.getTimestamp(END));
 
                 item.setRepEventExceptions((ArrayList<RepEventException>) DAOFactory.getRepEventExeptionDAO().selectAllByCalendarItem(item));
 
@@ -191,8 +191,8 @@ public class CalendarItemDAO extends DAO {
                     item.setDescription(result.getString(DESCRIPTION));
                     item.setRepeatable(Repeatable.toRepeatable(result.getString(REPEATABLE)));
                     // FIXME: handle timestamp / date / whatever!
-                    //item.setStartDatetime(result.getDate(START));
-                    //item.setEndDatetime(result.getDate(END));
+                    item.setStartDatetime(result.getTimestamp(START));
+                    item.setEndDatetime(result.getTimestamp(END));
 
                     item.setRepEventExceptions((ArrayList<RepEventException>) DAOFactory.getRepEventExeptionDAO().selectAllByCalendarItem(item));
                     item.setGroup(group);
@@ -265,8 +265,8 @@ public class CalendarItemDAO extends DAO {
                     item.setDescription(result.getString(DESCRIPTION));
                     item.setRepeatable(Repeatable.toRepeatable(result.getString(REPEATABLE)));
                     // FIXME: handle timestamp / date / whatever!
-                    //item.setStartDatetime(result.getDate(START));
-                    //item.setEndDatetime(result.getDate(END));
+                    item.setStartDatetime(result.getTimestamp(START));
+                    item.setEndDatetime(result.getTimestamp(END));
 
                     item.setRepEventExceptions((ArrayList<RepEventException>) DAOFactory.getRepEventExeptionDAO().selectAllByCalendarItem(item));
                     item.setEventCategory(category);
@@ -344,8 +344,8 @@ public class CalendarItemDAO extends DAO {
                     + " WHERE " + ID + " = ?;");
             stmt.setString(1, calendarItem.getDescription());
             stmt.setString(2, calendarItem.getRepeatable().toString());
-            stmt.setDate(3, calendarItem.getStartDatetime());
-            stmt.setDate(4, calendarItem.getEndDatetime());
+            stmt.setTimestamp(3, calendarItem.getStartDatetime());
+            stmt.setTimestamp(4, calendarItem.getEndDatetime());
             stmt.setInt(5, calendarItem.getGroup().getId());
             stmt.setInt(6, calendarItem.getEventCategory().getId());
             stmt.setInt(7, calendarItem.getId());

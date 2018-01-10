@@ -9,7 +9,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 public class RepEventExceptionDAOTest extends Assert {
@@ -17,8 +18,8 @@ public class RepEventExceptionDAOTest extends Assert {
 
     private RepEventException exception;
     private boolean skipped;
-    private Date startDate;
-    private Date endDate;
+    private Timestamp startDate;
+    private Timestamp endDate;
     private CalendarItem calendarItem;
     private int newID = 1;
 
@@ -29,8 +30,8 @@ public class RepEventExceptionDAOTest extends Assert {
         dao = DAOFactory.getRepEventExeptionDAO();
 
         skipped = true;
-        startDate = new Date(new java.util.Date().getTime());
-        endDate = new Date(startDate.getTime()+50000);
+        startDate = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+        endDate = new java.sql.Timestamp(startDate.getTime() + 500000);
         calendarItem = new CalendarItem();
         calendarItem.setId(newID);
 

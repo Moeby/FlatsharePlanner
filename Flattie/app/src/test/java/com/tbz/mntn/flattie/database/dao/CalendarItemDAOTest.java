@@ -1,5 +1,6 @@
 package com.tbz.mntn.flattie.database.dao;
 
+import com.tbz.mntn.flattie.database.databaseConnection.MysqlConnector;
 import com.tbz.mntn.flattie.database.dataclasses.CalendarItem;
 import com.tbz.mntn.flattie.database.dataclasses.EventCategory;
 import com.tbz.mntn.flattie.database.dataclasses.Group;
@@ -11,7 +12,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.sql.Date;
+import java.sql.Connection;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 public class CalendarItemDAOTest extends Assert {
@@ -19,8 +22,8 @@ public class CalendarItemDAOTest extends Assert {
 
     private CalendarItem item;
     private String description;
-    private Date startDate;
-    private Date endDate;
+    private Timestamp startDate;
+    private Timestamp endDate;
     private Repeatable repeatable;
     private EventCategory category;
     private Group group;
@@ -33,9 +36,8 @@ public class CalendarItemDAOTest extends Assert {
         dao = DAOFactory.getCalendarItemDAO();
 
         description = "This is a description";
-        startDate = new Date(new java.util.Date().getTime());
-
-        endDate = new Date(startDate.getTime() + 5000000);
+        startDate = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+        endDate = new java.sql.Timestamp(startDate.getTime() + 50000000);
         repeatable = Repeatable.NONE;
         category = new EventCategory();
         category.setId(1);
@@ -107,13 +109,15 @@ public class CalendarItemDAOTest extends Assert {
         assertEquals(2, dao.getCalendarItems().size());
         assertEquals(1, DAOFactory.getGroupDAO().getGroups().size());
         assertEquals(1, DAOFactory.getEventCategoryDAO().getEventCategories().size());
+        Connection con = MysqlConnector.getConnection();
+        assertTrue(con.isClosed());
+
+        System.out.println("first run done");
 
         // double selects
         item = dao.selectById(newID);
         assertEquals(newID, item.getId());
         assertEquals(2, dao.getCalendarItems().size());
-        assertEquals(1, DAOFactory.getGroupDAO().getGroups().size());
-        assertEquals(1, DAOFactory.getEventCategoryDAO().getEventCategories().size());
     }
 
     @Ignore
