@@ -11,28 +11,28 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class LoginController {
 
-    /**
-     * Check username and password and log user in if check successful
-     *
-     * @param username from the user input
-     * @param password from the user input
-     * @return null if username doesn't exist, false if password wrong and true if login successful
-     */
-    public Boolean login(String username, String password){
-        UserDAO userDAO = DAOFactory.getUserDAO();
-        User user = userDAO.selectByUsername(username);
+  /**
+   * Check username and password and log user in if check successful
+   *
+   * @param username from the user input
+   * @param password from the user input
+   * @return null if username doesn't exist, false if password wrong and true if login successful
+   */
+  public Boolean login(String username, String password) {
+    UserDAO userDAO = DAOFactory.getUserDAO();
+    User user = userDAO.selectByUsername(username);
 
-        if (!(user == null)){
-            if (arePasswordsMatching(user.getPassword(), password)){
-                LoggedInUser.setLoggedInUser(user);
-                return true;
-            }
-            return false;
-        }
-        return null;
+    if (!(user == null)) {
+      if (arePasswordsMatching(user.getPassword(), password)) {
+        LoggedInUser.setLoggedInUser(user);
+        return true;
+      }
+      return false;
     }
+    return null;
+  }
 
-    private Boolean arePasswordsMatching(String userPassword, String password){
-        return BCrypt.checkpw(password, userPassword);
-    }
+  private Boolean arePasswordsMatching(String userPassword, String password) {
+    return BCrypt.checkpw(password, userPassword);
+  }
 }

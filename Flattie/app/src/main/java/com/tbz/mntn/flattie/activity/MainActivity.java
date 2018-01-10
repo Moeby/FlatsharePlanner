@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
                 Boolean loggedIn = loginController.login(name.getEditText().getText().toString(), password.getEditText().getText().toString());
 
                 if (loggedIn == null) {
-                    Snackbar.make(view, "Name not found.", 1000).show();
+                    Snackbar.make(view, "Name not found.", 2000).show();
                 } else if (!loggedIn) {
-                    Snackbar.make(view, "Password incorrect. Please try again.", 1000).show();
+                    Snackbar.make(view, "Password incorrect. Please try again.", 2000).show();
                 } else {
                     launchCalendarActivity();
                 }

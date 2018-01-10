@@ -18,6 +18,7 @@ public class UserDAO extends DAO {
   private static UserDAO instance = new UserDAO();
   private ArrayList<User> users = new ArrayList();
   private User user;
+  private int rows;
 
   // table constants
   private static final String TABLE = "user";
@@ -39,49 +40,60 @@ public class UserDAO extends DAO {
    * @param user required values: email, username, password <br>possible nullable: removal date and group with id
    * @return
    */
-  public int insert(User user) {
-    String method = "insert " + TABLE;
-    int rows = -1;
-    Connection con = getConnection(method);
-    PreparedStatement stmt = null;
-    ResultSet result = null;
+  public int insert(final User user) {
+    Thread thread = new Thread(
+        new Runnable() {
+          public void run() {
+            String method = "insert " + TABLE;
+            rows = -1;
+            Connection con = getConnection(method);
+            PreparedStatement stmt = null;
+            ResultSet result = null;
+            try {
+              stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + EMAIL + "," + USERNAME + "," + PASSWORD + "," + REMOVAL_DATE + "," + GROUP_FK + ")"
+                      + " VALUES( ?, ?, ?, ?, ?);"
+                  , Statement.RETURN_GENERATED_KEYS);
+              stmt.setString(1, user.getEmail());
+              stmt.setString(2, user.getUsername());
+              stmt.setString(3, user.getPassword());
+              stmt.setDate(4, user.getRemovalDate());
+              Group group = user.getGroup();
+              if (group != null && group.getId() != 0)
+                stmt.setInt(5, group.getId());
+              else
+                stmt.setNull(5, Types.INTEGER);
+
+              rows = stmt.executeUpdate();
+              ResultSet generatedKeys = stmt.getGeneratedKeys();
+              if (generatedKeys.next())
+                user.setId(generatedKeys.getInt(1));
+
+              if (rows > 0)
+                users.add(user);
+
+            } catch (SQLException e) {
+              rows = switchSQLError(method, e);
+            } finally {
+              try {
+                // free resources
+                if (result != null)
+                  result.close();
+                if (stmt != null)
+                  stmt.close();
+                if (closeCon) {
+                  con.close();
+                }
+              } catch (SQLException e) {
+                logSQLError("closure " + method, e);
+              }
+            }
+          }
+        });
     try {
-      stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + EMAIL + "," + USERNAME + "," + PASSWORD + "," + REMOVAL_DATE + "," + GROUP_FK + ")"
-              + " VALUES( ?, ?, ?, ?, ?);"
-          , Statement.RETURN_GENERATED_KEYS);
-      stmt.setString(1, user.getEmail());
-      stmt.setString(2, user.getUsername());
-      stmt.setString(3, user.getPassword());
-      stmt.setDate(4, user.getRemovalDate());
-      Group group = user.getGroup();
-      if (group != null && group.getId() != 0)
-        stmt.setInt(5, group.getId());
-      else
-        stmt.setNull(5, Types.INTEGER);
-
-      rows = stmt.executeUpdate();
-      ResultSet generatedKeys = stmt.getGeneratedKeys();
-      if (generatedKeys.next())
-        user.setId(generatedKeys.getInt(1));
-
-      if (rows > 0)
-        users.add(user);
-
-    } catch (SQLException e) {
-      rows = switchSQLError(method, e);
-    } finally {
-      try {
-        // free resources
-        if (result != null)
-          result.close();
-        if (stmt != null)
-          stmt.close();
-        if (closeCon) {
-          con.close();
-        }
-      } catch (SQLException e) {
-        logSQLError("closure " + method, e);
-      }
+      thread.start();
+      thread.join();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
     return rows;
   }
