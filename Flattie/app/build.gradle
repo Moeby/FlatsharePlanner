@@ -30,12 +30,13 @@ dependencies {
     compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('library/mysql-connector-java-3.0.17-ga-bin.jar')
     compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.android.support:design:27.0.2'
     annotationProcessor 'com.jakewharton:butterknife:6.1.0'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
-    compile group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
+    compile 'org.mindrot:jbcrypt:0.3m'
+    implementation files('library/mysql-connector-java-3.0.17-ga-bin.jar')
 }
