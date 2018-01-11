@@ -1,10 +1,8 @@
 package com.tbz.mntn.flattie.authentication;
 
-import com.tbz.mntn.flattie.database.dao.DAOFactory;
-import com.tbz.mntn.flattie.database.dao.UserDAO;
+import com.tbz.mntn.flattie.database.dao.DaoFactory;
+import com.tbz.mntn.flattie.database.dao.UserDao;
 import com.tbz.mntn.flattie.database.dataclasses.User;
-
-import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Signup verification and handler
@@ -26,12 +24,12 @@ public class SignupController {
    */
   public int signup(String name, String email, String password, String repPassword) {
     if (password.equals(repPassword)) {
-      UserDAO userDAO = DAOFactory.getUserDAO();
-      //User user = userDAO.selectByUsername(name);
+      UserDao userDao = DaoFactory.getUserDao();
+      //User user = userDao.selectByUsername(name);
 
       //if (user == null) {
         User newUser = new User(email, name, password, null, null);
-        int rows = userDAO.insert(newUser);
+        int rows = userDao.insert(newUser);
         if (rows > 0) {
           LoggedInUser.setLoggedInUser(newUser);
           return 0;

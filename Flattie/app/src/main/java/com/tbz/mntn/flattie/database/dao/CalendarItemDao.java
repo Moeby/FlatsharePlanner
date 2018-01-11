@@ -15,26 +15,26 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CalendarItemDAO extends DAO {
-  private static CalendarItemDAO instance = new CalendarItemDAO();
-  private ArrayList<CalendarItem> calendarItems = new ArrayList();
+public class CalendarItemDao extends Dao {
+  private static CalendarItemDao         instance      = new CalendarItemDao();
+  private        ArrayList<CalendarItem> calendarItems = new ArrayList();
   private CalendarItem item;
-  private int rows;
+  private int          rows;
 
   // table constants
-  private static final String TABLE = "calendar_item";
-  private static final String ID = "id";
-  private static final String DESCRIPTION = "description";
-  private static final String REPEATABLE = "repeatable";
-  private static final String START = "start_datetime";
-  private static final String END = "end_datetime";
-  private static final String GROUP_FK = "group_fk";
+  private static final String TABLE             = "calendar_item";
+  private static final String ID                = "id";
+  private static final String DESCRIPTION       = "description";
+  private static final String REPEATABLE        = "repeatable";
+  private static final String START             = "start_datetime";
+  private static final String END               = "end_datetime";
+  private static final String GROUP_FK          = "group_fk";
   private static final String EVENT_CATEGORY_FK = "event_category_fk";
 
-  private CalendarItemDAO() {
+  private CalendarItemDao() {
   }
 
-  public static CalendarItemDAO getInstance() {
+  public static CalendarItemDao getInstance() {
     return instance;
   }
 
@@ -48,12 +48,12 @@ public class CalendarItemDAO extends DAO {
           public void run() {
             String method = "insert " + TABLE;
             rows = -1;
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            Connection        con    = getConnection(method);
+            PreparedStatement stmt   = null;
+            ResultSet         result = null;
             try {
               stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + DESCRIPTION + "," + REPEATABLE + "," + START + "," + END + "," + GROUP_FK + "," + EVENT_CATEGORY_FK + ")"
-                      + " VALUES( ?, ?, ?, ?, ?, ?);"
+                                          + " VALUES( ?, ?, ?, ?, ?, ?);"
                   , Statement.RETURN_GENERATED_KEYS);
               stmt.setString(1, calendarItem.getDescription());
               stmt.setString(2, calendarItem.getRepeatable().toString());
@@ -72,7 +72,7 @@ public class CalendarItemDAO extends DAO {
               if (rows > 0)
                 calendarItems.add(calendarItem);
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -83,7 +83,7 @@ public class CalendarItemDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -108,12 +108,12 @@ public class CalendarItemDAO extends DAO {
           public void run() {
             String method = "selectById " + TABLE;
             item = null;
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            Connection        con    = getConnection(method);
+            PreparedStatement stmt   = null;
+            ResultSet         result = null;
             try {
               stmt = con.prepareStatement("SELECT " + DESCRIPTION + "," + REPEATABLE + "," + START + "," + END + "," + EVENT_CATEGORY_FK + "," + GROUP_FK + " FROM " + TABLE
-                  + " WHERE " + ID + " = ?;");
+                                          + " WHERE " + ID + " = ?;");
               stmt.setInt(1, id);
 
               result = stmt.executeQuery();
@@ -134,15 +134,15 @@ public class CalendarItemDAO extends DAO {
                 item.setStartDatetime(result.getTimestamp(START));
                 item.setEndDatetime(result.getTimestamp(END));
 
-                item.setRepEventExceptions((ArrayList<RepEventException>) DAOFactory.getRepEventExeptionDAO().selectAllByCalendarItem(item));
+                item.setRepEventExceptions((ArrayList<RepEventException>) DaoFactory.getRepEventExeptionDao().selectAllByCalendarItem(item));
 
-                item.setEventCategory(DAOFactory.getEventCategoryDAO().selectById(result.getInt(EVENT_CATEGORY_FK), item));
+                item.setEventCategory(DaoFactory.getEventCategoryDao().selectById(result.getInt(EVENT_CATEGORY_FK), item));
 
-                item.setGroup(DAOFactory.getGroupDAO().selectById(result.getInt(GROUP_FK)));
+                item.setGroup(DaoFactory.getGroupDao().selectById(result.getInt(GROUP_FK)));
 
               }
             } catch (SQLException e) {
-              logSQLError(method, e);
+              logSqlError(method, e);
               MysqlConnector.close();
               item = null;
             } finally {
@@ -155,7 +155,7 @@ public class CalendarItemDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -190,17 +190,17 @@ public class CalendarItemDAO extends DAO {
           public void run() {
             String method = "selectAllByGroupId" + TABLE;
             itemList = new ArrayList();
-            int groupFk = group.getId();
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            int               groupFk = group.getId();
+            Connection        con     = getConnection(method);
+            PreparedStatement stmt    = null;
+            ResultSet         result  = null;
             try {
               stmt = con.prepareStatement("SELECT " + ID + "," + DESCRIPTION + "," + REPEATABLE + "," + START + "," + END + "," + EVENT_CATEGORY_FK + " FROM " + TABLE
-                  + " WHERE " + GROUP_FK + " = ?;");
+                                          + " WHERE " + GROUP_FK + " = ?;");
               stmt.setInt(1, groupFk);
               result = stmt.executeQuery();
               while (result.next()) {
-                int id = result.getInt(ID);
+                int          id   = result.getInt(ID);
                 CalendarItem item = null;
                 if (callerCalendarItem == null || id != callerCalendarItem.getId()) {
                   for (CalendarItem savedItem : calendarItems) {
@@ -219,9 +219,9 @@ public class CalendarItemDAO extends DAO {
                   item.setStartDatetime(result.getTimestamp(START));
                   item.setEndDatetime(result.getTimestamp(END));
 
-                  item.setRepEventExceptions((ArrayList<RepEventException>) DAOFactory.getRepEventExeptionDAO().selectAllByCalendarItem(item));
+                  item.setRepEventExceptions((ArrayList<RepEventException>) DaoFactory.getRepEventExeptionDao().selectAllByCalendarItem(item));
                   item.setGroup(group);
-                  item.setEventCategory(DAOFactory.getEventCategoryDAO().selectById(result.getInt(EVENT_CATEGORY_FK), item));
+                  item.setEventCategory(DaoFactory.getEventCategoryDao().selectById(result.getInt(EVENT_CATEGORY_FK), item));
                 } else {
                   item = callerCalendarItem;
                   item.setGroup(group);
@@ -230,7 +230,7 @@ public class CalendarItemDAO extends DAO {
               }
 
             } catch (SQLException e) {
-              logSQLError(method, e);
+              logSqlError(method, e);
               MysqlConnector.close();
               MysqlConnector.close();
               itemList = null;
@@ -244,7 +244,7 @@ public class CalendarItemDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -273,17 +273,17 @@ public class CalendarItemDAO extends DAO {
           public void run() {
             String method = "selectAllByEventCategory" + TABLE;
             itemList = new ArrayList();
-            int categoryFK = category.getId();
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            int               categoryFK = category.getId();
+            Connection        con        = getConnection(method);
+            PreparedStatement stmt       = null;
+            ResultSet         result     = null;
             try {
               stmt = con.prepareStatement("SELECT " + ID + "," + DESCRIPTION + "," + REPEATABLE + "," + START + "," + END + "," + GROUP_FK + " FROM " + TABLE
-                  + " WHERE " + EVENT_CATEGORY_FK + " = ?;");
+                                          + " WHERE " + EVENT_CATEGORY_FK + " = ?;");
               stmt.setInt(1, categoryFK);
               result = stmt.executeQuery();
               while (result.next()) {
-                int id = result.getInt(ID);
+                int          id   = result.getInt(ID);
                 CalendarItem item = null;
                 if (callerCalendarItem == null || id != callerCalendarItem.getId()) {
                   for (CalendarItem savedItem : calendarItems) {
@@ -302,19 +302,19 @@ public class CalendarItemDAO extends DAO {
                   item.setStartDatetime(result.getTimestamp(START));
                   item.setEndDatetime(result.getTimestamp(END));
 
-                  item.setRepEventExceptions((ArrayList<RepEventException>) DAOFactory.getRepEventExeptionDAO().selectAllByCalendarItem(item));
+                  item.setRepEventExceptions((ArrayList<RepEventException>) DaoFactory.getRepEventExeptionDao().selectAllByCalendarItem(item));
                   item.setEventCategory(category);
 
                   int groupId = result.getInt(GROUP_FK);
                   if (callerCalendarItem != null) {
                     Group callerGroup = callerCalendarItem.getGroup();
                     if (callerGroup == null || callerGroup.getId() != groupId) {
-                      item.setGroup(DAOFactory.getGroupDAO().selectById(groupId, callerCalendarItem));
+                      item.setGroup(DaoFactory.getGroupDao().selectById(groupId, callerCalendarItem));
                     } else {
                       item.setGroup(callerGroup);
                     }
                   } else {
-                    item.setGroup(DAOFactory.getGroupDAO().selectById(groupId));
+                    item.setGroup(DaoFactory.getGroupDao().selectById(groupId));
                   }
                 } else {
                   item = callerCalendarItem;
@@ -323,7 +323,7 @@ public class CalendarItemDAO extends DAO {
               }
 
             } catch (SQLException e) {
-              logSQLError(method, e);
+              logSqlError(method, e);
               MysqlConnector.close();
               itemList = null;
             } finally {
@@ -336,7 +336,7 @@ public class CalendarItemDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -357,7 +357,6 @@ public class CalendarItemDAO extends DAO {
 
   /**
    * Calendar item gets updated. <strong>All exceptions will get deleted by calling this method!</strong>
-   *
    * @param calendarItem
    * @return
    */
@@ -368,12 +367,12 @@ public class CalendarItemDAO extends DAO {
 
             String method = "update" + TABLE;
             rows = -1;
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            Connection        con    = getConnection(method);
+            PreparedStatement stmt   = null;
+            ResultSet         result = null;
             try {
-              RepEventExceptionDAO dao = DAOFactory.getRepEventExeptionDAO();
-              int check = dao.deleteAllByCalendarItem(calendarItem);
+              RepEventExceptionDao dao   = DaoFactory.getRepEventExeptionDao();
+              int                  check = dao.deleteAllByCalendarItem(calendarItem);
 
               /*
               if(check xx) {
@@ -382,13 +381,13 @@ public class CalendarItemDAO extends DAO {
              */
 
               stmt = con.prepareStatement("UPDATE " + TABLE
-                  + " SET " + DESCRIPTION + " = ?,"
-                  + REPEATABLE + " = ?,"
-                  + START + " = ?,"
-                  + END + " = ?,"
-                  + GROUP_FK + " = ?,"
-                  + EVENT_CATEGORY_FK + " = ?"
-                  + " WHERE " + ID + " = ?;");
+                                          + " SET " + DESCRIPTION + " = ?,"
+                                          + REPEATABLE + " = ?,"
+                                          + START + " = ?,"
+                                          + END + " = ?,"
+                                          + GROUP_FK + " = ?,"
+                                          + EVENT_CATEGORY_FK + " = ?"
+                                          + " WHERE " + ID + " = ?;");
               stmt.setString(1, calendarItem.getDescription());
               stmt.setString(2, calendarItem.getRepeatable().toString());
               stmt.setTimestamp(3, calendarItem.getStartDatetime());
@@ -405,7 +404,7 @@ public class CalendarItemDAO extends DAO {
             */
 
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -416,7 +415,7 @@ public class CalendarItemDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -433,7 +432,6 @@ public class CalendarItemDAO extends DAO {
 
   /**
    * Calendar item gets deleted. <strong>All exceptions will get deleted as well by calling this method!</strong>
-   *
    * @param calendarItem
    * @return
    */
@@ -441,15 +439,15 @@ public class CalendarItemDAO extends DAO {
     Thread thread = new Thread(
         new Runnable() {
           public void run() {
-            String method = "delete " + TABLE;
-            int rows = -1;
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            String            method = "delete " + TABLE;
+            int               rows   = -1;
+            Connection        con    = getConnection(method);
+            PreparedStatement stmt   = null;
+            ResultSet         result = null;
             try {
               boolean repeatable = (calendarItem.getRepeatable() != Repeatable.NONE);
               if (repeatable) {
-                RepEventExceptionDAO handleExceptions = DAOFactory.getRepEventExeptionDAO();
+                RepEventExceptionDao         handleExceptions   = DaoFactory.getRepEventExeptionDao();
                 ArrayList<RepEventException> repEventExceptions = calendarItem.getRepEventExceptions();
                 if (repEventExceptions != null) {
                   for (RepEventException repEventException : repEventExceptions)
@@ -458,7 +456,7 @@ public class CalendarItemDAO extends DAO {
               }
 
               stmt = con.prepareStatement("DELETE FROM " + TABLE
-                      + " WHERE " + ID + " = ?;"
+                                          + " WHERE " + ID + " = ?;"
                   , Statement.RETURN_GENERATED_KEYS);
               stmt.setInt(1, calendarItem.getId());
 
@@ -466,7 +464,7 @@ public class CalendarItemDAO extends DAO {
               if (rows > 0)
                 calendarItems.remove(calendarItem);
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -477,7 +475,7 @@ public class CalendarItemDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }

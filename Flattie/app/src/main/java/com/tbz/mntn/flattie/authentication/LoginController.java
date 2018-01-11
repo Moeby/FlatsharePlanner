@@ -1,7 +1,7 @@
 package com.tbz.mntn.flattie.authentication;
 
-import com.tbz.mntn.flattie.database.dao.DAOFactory;
-import com.tbz.mntn.flattie.database.dao.UserDAO;
+import com.tbz.mntn.flattie.database.dao.DaoFactory;
+import com.tbz.mntn.flattie.database.dao.UserDao;
 import com.tbz.mntn.flattie.database.dataclasses.User;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -19,9 +19,9 @@ public class LoginController {
    * @return null if username doesn't exist, false if password wrong and true if login successful
    */
   public Boolean login(String username, String password) {
-    UserDAO userDAO = DAOFactory.getUserDAO();
+    UserDao userDao = DaoFactory.getUserDao();
     // TODO: #57 REVIEW this requires internet otherwise the app crashes: enter a internet connection check (look into ticket)
-    User user = userDAO.selectByUsername(username);
+    User user = userDao.selectByUsername(username);
 
     if (!(user == null)) {
       if (arePasswordsMatching(user.getPassword(), password)) {

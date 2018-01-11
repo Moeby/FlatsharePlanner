@@ -12,9 +12,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepEventExceptionDAO extends DAO {
-  private static RepEventExceptionDAO instance = new RepEventExceptionDAO();
-  private ArrayList<RepEventException> repEventExceptions = new ArrayList();
+public class RepEventExceptionDao extends Dao {
+  private static RepEventExceptionDao         instance           = new RepEventExceptionDao();
+  private        ArrayList<RepEventException> repEventExceptions = new ArrayList();
   private List<RepEventException> itemList;
   private int rows;
 
@@ -27,10 +27,10 @@ public class RepEventExceptionDAO extends DAO {
   private static final String CALENDAR_ITEM_FK = "calendar_item_fk";
 
 
-  private RepEventExceptionDAO() {
+  private RepEventExceptionDao() {
   }
 
-  public static RepEventExceptionDAO getInstance() {
+  public static RepEventExceptionDao getInstance() {
     return instance;
   }
 
@@ -65,7 +65,7 @@ public class RepEventExceptionDAO extends DAO {
                 repEventExceptions.add(repEventException);
 
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -76,7 +76,7 @@ public class RepEventExceptionDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -135,7 +135,7 @@ public class RepEventExceptionDAO extends DAO {
               }
 
             } catch (SQLException e) {
-              logSQLError(method, e);
+              logSqlError(method, e);
               MysqlConnector.close();
               itemList = null;
             } finally {
@@ -148,7 +148,7 @@ public class RepEventExceptionDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -200,7 +200,7 @@ public class RepEventExceptionDAO extends DAO {
             }
             */
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -211,7 +211,7 @@ public class RepEventExceptionDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -250,7 +250,7 @@ public class RepEventExceptionDAO extends DAO {
                 repEventExceptions.remove(repEventException);
 
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -261,7 +261,7 @@ public class RepEventExceptionDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -281,7 +281,7 @@ public class RepEventExceptionDAO extends DAO {
    * @return
    */
   public int deleteAllByCalendarItem(CalendarItem calendarItem) {
-    // todo: transaction
+    // TODO LATER: transaction
     int deleted = 0;
     List<RepEventException> exceptions = selectAllByCalendarItem(calendarItem);
     if (exceptions != null) {
@@ -291,7 +291,7 @@ public class RepEventExceptionDAO extends DAO {
           deleted += check;
         else {
           deleted = check;
-          // todo: errorhandling, rollback
+          // TODO LATER: errorhandling, rollback
           break;
         }
       }

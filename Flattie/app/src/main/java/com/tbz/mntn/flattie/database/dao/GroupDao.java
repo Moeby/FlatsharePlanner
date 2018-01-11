@@ -9,9 +9,9 @@ import com.tbz.mntn.flattie.database.dataclasses.User;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class GroupDAO extends DAO {
-  private static GroupDAO instance = new GroupDAO();
-  private ArrayList<Group> groups = new ArrayList();
+public class GroupDao extends Dao {
+  private static GroupDao         instance = new GroupDao();
+  private        ArrayList<Group> groups   = new ArrayList();
   private Group group;
   private int rows;
 
@@ -21,10 +21,10 @@ public class GroupDAO extends DAO {
   private static final String NAME = "name";
   private static final String REMOVAL_DATE = "removal_date";
 
-  private GroupDAO() {
+  private GroupDao() {
   }
 
-  public static GroupDAO getInstance() {
+  public static GroupDao getInstance() {
     return instance;
   }
 
@@ -62,7 +62,7 @@ public class GroupDAO extends DAO {
                 groups.add(group);
 
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -73,7 +73,7 @@ public class GroupDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -132,12 +132,12 @@ public class GroupDAO extends DAO {
                 group.setId(id);
                 group.setName(result.getString(NAME));
 
-                group.setUsers((ArrayList<User>) DAOFactory.getUserDAO().selectAllByGroupId(group));
-                group.setShoppingItems((ArrayList<ShoppingItem>) DAOFactory.getShoppingItemDAO().selectAllByGroupId(group));
-                group.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByGroupId(group, callerCalendarItem));
+                group.setUsers((ArrayList<User>) DaoFactory.getUserDao().selectAllByGroupId(group));
+                group.setShoppingItems((ArrayList<ShoppingItem>) DaoFactory.getShoppingItemDao().selectAllByGroupId(group));
+                group.setCalendarItems((ArrayList<CalendarItem>) DaoFactory.getCalendarItemDao().selectAllByGroupId(group, callerCalendarItem));
               }
             } catch (SQLException e) {
-              logSQLError(method, e);
+              logSqlError(method, e);
               MysqlConnector.close();
               group = null;
             } finally {
@@ -150,7 +150,7 @@ public class GroupDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -194,7 +194,7 @@ public class GroupDAO extends DAO {
               }
 
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -205,7 +205,7 @@ public class GroupDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -221,7 +221,7 @@ public class GroupDAO extends DAO {
   }
 
   private void reactivate(Group group) {
-    // TODO: someday implement method
+    // TODO LATER: someday implement method
     // #44 at the moment no required feature!
   }
 

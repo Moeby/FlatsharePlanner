@@ -11,9 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventCategoryDAO extends DAO {
-  private static EventCategoryDAO instance = new EventCategoryDAO();
-  private ArrayList<EventCategory> eventCategories = new ArrayList();
+public class EventCategoryDao extends Dao {
+  private static EventCategoryDao         instance        = new EventCategoryDao();
+  private        ArrayList<EventCategory> eventCategories = new ArrayList();
   private List<EventCategory> categories;
   private EventCategory category;
   private int rows;
@@ -23,10 +23,10 @@ public class EventCategoryDAO extends DAO {
   private static final String ID = "id";
   private static final String NAME = "name";
 
-  private EventCategoryDAO() {
+  private EventCategoryDao() {
   }
 
-  public static EventCategoryDAO getInstance() {
+  public static EventCategoryDao getInstance() {
     return instance;
   }
 
@@ -74,10 +74,10 @@ public class EventCategoryDAO extends DAO {
                 category.setId(id);
                 category.setName(result.getString(NAME));
 
-                category.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByEventCategory(category, callerCalendarItem));
+                category.setCalendarItems((ArrayList<CalendarItem>) DaoFactory.getCalendarItemDao().selectAllByEventCategory(category, callerCalendarItem));
               }
             } catch (SQLException e) {
-              logSQLError(method, e);
+              logSqlError(method, e);
               MysqlConnector.close();
               category = null;
             } finally {
@@ -90,7 +90,7 @@ public class EventCategoryDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -136,12 +136,12 @@ public class EventCategoryDAO extends DAO {
                 category.setId(id);
                 category.setName(result.getString(NAME));
 
-                category.setCalendarItems((ArrayList<CalendarItem>) DAOFactory.getCalendarItemDAO().selectAllByEventCategory(category, null));
+                category.setCalendarItems((ArrayList<CalendarItem>) DaoFactory.getCalendarItemDao().selectAllByEventCategory(category, null));
 
                 categories.add(category);
               }
             } catch (SQLException e) {
-              logSQLError(method, e);
+              logSqlError(method, e);
               MysqlConnector.close();
               categories = null;
             } finally {
@@ -154,7 +154,7 @@ public class EventCategoryDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }

@@ -12,9 +12,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShoppingItemDAO extends DAO {
-  private static ShoppingItemDAO instance = new ShoppingItemDAO();
-  private ArrayList<ShoppingItem> shoppingItems = new ArrayList();
+public class ShoppingItemDao extends Dao {
+  private static ShoppingItemDao         instance      = new ShoppingItemDao();
+  private        ArrayList<ShoppingItem> shoppingItems = new ArrayList();
   private List<ShoppingItem> itemList;
   private int rows;
 
@@ -25,10 +25,10 @@ public class ShoppingItemDAO extends DAO {
   private static final String BOUGHT = "bought";
   private static final String GROUP_FK = "group_fk";
 
-  private ShoppingItemDAO() {
+  private ShoppingItemDao() {
   }
 
-  public static ShoppingItemDAO getInstance() {
+  public static ShoppingItemDao getInstance() {
     return instance;
   }
 
@@ -64,7 +64,7 @@ public class ShoppingItemDAO extends DAO {
                 shoppingItems.add(shoppingItem);
 
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -75,7 +75,7 @@ public class ShoppingItemDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -131,7 +131,7 @@ public class ShoppingItemDAO extends DAO {
               }
 
             } catch (SQLException e) {
-              logSQLError(method, e);
+              logSqlError(method, e);
               MysqlConnector.close();
               itemList = null;
             } finally {
@@ -144,7 +144,7 @@ public class ShoppingItemDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -186,7 +186,7 @@ public class ShoppingItemDAO extends DAO {
               rows = stmt.executeUpdate();
 
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -197,7 +197,7 @@ public class ShoppingItemDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -236,7 +236,7 @@ public class ShoppingItemDAO extends DAO {
                 shoppingItems.remove(shoppingItem);
 
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -247,7 +247,7 @@ public class ShoppingItemDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }

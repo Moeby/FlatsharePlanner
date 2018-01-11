@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class GroupDAOTest extends Assert {
-    private GroupDAO dao;
+public class GroupDaoTest extends Assert {
+    private GroupDao dao;
 
     private Group group;
     private String groupName;
@@ -19,7 +19,7 @@ public class GroupDAOTest extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        dao = DAOFactory.getGroupDAO();
+        dao = DaoFactory.getGroupDao();
 
         groupName = "name";
 

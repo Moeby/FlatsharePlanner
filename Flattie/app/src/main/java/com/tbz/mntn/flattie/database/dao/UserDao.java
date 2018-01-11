@@ -14,9 +14,9 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAO extends DAO {
-  private static UserDAO instance = new UserDAO();
-  private ArrayList<User> users = new ArrayList();
+public class UserDao extends Dao {
+  private static UserDao         instance = new UserDao();
+  private        ArrayList<User> users    = new ArrayList();
   private List<User> userList;
   private User user;
   private int rows;
@@ -30,10 +30,10 @@ public class UserDAO extends DAO {
   private static final String REMOVAL_DATE = "removal_date";
   private static final String GROUP_FK = "group_fk";
 
-  private UserDAO() {
+  private UserDao() {
   }
 
-  public static UserDAO getInstance() {
+  public static UserDao getInstance() {
     return instance;
   }
 
@@ -73,7 +73,7 @@ public class UserDAO extends DAO {
                 users.add(user);
 
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -85,7 +85,7 @@ public class UserDAO extends DAO {
                   con.close();
                 }
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -130,7 +130,7 @@ public class UserDAO extends DAO {
 
                   int groupFK = result.getInt(GROUP_FK);
                   if (groupFK != 0)
-                    user.setGroup(DAOFactory.getGroupDAO().selectById(groupFK));
+                    user.setGroup(DaoFactory.getGroupDao().selectById(groupFK));
                   else {
                     users.add(user);
                   }
@@ -142,7 +142,7 @@ public class UserDAO extends DAO {
                 user.setRemovalDate(result.getDate(REMOVAL_DATE));
               }
             } catch (SQLException e) {
-              logSQLError(method, e);
+              logSqlError(method, e);
               MysqlConnector.close();
               user = null;
             } finally {
@@ -155,7 +155,7 @@ public class UserDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure selectByUsername " + TABLE, e);
+                logSqlError("closure selectByUsername " + TABLE, e);
               }
             }
           }
@@ -172,8 +172,7 @@ public class UserDAO extends DAO {
   }
 
   private void selectByEmail(String email) {
-    // TODO: someday implement method
-    // at the moment no required feature!
+    // TODO LATER: implement method
   }
 
   /**
@@ -220,7 +219,7 @@ public class UserDAO extends DAO {
               }
 
             } catch (SQLException e) {
-              logSQLError(method, e);
+              logSqlError(method, e);
               MysqlConnector.close();
               userList = null;
             } finally {
@@ -233,7 +232,7 @@ public class UserDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -283,7 +282,7 @@ public class UserDAO extends DAO {
               rows = stmt.executeUpdate();
 
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -294,7 +293,7 @@ public class UserDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -338,10 +337,10 @@ public class UserDAO extends DAO {
                 Group group = user.getGroup();
                 if (group != null && group.getId() != 0)
                   if (selectAllByGroupId(group) == null)
-                    DAOFactory.getGroupDAO().remove(group);
+                    DaoFactory.getGroupDao().remove(group);
               }
             } catch (SQLException e) {
-              rows = switchSQLError(method, e);
+              rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
@@ -352,7 +351,7 @@ public class UserDAO extends DAO {
                 if (closeCon)
                   MysqlConnector.close();
               } catch (SQLException e) {
-                logSQLError("closure " + method, e);
+                logSqlError("closure " + method, e);
               }
             }
           }
@@ -368,7 +367,7 @@ public class UserDAO extends DAO {
   }
 
   private void reactivate() {
-    // TODO: someday implement method
+    // TODO LATER: someday implement method
   }
 
   public ArrayList<User> getUsers() {
