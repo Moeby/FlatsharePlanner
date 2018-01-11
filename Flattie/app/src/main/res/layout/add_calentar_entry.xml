@@ -1,136 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/myCoordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:orientation="vertical"
-    android:scrollbars="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:text="Add Calendar Entry"
-        android:textSize="40dp"
-        android:textColor="@color/title"
-        android:fontFamily="cursive"
-        android:textAlignment="center"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="40dp"
-        android:paddingBottom="40dp"/>
+        android:layout_height="match_parent"
+        android:background="@color/bg"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:scrollbars="vertical">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cal_start_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-        <EditText
-            android:id="@+id/cal_start_date_input"
-            android:textColor="#000000"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Startdate"/>
+            android:fontFamily="cursive"
+            android:paddingBottom="40dp"
+            android:paddingTop="40dp"
+            android:text="Add Calendar Entry"
+            android:textAlignment="center"
+            android:textColor="@color/title"
+            android:textSize="40dp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/cal_start_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/cal_start_date_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:hint="Startdate"
+                android:textColor="#000000" />
             <!--android:onClick="datePickStartDate"-->
-    </android.support.design.widget.TextInputLayout>
+        </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cal_start_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-        <EditText
-            android:id="@+id/cal_start_time_input"
-            android:textColor="#000000"
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/cal_end_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Startdate"/>
-            <!--android:onClick="datePickStartTime"-->
-    </android.support.design.widget.TextInputLayout>
+            android:padding="10dp">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cal_end_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-        <EditText
-            android:id="@+id/cal_end_date_input"
-            android:textColor="#000000"
+            <EditText
+                android:id="@+id/cal_end_date_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:hint="Enddate"
+                android:textColor="#000000" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/cal_entry_layout_repeatable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enddate"/>
-            <!--android:onClick="datePickEndDate"-->
-    </android.support.design.widget.TextInputLayout>
+            android:padding="10dp">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cal_end_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-        <EditText
-            android:id="@+id/cal_end_time_input"
-            android:textColor="#000000"
+            <Spinner
+                android:id="@+id/cal_entry_repeatable"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/cal_entry_layout_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Startdate"/>
-            <!--android:onClick="datePickEndTime"-->
-    </android.support.design.widget.TextInputLayout>
+            android:padding="10dp">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cal_entry_layout_repeatable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-        <Spinner
-            android:id="@+id/cal_entry_repeatable"
+            <Spinner
+                android:id="@+id/cal_entry_category"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/cal_entry_layout_people"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <Spinner
+                android:id="@+id/cal_entry_people"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/cal_entry_layout_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/cal_entry_input_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="20"
+                android:hint="Description"
+                android:textColor="#000000" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_add_cal_entry"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cal_entry_layout_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-        <Spinner
-            android:id="@+id/cal_entry_category"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cal_entry_layout_people"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-        <Spinner
-            android:id="@+id/cal_entry_people"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cal_entry_layout_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-        <EditText
-            android:id="@+id/cal_entry_input_desc"
-            android:textColor="#000000"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="20"
-            android:hint="Description" />
-    </android.support.design.widget.TextInputLayout>
-
-    <Button android:id="@+id/btn_add_cal_entry"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Add"
-        android:background="@color/app_design"
-        android:layout_marginTop="40dp"
-        android:textColor="@android:color/white"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        android:padding="10dp"/>
-
-</LinearLayout>
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="40dp"
+            android:background="@color/app_design"
+            android:padding="10dp"
+            android:text="Add"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
