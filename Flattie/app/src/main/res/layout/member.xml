@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="250dp">
+    android:layout_height="250dp"
+    android:orientation="horizontal">
 
     <!--<android.support.v7.widget.CardView
         android:id="@+id/member_view"
@@ -19,30 +19,30 @@
         card_view:cardCornerRadius="7dp">-->
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/member_image"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:scaleType="centerCrop"/>
+        <ImageView
+            android:id="@+id/member_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:scaleType="centerCrop" />
 
-            <TextView
-                android:id="@+id/member_name"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textAlignment="center"/>
+        <TextView
+            android:id="@+id/member_name"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center" />
 
-            <ImageButton
-                android:id="@+id/btn_delete_member"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/bin"
-                android:scaleType="centerCrop"/>
-            <!-- photo von mülleimer und von person-profil einfügen-->
-        </RelativeLayout>
+        <ImageButton
+            android:id="@+id/btn_delete_member"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bin"
+            android:scaleType="centerCrop" />
+        <!-- photo von mülleimer und von person-profil einfügen-->
+    </RelativeLayout>
     <!--</android.support.v7.widget.CardView>-->
 </LinearLayout>

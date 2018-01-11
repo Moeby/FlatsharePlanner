@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="250dp">
+    android:layout_height="250dp"
+    android:orientation="horizontal">
 
     <!--<android.support.v7.widget.CardView
         android:id="@+id/shopping_view"
@@ -18,32 +18,31 @@
         card_view:cardBackgroundColor="@color/bg_inputfield"
         card_view:cardCornerRadius="7dp">-->
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <CheckBox
-                android:id="@+id/check_shopping_item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="replace"
-                />
+        <CheckBox
+            android:id="@+id/check_shopping_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="replace" />
 
-            <!--<TextView
-                android:id="@+id/shopping_item_name"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textAlignment="center"/>-->
+        <!--<TextView
+            android:id="@+id/shopping_item_name"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"/>-->
 
-            <ImageButton
-                android:id="@+id/btn_delete_item"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/bin"
-                android:scaleType="centerCrop"/>
-            <!-- photo von mülleimer einfügen-->
-        </RelativeLayout>
+        <ImageButton
+            android:id="@+id/btn_delete_item"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bin"
+            android:scaleType="centerCrop" />
+        <!-- photo von mülleimer einfügen-->
+    </RelativeLayout>
     <!--</android.support.v7.widget.CardView>-->
 
 </LinearLayout>

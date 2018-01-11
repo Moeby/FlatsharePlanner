@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bg"
+        android:focusableInTouchMode="true"
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -27,17 +28,16 @@
             android:textSize="40dp" />
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/login_input_layout_email"
+            android:id="@+id/login_input_layout_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp">
 
             <EditText
-                android:id="@+id/login_input_email"
+                android:id="@+id/login_input_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Username"
-                android:inputType="textEmailAddress"
                 android:textColor="#000000" />
         </android.support.design.widget.TextInputLayout>
 

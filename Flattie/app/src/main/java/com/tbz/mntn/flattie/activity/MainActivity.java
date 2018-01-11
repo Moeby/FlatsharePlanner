@@ -13,46 +13,48 @@ import com.tbz.mntn.flattie.authentication.LoginController;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Button btnSignup = findViewById(R.id.btn_link_signup);
-        Button btnLogin = findViewById(R.id.btn_login);
-        final TextInputLayout email = findViewById(R.id.login_input_layout_email);
-        final TextInputLayout password = findViewById(R.id.login_input_layout_password);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    Button btnSignup = findViewById(R.id.btn_link_signup);
+    Button btnLogin = findViewById(R.id.btn_login);
+    final TextInputLayout email = findViewById(R.id.login_input_layout_name);
+    final TextInputLayout password = findViewById(R.id.login_input_layout_password);
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LoginController loginController = new LoginController();
-                Boolean loggedIn = loginController.login(email.getEditText().getText().toString(), password.getEditText().getText().toString());
+    btnLogin.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        LoginController loginController = new LoginController();
+        Boolean loggedIn = loginController.login(email.getEditText().getText().toString(), password.getEditText().getText().toString());
 
-                if (loggedIn == null) {
-                    Snackbar.make(view, "Email address not found.", 1000).show();
-                } else if (!loggedIn) {
-                    Snackbar.make(view, "Password incorrect. Please try again.", 1000).show();
-                } else {
-                    launchCalendarActivity();
-                }
-            }
-        });
+        if (loggedIn == null) {
+          // TODO: #57 REVIEW text false: field is named 'username' --> change maybe into smt more general like 'User not found'.
+          Snackbar.make(view, "Email address not found.", 1000).show();
+        } else if (!loggedIn) {
+          Snackbar.make(view, "Password incorrect. Please try again.", 1000).show();
+        } else {
+          // TODO later: launch flattie group page instead of calendar view
+          launchCalendarActivity();
+        }
+      }
+    });
 
-        btnSignup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchSignupActivity();
-            }
-        });
-    }
+    btnSignup.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        launchSignupActivity();
+      }
+    });
+  }
 
-    private void launchSignupActivity() {
-        Intent intent = new Intent(MainActivity.this, SignupActivity.class);
-        startActivity(intent);
-    }
+  private void launchSignupActivity() {
+    Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+    startActivity(intent);
+  }
 
-    private void launchCalendarActivity() {
-        Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-        startActivity(intent);
-    }
+  private void launchCalendarActivity() {
+    Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+    startActivity(intent);
+  }
 }
