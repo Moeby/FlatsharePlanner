@@ -30,20 +30,23 @@ public class SignupActivity extends AppCompatActivity {
     final TextInputLayout repPassword = findViewById(R.id.signup_rep_layout_password);
 
     btnSignup.setOnClickListener(new View.OnClickListener() {
+      //TODO: implement inputfield checkers and error messages
       @Override
       public void onClick(View view) {
         SignupController signupController = new SignupController();
-        int signedUp = signupController.signup(name.getEditText().getText().toString(),
+        Boolean signedUp = signupController.signup(name.getEditText().getText().toString(),
             email.getEditText().getText().toString(),
             password.getEditText().getText().toString(),
-            repPassword.getEditText().getText().toString());
-        if (signedUp == 3) {
+            repPassword.getEditText().getText().toString(),
+            view);
+        /*if (signedUp == 3) {
           Snackbar.make(view, "The repeat password does not match your password.", 3000).show();
         } else if (signedUp == 2) {
-          Snackbar.make(view, "Name already in use. Please chose another one.", 3000).show();
+          Snackbar.make(view, "Name or email address already in use. Please chose another one.", 3000).show();
         } else if (signedUp == 1) {
-          Snackbar.make(view, "Creation of a new user account failed.", 3000).show();
-        } else {
+          Snackbar.make(view, "Creation of a new user account failed.", 3000).show();*/
+        if(signedUp){
+        //} else {
           launchCalendarActivity();
         }
       }
