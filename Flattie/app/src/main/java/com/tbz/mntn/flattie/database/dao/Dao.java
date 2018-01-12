@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.database.dao;
 
+import android.util.Log;
+
 import com.tbz.mntn.flattie.database.databaseConnection.MysqlConnector;
 
 import java.sql.Connection;
@@ -80,10 +82,9 @@ abstract class Dao {
   }
 
   void logSqlError(String method, SQLException e) {
-    //TODO: get Log.w back!
-    //        Log.w(TAG, method+": ", e);
-    System.out.println(method + ": " + e);
-    System.out.println(e.getErrorCode() + ", " + e.getSQLState());
+    Log.w("SQLException", method + ": ", e);
+    //System.out.println(method + ": " + e);
+    //System.out.println(e.getErrorCode() + ", " + e.getSQLState());
   }
 
   private void setCloseCon(boolean closeCon) {

@@ -187,7 +187,7 @@ public class GroupDao extends Dao {
     return group;
   }
 
-  // TODO: find all without loading associated things
+  // TODO LATER: find all without loading associated things
 
   /**
    * Update removal_date to current date - this group will be ignored by future selects.

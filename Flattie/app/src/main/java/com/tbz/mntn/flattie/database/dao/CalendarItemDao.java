@@ -6,6 +6,7 @@ import com.tbz.mntn.flattie.database.dataclasses.EventCategory;
 import com.tbz.mntn.flattie.database.dataclasses.Group;
 import com.tbz.mntn.flattie.database.dataclasses.RepEventException;
 import com.tbz.mntn.flattie.database.dataclasses.Repeatable;
+import com.tbz.mntn.flattie.database.dataclasses.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,6 +31,7 @@ public class CalendarItemDao extends Dao {
   private static final String END               = "end_datetime";
   private static final String GROUP_FK          = "group_fk";
   private static final String EVENT_CATEGORY_FK = "event_category_fk";
+  private static final String USER_FK           = "user_fk";
 
   private CalendarItemDao() {
   }
@@ -61,8 +63,9 @@ public class CalendarItemDao extends Dao {
                                           + "," + START
                                           + "," + END
                                           + "," + GROUP_FK
-                                          + "," + EVENT_CATEGORY_FK + ")"
-                                          + " VALUES( ?, ?, ?, ?, ?, ?);",
+                                          + "," + EVENT_CATEGORY_FK
+                                          + "," + USER_FK + ")"
+                                          + " VALUES( ?, ?, ?, ?, ?, ?, ?);",
                                           Statement.RETURN_GENERATED_KEYS);
               stmt.setString(1, calendarItem.getDescription());
               stmt.setString(2, calendarItem.getRepeatable().toString());
@@ -72,6 +75,10 @@ public class CalendarItemDao extends Dao {
               EventCategory category = calendarItem.getEventCategory();
               if (category != null && category.getId() != 0) {
                 stmt.setInt(6, calendarItem.getEventCategory().getId());
+              }
+              User user = calendarItem.getUser();
+              if (user != null && user.getId() != 0) {
+                stmt.setInt(6, calendarItem.getUser().getId());
               }
 
               rows = stmt.executeUpdate();
@@ -116,7 +123,6 @@ public class CalendarItemDao extends Dao {
   /**
    * Select a CalendarItem by its id.
    * This includes a select of all associated RepEventExceptions, EventCategories and Groups.
-   * TODO #44: check for assignee!!
    * @param id of CalendarItem
    * @return calendar item from database or null if not found / an error occurred
    */
@@ -136,7 +142,8 @@ public class CalendarItemDao extends Dao {
                                           + START + ","
                                           + END + ","
                                           + EVENT_CATEGORY_FK + ","
-                                          + GROUP_FK
+                                          + GROUP_FK + ","
+                                          + USER_FK
                                           + " FROM " + TABLE
                                           + " WHERE " + ID + " = ?;");
               stmt.setInt(1, id);
@@ -166,6 +173,15 @@ public class CalendarItemDao extends Dao {
                                                             item));
                 item.setGroup(DaoFactory.getGroupDao()
                                         .selectById(result.getInt(GROUP_FK)));
+                ArrayList<User> users = DaoFactory.getUserDao()
+                                                  .getUsers();
+                int userId = result.getInt(USER_FK);
+                for (User user : users) {
+                  if (user.getId() == userId) {
+                    item.setUser(user);
+                    break;
+                  }
+                }
               }
             } catch (SQLException e) {
               logSqlError(method, e);
@@ -235,7 +251,8 @@ public class CalendarItemDao extends Dao {
                                           + REPEATABLE + ","
                                           + START + ","
                                           + END + ","
-                                          + EVENT_CATEGORY_FK
+                                          + EVENT_CATEGORY_FK + ","
+                                          + USER_FK
                                           + " FROM " + TABLE
                                           + " WHERE " + GROUP_FK + " = ?;");
               stmt.setInt(1, groupFk);
@@ -266,6 +283,15 @@ public class CalendarItemDao extends Dao {
                   item.setEventCategory(DaoFactory.getEventCategoryDao()
                                                   .selectById(result.getInt(EVENT_CATEGORY_FK),
                                                               item));
+                  ArrayList<User> users = DaoFactory.getUserDao()
+                                                    .getUsers();
+                  int userId = result.getInt(USER_FK);
+                  for (User user : users) {
+                    if (user.getId() == userId) {
+                      item.setUser(user);
+                      break;
+                    }
+                  }
                 } else {
                   item = callerCalendarItem;
                   item.setGroup(group);
@@ -345,7 +371,8 @@ public class CalendarItemDao extends Dao {
                                           + REPEATABLE + ","
                                           + START + ","
                                           + END + ","
-                                          + GROUP_FK
+                                          + GROUP_FK + ","
+                                          + USER_FK
                                           + " FROM " + TABLE
                                           + " WHERE " + EVENT_CATEGORY_FK + " = ?;");
               stmt.setInt(1, categoryFk);
@@ -385,6 +412,15 @@ public class CalendarItemDao extends Dao {
                     }
                   } else {
                     item.setGroup(DaoFactory.getGroupDao().selectById(groupId));
+                  }
+                  ArrayList<User> users = DaoFactory.getUserDao()
+                                                    .getUsers();
+                  int userId = result.getInt(USER_FK);
+                  for (User user : users) {
+                    if (user.getId() == userId) {
+                      item.setUser(user);
+                      break;
+                    }
                   }
                 } else {
                   item = callerCalendarItem;
@@ -462,7 +498,8 @@ public class CalendarItemDao extends Dao {
                                           + START + " = ?,"
                                           + END + " = ?,"
                                           + GROUP_FK + " = ?,"
-                                          + EVENT_CATEGORY_FK + " = ?"
+                                          + EVENT_CATEGORY_FK + " = ?,"
+                                          + USER_FK + " = ?"
                                           + " WHERE " + ID + " = ?;");
               stmt.setString(1, calendarItem.getDescription());
               stmt.setString(2, calendarItem.getRepeatable().toString());
@@ -470,15 +507,15 @@ public class CalendarItemDao extends Dao {
               stmt.setTimestamp(4, calendarItem.getEndDatetime());
               stmt.setInt(5, calendarItem.getGroup().getId());
               stmt.setInt(6, calendarItem.getEventCategory().getId());
-              stmt.setInt(7, calendarItem.getId());
+              stmt.setInt(7, calendarItem.getUser().getId());
+              stmt.setInt(8, calendarItem.getId());
               rows = stmt.executeUpdate();
 
-            /*
-            if (rows > 0) {
-                maybe do something
-            }
-            */
-
+              /*
+              if (rows > 0) {
+                  maybe do something
+              }
+              */
             } catch (SQLException e) {
               rows = switchSqlError(method, e);
             } finally {

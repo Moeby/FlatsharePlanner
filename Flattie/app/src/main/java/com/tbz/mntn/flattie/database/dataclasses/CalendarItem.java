@@ -24,7 +24,7 @@ public class CalendarItem {
 
   /**
    * Constructor to create a complete CalendarItem.
-   * @param description   a short text or title - max length TODO: check max length
+   * @param description   a short text or title - enough place for longer texts in db
    * @param repeatable    repeatable state - default should be 'NONE'
    * @param startDatetime beginning of the CalendarItem (enter time 0:00 for a hole day)
    * @param endDatetime   end of the CalendarItem (if it last until 24:00 simply enter null)
