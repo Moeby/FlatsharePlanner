@@ -17,8 +17,8 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 
-public class CalendarItemDAOTest extends Assert {
-    private CalendarItemDAO dao;
+public class CalendarItemDaoTest extends Assert {
+    private CalendarItemDao dao;
 
     private CalendarItem item;
     private String description;
@@ -33,7 +33,7 @@ public class CalendarItemDAOTest extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        dao = DAOFactory.getCalendarItemDAO();
+        dao = DaoFactory.getCalendarItemDao();
 
         description = "This is a description";
         startDate = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
@@ -95,8 +95,8 @@ public class CalendarItemDAOTest extends Assert {
 
         assertEquals(newID, item.getId());
         assertEquals(2, dao.getCalendarItems().size());
-        assertEquals(1, DAOFactory.getGroupDAO().getGroups().size());
-        assertEquals(1, DAOFactory.getEventCategoryDAO().getEventCategories().size());
+        assertEquals(1, DaoFactory.getGroupDao().getGroups().size());
+        assertEquals(1, DaoFactory.getEventCategoryDao().getEventCategories().size());
     }
 
     @Ignore
@@ -107,8 +107,8 @@ public class CalendarItemDAOTest extends Assert {
 
         assertEquals(newID, item.getId());
         assertEquals(2, dao.getCalendarItems().size());
-        assertEquals(1, DAOFactory.getGroupDAO().getGroups().size());
-        assertEquals(1, DAOFactory.getEventCategoryDAO().getEventCategories().size());
+        assertEquals(1, DaoFactory.getGroupDao().getGroups().size());
+        assertEquals(1, DaoFactory.getEventCategoryDao().getEventCategories().size());
         Connection con = MysqlConnector.getConnection();
         assertTrue(con.isClosed());
 
@@ -150,7 +150,7 @@ public class CalendarItemDAOTest extends Assert {
         item.setStartDatetime(startDate);
         item.setEndDatetime(endDate);
         item.setRepeatable(repeatable);
-        item.setEventCategory(DAOFactory.getEventCategoryDAO().selectById(1));
+        item.setEventCategory(DaoFactory.getEventCategoryDao().selectById(1));
         Group group = new Group();
         group.setId(1);
         item.setGroup(group);

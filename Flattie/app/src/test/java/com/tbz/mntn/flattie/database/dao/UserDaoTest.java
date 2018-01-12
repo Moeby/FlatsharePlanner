@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class UserDAOTest extends Assert{
-    private UserDAO dao;
+public class UserDaoTest extends Assert{
+    private UserDao dao;
 
     private User user;
     private String email;
@@ -29,7 +29,7 @@ public class UserDAOTest extends Assert{
 
     @Before
     public void setUp() throws Exception {
-        dao = DAOFactory.getUserDAO();
+        dao = DaoFactory.getUserDao();
 
         email = "mail";
         email2 = "mail2";
@@ -138,13 +138,13 @@ public class UserDAOTest extends Assert{
 
         assertEquals(newID,user.getId());
         assertEquals(1,dao.getUsers().size());
-        assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
+        assertEquals(1, DaoFactory.getGroupDao().getGroups().size());
         
         // double select
         user = dao.selectByUsername(username);
         assertEquals(newID,user.getId());
         assertEquals(1,dao.getUsers().size());
-        assertEquals(1,DAOFactory.getGroupDAO().getGroups().size());
+        assertEquals(1, DaoFactory.getGroupDao().getGroups().size());
     }
 
     @Ignore
@@ -155,13 +155,13 @@ public class UserDAOTest extends Assert{
     
         assertEquals(2,user.getId());
         assertEquals(1,dao.getUsers().size());
-        assertEquals(0,DAOFactory.getGroupDAO().getGroups().size());
+        assertEquals(0, DaoFactory.getGroupDao().getGroups().size());
     
         // double select
         user = dao.selectByUsername(username2);
         assertEquals(2,user.getId());
         assertEquals(1,dao.getUsers().size());
-        assertEquals(0,DAOFactory.getGroupDAO().getGroups().size());
+        assertEquals(0, DaoFactory.getGroupDao().getGroups().size());
     }
 
     @Ignore
@@ -267,7 +267,7 @@ public class UserDAOTest extends Assert{
         result = dao.remove(user);
 
         assertEquals(1,result);
-        assertEquals(null, DAOFactory.getGroupDAO().selectById(1));
+        assertEquals(null, DaoFactory.getGroupDao().selectById(1));
     }
 
     @Ignore

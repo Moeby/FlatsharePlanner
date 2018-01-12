@@ -10,15 +10,15 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class EventCategoryDAOTest extends Assert {
-    private EventCategoryDAO dao;
+public class EventCategoryDaoTest extends Assert {
+    private EventCategoryDao dao;
 
     private int newID = 1;
     private String name = "event";
 
     @Before
     public void setUp() throws Exception {
-        dao = DAOFactory.getEventCategoryDAO();
+        dao = DaoFactory.getEventCategoryDao();
     }
 
     @After

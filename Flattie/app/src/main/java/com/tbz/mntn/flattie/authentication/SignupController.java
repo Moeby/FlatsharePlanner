@@ -1,10 +1,14 @@
 package com.tbz.mntn.flattie.authentication;
 
 import android.support.design.widget.Snackbar;
+
+import com.tbz.mntn.flattie.database.dataclasses.User;
+
+import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import com.tbz.mntn.flattie.database.dao.DAOFactory;
-import com.tbz.mntn.flattie.database.dao.UserDAO;
+import com.tbz.mntn.flattie.database.dao.DaoFactory;
+import com.tbz.mntn.flattie.database.dao.UserDao;
 import com.tbz.mntn.flattie.database.dataclasses.User;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -18,7 +22,6 @@ public class SignupController {
   /**
    * Check if username already exists
    * if not create a new user account and log in
-   *
    * @param name        from the user input
    * @param email       from the user input
    * @param password    from the user input
@@ -41,12 +44,13 @@ public class SignupController {
       return false;
     }
     if (password.equals(repPassword)) {
-      UserDAO userDAO = DAOFactory.getUserDAO();
+      UserDao userDAO = DaoFactory.getUserDao();
 
       //TODO: hash password and generate pepper
       String passwordHash = BCrypt.hashpw(password,pepper);
       User newUser = new User(email, name, passwordHash, null, null);
       int rows = userDAO.insert(newUser);
+
       if (rows > 0) {
         LoggedInUser.setLoggedInUser(newUser);
         return true;

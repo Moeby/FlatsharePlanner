@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class ShoppingItemDAOTest extends Assert {
-    private ShoppingItemDAO dao;
+public class ShoppingItemDaoTest extends Assert {
+    private ShoppingItemDao dao;
 
     private ShoppingItem item;
     private String name;
@@ -37,7 +37,7 @@ public class ShoppingItemDAOTest extends Assert {
         item.setBought(bought);
         item.setGroup(group);
 
-        dao = DAOFactory.getShoppingItemDAO();
+        dao = DaoFactory.getShoppingItemDao();
     }
 
     @After

@@ -13,8 +13,8 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 
-public class RepEventExceptionDAOTest extends Assert {
-    private RepEventExceptionDAO dao;
+public class RepEventExceptionDaoTest extends Assert {
+    private RepEventExceptionDao dao;
 
     private RepEventException exception;
     private boolean skipped;
@@ -27,7 +27,7 @@ public class RepEventExceptionDAOTest extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        dao = DAOFactory.getRepEventExeptionDAO();
+        dao = DaoFactory.getRepEventExeptionDao();
 
         skipped = true;
         startDate = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
