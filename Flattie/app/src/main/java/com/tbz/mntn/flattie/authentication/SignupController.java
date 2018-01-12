@@ -11,12 +11,14 @@ import com.tbz.mntn.flattie.database.dao.DaoFactory;
 import com.tbz.mntn.flattie.database.dao.UserDao;
 import com.tbz.mntn.flattie.database.dataclasses.User;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 /**
  * Signup verification and handler
  */
 
 public class SignupController {
-
+  private final String pepper = "NaTanaMa";
   /**
    * Check if username already exists
    * if not create a new user account and log in
@@ -45,9 +47,10 @@ public class SignupController {
       UserDao userDAO = DaoFactory.getUserDao();
 
       //TODO: hash password and generate pepper
-      //String passwordHash = BCrypt.hashpw(password);
-      User newUser = new User(email, name, password, null, null);
-      int  rows    = userDAO.insert(newUser);
+      String passwordHash = BCrypt.hashpw(password,pepper);
+      User newUser = new User(email, name, passwordHash, null, null);
+      int rows = userDAO.insert(newUser);
+
       if (rows > 0) {
         LoggedInUser.setLoggedInUser(newUser);
         return true;
