@@ -9,54 +9,55 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class EventCategoryDao extends Dao {
   private static EventCategoryDao         instance        = new EventCategoryDao();
   private        ArrayList<EventCategory> eventCategories = new ArrayList();
-  private List<EventCategory> categories;
-  private EventCategory category;
-  private int rows;
+  private ArrayList<EventCategory> categories;
+  private EventCategory            category;
+  private int                      rows;
 
   // table constants
   private static final String TABLE = "event_category";
-  private static final String ID = "id";
-  private static final String NAME = "name";
+  private static final String ID    = "id";
+  private static final String NAME  = "name";
 
   private EventCategoryDao() {
   }
 
-  public static EventCategoryDao getInstance() {
+  static EventCategoryDao getInstance() {
     return instance;
   }
 
   /**
-   * calls selectById with calendarItem = default null
-   *
-   * @param id
+   * Get a specific EventCategory.
+   * @param id search criteria
    * @return event category from database or null if not found / an error occurred
+   * @see #selectById(int, CalendarItem)
    */
   public EventCategory selectById(int id) {
     return selectById(id, null);
   }
 
   /**
-   * @param id
-   * @param callerCalendarItem
+   * Get a specific EventCategory.
+   * @param id                 search criteria
+   * @param callerCalendarItem null if called from outside
+   *                           or event which has called another select method
    * @return event category from database or null if not found / an error occurred
    */
-  public EventCategory selectById(final int id, final CalendarItem callerCalendarItem) {
+  EventCategory selectById(final int id, final CalendarItem callerCalendarItem) {
     Thread thread = new Thread(
         new Runnable() {
           public void run() {
             String method = "selectById " + TABLE;
             category = null;
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            Connection        con    = getConnection(method);
+            PreparedStatement stmt   = null;
+            ResultSet         result = null;
             try {
               stmt = con.prepareStatement("SELECT " + NAME + " FROM " + TABLE
-                  + " WHERE " + ID + " = ?;");
+                                          + " WHERE " + ID + " = ?;");
               stmt.setInt(1, id);
 
               result = stmt.executeQuery();
@@ -74,7 +75,9 @@ public class EventCategoryDao extends Dao {
                 category.setId(id);
                 category.setName(result.getString(NAME));
 
-                category.setCalendarItems((ArrayList<CalendarItem>) DaoFactory.getCalendarItemDao().selectAllByEventCategory(category, callerCalendarItem));
+                category.setCalendarItems(DaoFactory.getCalendarItemDao()
+                                                    .selectAllByEventCategory(category,
+                                                                              callerCalendarItem));
               }
             } catch (SQLException e) {
               logSqlError(method, e);
@@ -83,12 +86,15 @@ public class EventCategoryDao extends Dao {
             } finally {
               try {
                 // free resources
-                if (result != null)
+                if (result != null) {
                   result.close();
-                if (stmt != null)
+                }
+                if (stmt != null) {
                   stmt.close();
-                if (closeCon)
+                }
+                if (closeCon) {
                   MysqlConnector.close();
+                }
               } catch (SQLException e) {
                 logSqlError("closure " + method, e);
               }
@@ -106,22 +112,23 @@ public class EventCategoryDao extends Dao {
   }
 
   /**
+   * Get all possible event categories.
    * @return all event categories from database or null if an error occurred
    */
-  public List<EventCategory> selectAll() {
+  public ArrayList<EventCategory> selectAll() {
     Thread thread = new Thread(
         new Runnable() {
           public void run() {
             String method = "selectAll " + TABLE;
             categories = new ArrayList();
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            Connection        con    = getConnection(method);
+            PreparedStatement stmt   = null;
+            ResultSet         result = null;
             try {
               stmt = con.prepareStatement("SELECT " + ID + ", " + NAME + " FROM " + TABLE + ";");
               result = stmt.executeQuery();
               while (result.next()) {
-                int id = result.getInt(ID);
+                int           id       = result.getInt(ID);
                 EventCategory category = null;
                 for (EventCategory eventCategory : eventCategories) {
                   if (id == eventCategory.getId()) {
@@ -136,7 +143,8 @@ public class EventCategoryDao extends Dao {
                 category.setId(id);
                 category.setName(result.getString(NAME));
 
-                category.setCalendarItems((ArrayList<CalendarItem>) DaoFactory.getCalendarItemDao().selectAllByEventCategory(category, null));
+                category.setCalendarItems(DaoFactory.getCalendarItemDao()
+                                                    .selectAllByEventCategory(category, null));
 
                 categories.add(category);
               }
@@ -147,12 +155,15 @@ public class EventCategoryDao extends Dao {
             } finally {
               try {
                 // free resources
-                if (result != null)
+                if (result != null) {
                   result.close();
-                if (stmt != null)
+                }
+                if (stmt != null) {
                   stmt.close();
-                if (closeCon)
+                }
+                if (closeCon) {
                   MysqlConnector.close();
+                }
               } catch (SQLException e) {
                 logSqlError("closure " + method, e);
               }
