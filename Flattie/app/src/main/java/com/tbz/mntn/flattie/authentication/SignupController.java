@@ -14,7 +14,7 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 
 public class SignupController {
-
+  private final String pepper = "NaTanaMa";
   /**
    * Check if username already exists
    * if not create a new user account and log in
@@ -44,8 +44,8 @@ public class SignupController {
       UserDAO userDAO = DAOFactory.getUserDAO();
 
       //TODO: hash password and generate pepper
-      //String passwordHash = BCrypt.hashpw(password);
-      User newUser = new User(email, name, password, null, null);
+      String passwordHash = BCrypt.hashpw(password,pepper);
+      User newUser = new User(email, name, passwordHash, null, null);
       int rows = userDAO.insert(newUser);
       if (rows > 0) {
         LoggedInUser.setLoggedInUser(newUser);
