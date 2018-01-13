@@ -4,55 +4,60 @@ import android.support.annotation.Nullable;
 
 public class ShoppingItem {
 
-    private int id;
-    private String name;
-    private boolean bought;
-    private Group group;
+  private int     id;
+  private String  name;
+  private boolean bought;
+  private Group   group;
 
-    public ShoppingItem() {
-    }
 
-    /**
-     * @param name
-     * @param bought
-     * @param group
-     */
-    public ShoppingItem(String name, boolean bought, @Nullable Group group) {
-        this.name   = name;
-        this.bought = bought;
-        this.group  = group;
-    }
+  /**
+   * Empty constructor. Do not forget to add all required fields.
+   */
+  public ShoppingItem() {
+  }
 
-    public int getId() {
-        return id;
-    }
+  /**
+   * Constructor to create a complete ShoppingItem.
+   * @param name   title of the ShoppingItem
+   * @param bought true if somebody planned to buy this item
+   * @param group  associated group
+   */
+  public ShoppingItem(String name, boolean bought, @Nullable Group group) {
+    this.name = name;
+    this.bought = bought;
+    this.group = group;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public boolean isBought() {
-        return bought;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setBought(boolean bought) {
-        this.bought = bought;
-    }
+  public boolean isBought() {
+    return bought;
+  }
 
-    public Group getGroup() {
-        return group;
-    }
+  public void setBought(boolean bought) {
+    this.bought = bought;
+  }
 
-    public void setGroup(Group group) {
-        this.group = group;
-    }
+  public Group getGroup() {
+    return group;
+  }
+
+  public void setGroup(Group group) {
+    this.group = group;
+  }
 
 }

@@ -1,8 +1,8 @@
 package com.tbz.mntn.flattie.database.dao;
 
+import com.tbz.mntn.flattie.database.databaseConnection.MysqlConnector;
 import com.tbz.mntn.flattie.database.dataclasses.Group;
 import com.tbz.mntn.flattie.database.dataclasses.User;
-import com.tbz.mntn.flattie.database.databaseConnection.MysqlConnector;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -12,12 +12,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.List;
 
 public class UserDao extends Dao {
   private static UserDao         instance = new UserDao();
   private        ArrayList<User> users    = new ArrayList();
-  private List<User> userList;
+  private ArrayList<User> userList;
   private User user;
   private int rows;
 
@@ -179,7 +178,7 @@ public class UserDao extends Dao {
    * @param group required values: id
    * @return list of users from database or null if not found / an error occurred <br>ignores removed user
    */
-  public List<User> selectAllByGroupId(final Group group) {
+  public ArrayList<User> selectAllByGroupId(final Group group) {
     Thread thread = new Thread(
         new Runnable() {
           public void run() {
