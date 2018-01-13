@@ -22,13 +22,14 @@ public class CalendarEntryController {
 
   /**
    * Get the data objects for the specified parameters and try to persist it.
-   * @param description   of the event
-   * @param repeatable    (NONE, DAILY, WEEKLY, MONTHLY, YEARLY)
-   * @param startDate     of the event
-   * @param endDate       of the event
-   * @param group         the event belongs to
+   *
+   * @param description of the event
+   * @param repeatable (NONE, DAILY, WEEKLY, MONTHLY, YEARLY)
+   * @param startDate of the event
+   * @param endDate of the event
+   * @param group the event belongs to
    * @param eventCategory (event, absence, duty)
-   * @param assignedUser  to the event, only one possible
+   * @param assignedUser to the event, only one possible
    * @return true if persisting was successful, false otherwise
    */
   public boolean saveCalendarEntryToDatabase(String description,
@@ -69,8 +70,10 @@ public class CalendarEntryController {
       int result = calendarItemDao.insert(item);
 
       // insert successful == 1
-      if (result != 1) {return false;}
-      return true;
+      if (result == 1) {
+        return true;
+      }
+      return false;
     }
   }
 
