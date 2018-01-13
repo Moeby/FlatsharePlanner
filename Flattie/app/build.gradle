@@ -19,6 +19,17 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            //...
+        }
+        innerTest {
+            //...
+            matchingFallbacks = ['debug', 'release']
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 
@@ -39,4 +50,6 @@ dependencies {
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
     compile 'org.mindrot:jbcrypt:0.3m'
     implementation files('library/mysql-connector-java-3.0.17-ga-bin.jar')
+  //  implementation project(':slideDateTimePickerSample')
+    compile project(path: ':slideDateTimePicker-1.0.8')
 }
