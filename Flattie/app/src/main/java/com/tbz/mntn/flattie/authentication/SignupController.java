@@ -2,9 +2,6 @@ package com.tbz.mntn.flattie.authentication;
 
 import android.support.design.widget.Snackbar;
 
-import com.tbz.mntn.flattie.database.dataclasses.User;
-
-import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import com.tbz.mntn.flattie.database.dao.DaoFactory;
@@ -19,6 +16,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class SignupController {
   private final String pepper = "NaTanaMa";
+  private String salt = BCrypt.gensalt();
   /**
    * Check if username already exists
    * if not create a new user account and log in
@@ -30,6 +28,7 @@ public class SignupController {
    */
   //public int signup(String name, String email, String password, String repPassword, View view) {
   public Boolean signup(String name, String email, String password, String repPassword, View view) {
+    System.out.println(salt);
     if (name.equals("")) {
       Snackbar.make(view, "Please enter a name.", 3000).show();
       return false;
