@@ -25,8 +25,7 @@ public class GroupDao extends Dao {
   private static final String NAME         = "name";
   private static final String REMOVAL_DATE = "removal_date";
 
-  private GroupDao() {
-  }
+  private GroupDao() {}
 
   static GroupDao getInstance() {
     return instance;

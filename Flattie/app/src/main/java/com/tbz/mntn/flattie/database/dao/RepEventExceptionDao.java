@@ -25,9 +25,7 @@ public class RepEventExceptionDao extends Dao {
   private static final String SKIPPED          = "skipped";
   private static final String CALENDAR_ITEM_FK = "calendar_item_fk";
 
-
-  private RepEventExceptionDao() {
-  }
+  private RepEventExceptionDao() {}
 
   static RepEventExceptionDao getInstance() {
     return instance;

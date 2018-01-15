@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
 import com.tbz.mntn.flattie.R;
-import com.tbz.mntn.flattie.authentication.LoggedInUser;
+import com.tbz.mntn.flattie.authentification.LoggedInUser;
 import com.tbz.mntn.flattie.calendar.CalendarEntryController;
 import com.tbz.mntn.flattie.database.dao.DaoFactory;
 import com.tbz.mntn.flattie.database.dao.EventCategoryDao;
@@ -50,6 +50,7 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
     public void onDateTimeSet(Date date) {
       startDate = date;
       TextInputLayout startDate = findViewById(R.id.cal_start_date);
+      // TODO #61: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
       if (endDate == null || date.before(endDate)) {
         startDate.getEditText().setText(dateFormat.format(date));
       } else {
@@ -61,7 +62,9 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
       }
     }
 
-    // Optional cancel listener
+    /**
+     *  Optional cancel listener.
+     */
     @Override
     public void onDateTimeCancel() {
       Toast.makeText(AddCalendarEntryActivity.this,
@@ -81,6 +84,7 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
     public void onDateTimeSet(Date date) {
       endDate = date;
       TextInputLayout endDate = findViewById(R.id.cal_end_date);
+      // TODO #61: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
       if (startDate == null || date.after(startDate)) {
         endDate.getEditText().setText(dateFormat.format(date));
       } else {
@@ -124,14 +128,19 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
       // Check dates and description are not empty
       if (this.startDate != null && this.endDate != null) {
         CalendarEntryController calendarEntryController = new CalendarEntryController();
+        // TODO #61: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
         Boolean isItemSavedToDb =
-            calendarEntryController.saveCalendarEntryToDatabase(description.getEditText().getText().toString(),
-                                                                repeatableSpinner.getSelectedItem().toString(),
+            calendarEntryController.saveCalendarEntryToDatabase(description.getEditText()
+                                                                           .getText().toString(),
+                                                                repeatableSpinner.getSelectedItem()
+                                                                                 .toString(),
                                                                 this.startDate,
                                                                 this.endDate,
                                                                 loggedInUser.getGroup(),
-                                                                categorySpinner.getSelectedItem().toString(),
-                                                                peopleSpinner.getSelectedItem().toString());
+                                                                categorySpinner.getSelectedItem()
+                                                                               .toString(),
+                                                                peopleSpinner.getSelectedItem()
+                                                                             .toString());
         if (isItemSavedToDb) {
           launchCalendarActivity();
         } else {
@@ -160,11 +169,13 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
   }
 
   private void setRepeatableSpinnerValues(Spinner repeatableSpinner) {
-    String[] repeatableNames = Arrays.toString(Repeatable.values()).replaceAll("^.|.$", "").split(", ");
+    String[] repeatableNames = Arrays.toString(Repeatable.values())
+                                     .replaceAll("^.|.$", "").split(", ");
 
     ArrayAdapter<String> repeatableSpinnerArrayAdapter = new ArrayAdapter<>(
         this, android.R.layout.simple_spinner_item, repeatableNames);
-    repeatableSpinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    repeatableSpinnerArrayAdapter
+        .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     repeatableSpinner.setAdapter(repeatableSpinnerArrayAdapter);
   }
 
@@ -172,11 +183,13 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
   private void setCategorySpinnerValues(Spinner categorySpinner) {
     EventCategoryDao    eventCategoryDao = DaoFactory.getEventCategoryDao();
     List<EventCategory> eventCategories  = eventCategoryDao.selectAll();
-    String[]            categoryNames    = eventCategories.stream().map(EventCategory::getName).toArray(String[]::new);
+    String[] categoryNames = eventCategories.stream().map(EventCategory::getName)
+                                            .toArray(String[]::new);
 
     ArrayAdapter<String> repeatableSpinnerArrayAdapter = new ArrayAdapter<>(
         this, android.R.layout.simple_spinner_item, categoryNames);
-    repeatableSpinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    repeatableSpinnerArrayAdapter
+        .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     categorySpinner.setAdapter(repeatableSpinnerArrayAdapter);
   }
 
@@ -184,11 +197,13 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
   private void setGroupMembersSpinnerValues(Spinner peopleSpinner) {
     User            loggedInUser = LoggedInUser.getLoggedInUser();
     ArrayList<User> groupUsers   = loggedInUser.getGroup().getUsers();
-    String[]        peopleNames  = groupUsers.stream().map(User::getUsername).toArray(String[]::new);
+    String[] peopleNames = groupUsers.stream().map(User::getUsername)
+                                     .toArray(String[]::new);
 
     ArrayAdapter<String> repeatableSpinnerArrayAdapter = new ArrayAdapter<>(
         this, android.R.layout.simple_spinner_item, peopleNames);
-    repeatableSpinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    repeatableSpinnerArrayAdapter
+        .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     peopleSpinner.setAdapter(repeatableSpinnerArrayAdapter);
   }
 

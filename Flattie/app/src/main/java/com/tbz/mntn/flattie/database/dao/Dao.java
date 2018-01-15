@@ -83,6 +83,7 @@ abstract class Dao {
 
   void logSqlError(String method, SQLException e) {
     Log.w("SQLException", method + ": ", e);
+    // For test cases without phone or emulator :
     //System.out.println(method + ": " + e);
     //System.out.println(e.getErrorCode() + ", " + e.getSQLState());
   }

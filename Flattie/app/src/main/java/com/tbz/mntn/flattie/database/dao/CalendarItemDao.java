@@ -33,8 +33,7 @@ public class CalendarItemDao extends Dao {
   private static final String EVENT_CATEGORY_FK = "event_category_fk";
   private static final String USER_FK           = "user_fk";
 
-  private CalendarItemDao() {
-  }
+  private CalendarItemDao() {}
 
   static CalendarItemDao getInstance() {
     return instance;
@@ -486,7 +485,7 @@ public class CalendarItemDao extends Dao {
               int                  check = dao.deleteAllByCalendarItem(calendarItem);
 
               /*
-              Todo: when transaction inserted check
+              TODO LATER: when transaction in RepEventExceptionDao is inserted: check
               if(check xx) {
                   maybe do something
               }
@@ -557,8 +556,8 @@ public class CalendarItemDao extends Dao {
     Thread thread = new Thread(
         new Runnable() {
           public void run() {
-            String            method = "delete " + TABLE;
-            int               rows   = -1;
+            String method = "delete " + TABLE;
+            rows = -1;
             Connection        con    = getConnection(method);
             PreparedStatement stmt   = null;
             ResultSet         result = null;
