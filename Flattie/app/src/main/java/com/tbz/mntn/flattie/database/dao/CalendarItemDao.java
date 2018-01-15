@@ -485,7 +485,7 @@ public class CalendarItemDao extends Dao {
               int                  check = dao.deleteAllByCalendarItem(calendarItem);
 
               /*
-              Todo: when transaction inserted check
+              TODO LATER: when transaction in RepEventExceptionDao is inserted: check
               if(check xx) {
                   maybe do something
               }

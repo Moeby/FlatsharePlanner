@@ -2,10 +2,10 @@ package com.tbz.mntn.flattie.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Button;
 
 import com.tbz.mntn.flattie.R;
@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     btnLogin.setOnClickListener(view -> {
       LoginController loginController = new LoginController();
+      // TODO #57: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
       Boolean loggedIn = loginController.login(email.getEditText().getText().toString(),
                                                password.getEditText().getText().toString(),
                                                context);
