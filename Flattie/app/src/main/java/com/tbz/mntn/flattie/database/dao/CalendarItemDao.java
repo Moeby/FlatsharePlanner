@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 
 public class CalendarItemDao extends Dao {
@@ -74,10 +75,14 @@ public class CalendarItemDao extends Dao {
               EventCategory category = calendarItem.getEventCategory();
               if (category != null && category.getId() != 0) {
                 stmt.setInt(6, calendarItem.getEventCategory().getId());
+              } else {
+                stmt.setNull(6, Types.INTEGER);
               }
               User user = calendarItem.getUser();
               if (user != null && user.getId() != 0) {
                 stmt.setInt(6, calendarItem.getUser().getId());
+              } else {
+                stmt.setNull(7, Types.INTEGER);
               }
 
               rows = stmt.executeUpdate();
