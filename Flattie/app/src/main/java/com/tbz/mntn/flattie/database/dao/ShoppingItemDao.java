@@ -24,8 +24,7 @@ public class ShoppingItemDao extends Dao {
   private static final String BOUGHT   = "bought";
   private static final String GROUP_FK = "group_fk";
 
-  private ShoppingItemDao() {
-  }
+  private ShoppingItemDao() {}
 
   static ShoppingItemDao getInstance() {
     return instance;

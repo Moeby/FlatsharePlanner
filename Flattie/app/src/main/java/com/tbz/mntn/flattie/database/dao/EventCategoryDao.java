@@ -15,15 +15,13 @@ public class EventCategoryDao extends Dao {
   private        ArrayList<EventCategory> eventCategories = new ArrayList();
   private ArrayList<EventCategory> categories;
   private EventCategory            category;
-  private int                      rows;
 
   // table constants
   private static final String TABLE = "event_category";
   private static final String ID    = "id";
   private static final String NAME  = "name";
 
-  private EventCategoryDao() {
-  }
+  private EventCategoryDao() {}
 
   static EventCategoryDao getInstance() {
     return instance;

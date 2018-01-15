@@ -17,28 +17,30 @@ public class UserDao extends Dao {
   private static UserDao         instance = new UserDao();
   private        ArrayList<User> users    = new ArrayList();
   private ArrayList<User> userList;
-  private User user;
-  private int rows;
+  private User            user;
+  private int             rows;
 
   // table constants
-  private static final String TABLE = "user";
-  private static final String ID = "id";
-  private static final String EMAIL = "email";
-  private static final String USERNAME = "username";
-  private static final String PASSWORD = "password";
+  private static final String TABLE        = "user";
+  private static final String ID           = "id";
+  private static final String EMAIL        = "email";
+  private static final String USERNAME     = "username";
+  private static final String PASSWORD     = "password";
   private static final String REMOVAL_DATE = "removal_date";
-  private static final String GROUP_FK = "group_fk";
+  private static final String GROUP_FK     = "group_fk";
 
-  private UserDao() {
-  }
+  private UserDao() {}
 
-  public static UserDao getInstance() {
+  static UserDao getInstance() {
     return instance;
   }
 
   /**
-   * @param user required values: email, username, password <br>possible nullable: removal date and group with id
-   * @return
+   * Insert a new user into the database.
+   * @param user required values: email, username, password<br>
+   *             possible nullable: removal date and group with id
+   * @return positive = ok, negative = error
+   * @see Dao#switchSqlError(String method, SQLException e)
    */
   public int insert(final User user) {
     Thread thread = new Thread(
@@ -46,40 +48,50 @@ public class UserDao extends Dao {
           public void run() {
             String method = "insert " + TABLE;
             rows = -1;
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            Connection        con    = getConnection(method);
+            PreparedStatement stmt   = null;
+            ResultSet         result = null;
             try {
-              stmt = con.prepareStatement("INSERT INTO " + TABLE + " (" + EMAIL + "," + USERNAME + "," + PASSWORD + "," + REMOVAL_DATE + "," + GROUP_FK + ")"
-                      + " VALUES( ?, ?, ?, ?, ?);"
-                  , Statement.RETURN_GENERATED_KEYS);
+              stmt = con.prepareStatement("INSERT INTO " + TABLE + " ("
+                                          + EMAIL + ","
+                                          + USERNAME + ","
+                                          + PASSWORD + ","
+                                          + REMOVAL_DATE + ","
+                                          + GROUP_FK + ")"
+                                          + " VALUES( ?, ?, ?, ?, ?);",
+                                          Statement.RETURN_GENERATED_KEYS);
               stmt.setString(1, user.getEmail());
               stmt.setString(2, user.getUsername());
               stmt.setString(3, user.getPassword());
               stmt.setDate(4, user.getRemovalDate());
               Group group = user.getGroup();
-              if (group != null && group.getId() != 0)
+              if (group != null && group.getId() != 0) {
                 stmt.setInt(5, group.getId());
-              else
+              } else {
                 stmt.setNull(5, Types.INTEGER);
+              }
 
               rows = stmt.executeUpdate();
               ResultSet generatedKeys = stmt.getGeneratedKeys();
-              if (generatedKeys.next())
+              if (generatedKeys.next()) {
                 user.setId(generatedKeys.getInt(1));
+              }
 
-              if (rows > 0)
+              if (rows > 0) {
                 users.add(user);
+              }
 
             } catch (SQLException e) {
               rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
-                if (result != null)
+                if (result != null) {
                   result.close();
-                if (stmt != null)
+                }
+                if (stmt != null) {
                   stmt.close();
+                }
                 if (closeCon) {
                   con.close();
                 }
@@ -99,27 +111,33 @@ public class UserDao extends Dao {
   }
 
   /**
-   * @param username
+   * Gets a user from database.
+   * @param username search criteria
    * @return user from database or null if not found / an error occurred <br>ignores removed users
    */
   public User selectByUsername(final String username) {
     Thread thread = new Thread(
         new Runnable() {
           public void run() {
-            String method = "selectByUsername " + TABLE;
-
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            String            method = "selectByUsername " + TABLE;
+            Connection        con    = getConnection(method);
+            PreparedStatement stmt   = null;
+            ResultSet         result = null;
             try {
-              stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + GROUP_FK + " FROM " + TABLE
-                  + " WHERE " + USERNAME + " = ?"
-                  + " AND " + REMOVAL_DATE + " IS NULL;");
+              stmt = con.prepareStatement("SELECT "
+                                          + ID + ","
+                                          + EMAIL + ","
+                                          + PASSWORD + ","
+                                          + REMOVAL_DATE + ","
+                                          + GROUP_FK
+                                          + " FROM " + TABLE
+                                          + " WHERE " + USERNAME + " = ?"
+                                          + " AND " + REMOVAL_DATE + " IS NULL;");
               stmt.setString(1, username);
               result = stmt.executeQuery();
               if (result.next()) {
                 for (User savedUser : users) {
-                  if (username == savedUser.getUsername()) {
+                  if (username.equals(savedUser.getUsername())) {
                     setUser(savedUser);
                     break;
                   }
@@ -127,10 +145,10 @@ public class UserDao extends Dao {
                 if (user == null) {
                   setUser(new User());
 
-                  int groupFK = result.getInt(GROUP_FK);
-                  if (groupFK != 0)
-                    user.setGroup(DaoFactory.getGroupDao().selectById(groupFK));
-                  else {
+                  int groupFk = result.getInt(GROUP_FK);
+                  if (groupFk != 0) {
+                    user.setGroup(DaoFactory.getGroupDao().selectById(groupFk));
+                  } else {
                     users.add(user);
                   }
                 }
@@ -147,12 +165,15 @@ public class UserDao extends Dao {
             } finally {
               try {
                 // free resources
-                if (result != null)
+                if (result != null) {
                   result.close();
-                if (stmt != null)
+                }
+                if (stmt != null) {
                   stmt.close();
-                if (closeCon)
+                }
+                if (closeCon) {
                   MysqlConnector.close();
+                }
               } catch (SQLException e) {
                 logSqlError("closure selectByUsername " + TABLE, e);
               }
@@ -175,8 +196,10 @@ public class UserDao extends Dao {
   }
 
   /**
+   * Get all users of a group.
    * @param group required values: id
-   * @return list of users from database or null if not found / an error occurred <br>ignores removed user
+   * @return list of users from database or null if not found / an error occurred
+   * <br>ignores removed user
    */
   public ArrayList<User> selectAllByGroupId(final Group group) {
     Thread thread = new Thread(
@@ -184,18 +207,24 @@ public class UserDao extends Dao {
           public void run() {
             String method = "selectAllByGroupId " + TABLE;
             userList = new ArrayList();
-            int groupFk = group.getId();
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            int               groupFk = group.getId();
+            Connection        con     = getConnection(method);
+            PreparedStatement stmt    = null;
+            ResultSet         result  = null;
             try {
-              stmt = con.prepareStatement("SELECT " + ID + "," + EMAIL + "," + PASSWORD + "," + REMOVAL_DATE + "," + USERNAME + " FROM " + TABLE
-                  + " WHERE " + GROUP_FK + " = ?"
-                  + " AND " + REMOVAL_DATE + " IS NULL;");
+              stmt = con.prepareStatement("SELECT "
+                                          + ID + ","
+                                          + EMAIL + ","
+                                          + PASSWORD + ","
+                                          + REMOVAL_DATE + ","
+                                          + USERNAME
+                                          + " FROM " + TABLE
+                                          + " WHERE " + GROUP_FK + " = ?"
+                                          + " AND " + REMOVAL_DATE + " IS NULL;");
               stmt.setInt(1, groupFk);
               result = stmt.executeQuery();
               while (result.next()) {
-                int id = result.getInt(ID);
+                int  id   = result.getInt(ID);
                 User user = null;
                 for (User savedUser : users) {
                   if (id == savedUser.getId()) {
@@ -224,12 +253,15 @@ public class UserDao extends Dao {
             } finally {
               try {
                 // free resources
-                if (result != null)
+                if (result != null) {
                   result.close();
-                if (stmt != null)
+                }
+                if (stmt != null) {
                   stmt.close();
-                if (closeCon)
+                }
+                if (closeCon) {
                   MysqlConnector.close();
+                }
               } catch (SQLException e) {
                 logSqlError("closure " + method, e);
               }
@@ -251,30 +283,31 @@ public class UserDao extends Dao {
   }
 
   /**
-   * update group_fk in user
-   *
+   * Update group_fk in user.
    * @param user needs to contain at least the id and a group with an id
-   * @return
+   * @return positive = ok, negative = error
+   * @see Dao#switchSqlError(String method, SQLException e)
    */
   public int updateGroup(final User user) {
     Thread thread = new Thread(
         new Runnable() {
           public void run() {
             String method = "updateGroup " + TABLE;
-            Group group = user.getGroup();
+            Group  group  = user.getGroup();
             rows = -1;
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            Connection        con    = getConnection(method);
+            PreparedStatement stmt   = null;
+            ResultSet         result = null;
             try {
               stmt = con.prepareStatement("UPDATE " + TABLE
-                  + " SET " + GROUP_FK + " = ?"
-                  + " WHERE " + ID + " = ?"
-                  + " AND " + REMOVAL_DATE + " IS NULL;");
-              if (group != null && group.getId() != 0)
+                                          + " SET " + GROUP_FK + " = ?"
+                                          + " WHERE " + ID + " = ?"
+                                          + " AND " + REMOVAL_DATE + " IS NULL;");
+              if (group != null && group.getId() != 0) {
                 stmt.setInt(1, group.getId());
-              else
+              } else {
                 stmt.setNull(1, Types.INTEGER);
+              }
 
               stmt.setInt(2, user.getId());
 
@@ -285,12 +318,15 @@ public class UserDao extends Dao {
             } finally {
               try {
                 // free resources
-                if (result != null)
+                if (result != null) {
                   result.close();
-                if (stmt != null)
+                }
+                if (stmt != null) {
                   stmt.close();
-                if (closeCon)
+                }
+                if (closeCon) {
                   MysqlConnector.close();
+                }
               } catch (SQLException e) {
                 logSqlError("closure " + method, e);
               }
@@ -308,25 +344,26 @@ public class UserDao extends Dao {
   }
 
   /**
-   * update removal_date to current date - this user will be ignored by future selects
-   *
-   * @param user required values: id, group with id <br>ignored values: everything else
-   * @return
+   * Update removal_date to current date - this user will be ignored by future selects.
+   * @param user required values: id, group with id <br>
+   *             ignored values: everything else
+   * @return positive = ok, negative = error
+   * @see Dao#switchSqlError(String method, SQLException e)
    */
   public int remove(final User user) {
     Thread thread = new Thread(
         new Runnable() {
           public void run() {
-            String method = "remove " + TABLE;
-            Date removalDate = new Date(new java.util.Date().getTime());
+            String method      = "remove " + TABLE;
+            Date   removalDate = new Date(new java.util.Date().getTime());
             rows = -1;
-            Connection con = getConnection(method);
-            PreparedStatement stmt = null;
-            ResultSet result = null;
+            Connection        con    = getConnection(method);
+            PreparedStatement stmt   = null;
+            ResultSet         result = null;
             try {
               stmt = con.prepareStatement("UPDATE " + TABLE
-                  + " SET " + REMOVAL_DATE + " = ?"
-                  + " WHERE " + ID + " = ?;");
+                                          + " SET " + REMOVAL_DATE + " = ?"
+                                          + " WHERE " + ID + " = ?;");
               stmt.setDate(1, removalDate);
               stmt.setInt(2, user.getId());
 
@@ -334,21 +371,26 @@ public class UserDao extends Dao {
               if (rows > 0) {
                 user.setRemovalDate(removalDate);
                 Group group = user.getGroup();
-                if (group != null && group.getId() != 0)
-                  if (selectAllByGroupId(group) == null)
+                if (group != null && group.getId() != 0) {
+                  if (selectAllByGroupId(group) == null) {
                     DaoFactory.getGroupDao().remove(group);
+                  }
+                }
               }
             } catch (SQLException e) {
               rows = switchSqlError(method, e);
             } finally {
               try {
                 // free resources
-                if (result != null)
+                if (result != null) {
                   result.close();
-                if (stmt != null)
+                }
+                if (stmt != null) {
                   stmt.close();
-                if (closeCon)
+                }
+                if (closeCon) {
                   MysqlConnector.close();
+                }
               } catch (SQLException e) {
                 logSqlError("closure " + method, e);
               }
