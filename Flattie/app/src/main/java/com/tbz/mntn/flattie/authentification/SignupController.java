@@ -15,8 +15,6 @@ import org.mindrot.jbcrypt.BCrypt;
  * Signup verification and handler.
  */
 public class SignupController {
-  private final String pepper = "NaTanaMa";
-  private String salt = BCrypt.gensalt();
 
   /**
    * Check if username already exists.
@@ -28,7 +26,6 @@ public class SignupController {
    * @return true if user could log in, false if there was a problem with the login
    */
   public Boolean signup(String name, String email, String password, String repPassword, View view) {
-    System.out.println(salt);
     if (name.equals("")) {
       Snackbar.make(view, "Please enter a name.", 3000).show();
       return false;
@@ -45,8 +42,8 @@ public class SignupController {
     if (password.equals(repPassword)) {
       UserDao userDao = DaoFactory.getUserDao();
 
-      //TODO: hash password and generate pepper
-      String passwordHash = BCrypt.hashpw(password, pepper);
+      String salt = BCrypt.gensalt();
+      String passwordHash = BCrypt.hashpw(password, salt);
       User   newUser      = new User(email, name, passwordHash, null, null);
       int    rows         = userDao.insert(newUser);
 
