@@ -1,4 +1,4 @@
-package com.tbz.mntn.flattie.authentication;
+package com.tbz.mntn.flattie.authentification;
 
 import android.content.Context;
 
@@ -10,12 +10,12 @@ import com.tbz.mntn.flattie.internet.InternetChecker;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
- * Login verification and handler
+ * Login verification and handler.
  */
 public class LoginController {
 
   /**
-   * Check username and password and log user in if check successful
+   * Check username and password and log user in if check successful.
    * @param username from the user input
    * @param password from the user input
    * @return null if username doesn't exist, false if password wrong and true if login successful

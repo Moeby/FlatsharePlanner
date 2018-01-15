@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.tbz.mntn.flattie.R;
-import com.tbz.mntn.flattie.authentication.LoginController;
+import com.tbz.mntn.flattie.authentification.LoginController;
 
 public class MainActivity extends AppCompatActivity {
   Context context;

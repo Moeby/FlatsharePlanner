@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
 import com.tbz.mntn.flattie.R;
-import com.tbz.mntn.flattie.authentication.LoggedInUser;
+import com.tbz.mntn.flattie.authentification.LoggedInUser;
 import com.tbz.mntn.flattie.calendar.CalendarEntryController;
 import com.tbz.mntn.flattie.database.dao.DaoFactory;
 import com.tbz.mntn.flattie.database.dao.EventCategoryDao;

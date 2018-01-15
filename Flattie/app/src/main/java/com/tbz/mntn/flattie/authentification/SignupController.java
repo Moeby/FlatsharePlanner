@@ -1,8 +1,4 @@
-package com.tbz.mntn.flattie.authentication;
-
-import android.support.design.widget.Snackbar;
-
-import com.tbz.mntn.flattie.database.dataclasses.User;
+package com.tbz.mntn.flattie.authentification;
 
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -14,21 +10,19 @@ import com.tbz.mntn.flattie.database.dataclasses.User;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
- * Signup verification and handler
+ * Signup verification and handler.
  */
-
 public class SignupController {
-  private final String pepper = "NaTanaMa";
+
   /**
-   * Check if username already exists
-   * if not create a new user account and log in
+   * Check if username already exists.
+   * If not create a new user account and log in.
    * @param name        from the user input
    * @param email       from the user input
    * @param password    from the user input
    * @param repPassword from the user input
    * @return true if user could log in, false if there was a problem with the login
    */
-  //public int signup(String name, String email, String password, String repPassword, View view) {
   public Boolean signup(String name, String email, String password, String repPassword, View view) {
     if (name.equals("")) {
       Snackbar.make(view, "Please enter a name.", 3000).show();
@@ -44,18 +38,20 @@ public class SignupController {
       return false;
     }
     if (password.equals(repPassword)) {
-      UserDao userDAO = DaoFactory.getUserDao();
+      UserDao userDao = DaoFactory.getUserDao();
 
       //TODO: hash password and generate pepper
-      String passwordHash = BCrypt.hashpw(password,pepper);
-      User newUser = new User(email, name, passwordHash, null, null);
-      int rows = userDAO.insert(newUser);
+      String pepper       = "NaTanaMa";
+      String passwordHash = BCrypt.hashpw(password, pepper);
+      User   newUser      = new User(email, name, passwordHash, null, null);
+      int    rows         = userDao.insert(newUser);
 
       if (rows > 0) {
         LoggedInUser.setLoggedInUser(newUser);
         return true;
       } else if (rows == -200) {
-        Snackbar.make(view, "Name or email address already in use. Please chose another one.", 3000).show();
+        Snackbar.make(view, "Name or email address already in use."
+                            + " Please chose another one.", 3000).show();
         return false;
       }
       Snackbar.make(view, "Creation of a new user account failed.", 3000).show();
