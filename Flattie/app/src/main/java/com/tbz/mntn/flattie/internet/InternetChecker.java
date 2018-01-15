@@ -8,11 +8,26 @@ import android.net.NetworkInfo;
  * Check if internet connection active.
  */
 public final class InternetChecker {
+  private static ConnectivityManager connectivityManager;
+
+  /**
+   * Checks if there is an active internet connection.
+   * @param context activity which checks the internet connection
+   * @return true if connected, false if not
+   */
   public static Boolean isInternetConnectionActive(Context context) {
-    ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-    if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-        connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+    connectivityManager = (ConnectivityManager) context
+        .getSystemService(Context.CONNECTIVITY_SERVICE);
+    if (typeConnected(ConnectivityManager.TYPE_MOBILE)
+        || typeConnected(ConnectivityManager.TYPE_WIFI)) {
       //we are connected to a network
+      return true;
+    }
+    return false;
+  }
+
+  private static Boolean typeConnected(int type) {
+    if (connectivityManager.getNetworkInfo(type).getState() == NetworkInfo.State.CONNECTED) {
       return true;
     }
     return false;
