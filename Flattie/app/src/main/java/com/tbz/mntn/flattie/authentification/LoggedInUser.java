@@ -13,17 +13,17 @@ public class LoggedInUser {
     return loggedInUser;
   }
 
-  static void setLoggedInUser(User loggedInUser) {
+  public static void setLoggedInUser(User loggedInUser) {
     LoggedInUser.loggedInUser = loggedInUser;
     LoggedInUser.loggedIn = true;
   }
 
-  static void logoutCurrentlyLoggedInUser() {
+  public static void logoutCurrentlyLoggedInUser() {
     LoggedInUser.loggedInUser = null;
     LoggedInUser.loggedIn = false;
   }
 
-  static boolean isLoggedIn() {
+  public static boolean isLoggedIn() {
     return loggedIn;
   }
 }

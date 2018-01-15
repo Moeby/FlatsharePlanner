@@ -1,8 +1,10 @@
 package com.tbz.mntn.flattie.authentification;
 
 import android.support.design.widget.Snackbar;
+
 import android.view.View;
 
+import com.tbz.mntn.flattie.authentification.LoggedInUser;
 import com.tbz.mntn.flattie.database.dao.DaoFactory;
 import com.tbz.mntn.flattie.database.dao.UserDao;
 import com.tbz.mntn.flattie.database.dataclasses.User;
@@ -40,9 +42,8 @@ public class SignupController {
     if (password.equals(repPassword)) {
       UserDao userDao = DaoFactory.getUserDao();
 
-      //TODO: hash password and generate pepper
-      String pepper       = "NaTanaMa";
-      String passwordHash = BCrypt.hashpw(password, pepper);
+      String salt = BCrypt.gensalt();
+      String passwordHash = BCrypt.hashpw(password, salt);
       User   newUser      = new User(email, name, passwordHash, null, null);
       int    rows         = userDao.insert(newUser);
 
