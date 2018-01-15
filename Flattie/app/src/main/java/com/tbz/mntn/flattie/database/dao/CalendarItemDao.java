@@ -80,7 +80,7 @@ public class CalendarItemDao extends Dao {
               }
               User user = calendarItem.getUser();
               if (user != null && user.getId() != 0) {
-                stmt.setInt(6, calendarItem.getUser().getId());
+                stmt.setInt(7, calendarItem.getUser().getId());
               } else {
                 stmt.setNull(7, Types.INTEGER);
               }
