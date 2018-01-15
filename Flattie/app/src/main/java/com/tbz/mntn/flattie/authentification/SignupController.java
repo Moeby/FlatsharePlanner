@@ -1,4 +1,4 @@
-package com.tbz.mntn.flattie.authentication;
+package com.tbz.mntn.flattie.authentification;
 
 import android.support.design.widget.Snackbar;
 
