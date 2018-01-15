@@ -22,14 +22,13 @@ public class CalendarEntryController {
 
   /**
    * Get the data objects for the specified parameters and try to persist it.
-   *
-   * @param description of the event
-   * @param repeatable (NONE, DAILY, WEEKLY, MONTHLY, YEARLY)
-   * @param startDate of the event
-   * @param endDate of the event
-   * @param group the event belongs to
+   * @param description   of the event
+   * @param repeatable    (NONE, DAILY, WEEKLY, MONTHLY, YEARLY)
+   * @param startDate     of the event
+   * @param endDate       of the event
+   * @param group         the event belongs to
    * @param eventCategory (event, absence, duty)
-   * @param assignedUser to the event, only one possible
+   * @param assignedUser  to the event, only one possible
    * @return true if persisting was successful, false otherwise
    */
   public boolean saveCalendarEntryToDatabase(String description,
@@ -39,42 +38,37 @@ public class CalendarEntryController {
                                              Group group,
                                              String eventCategory,
                                              String assignedUser) {
-    {
-      CalendarItemDao calendarItemDao = DaoFactory.getCalendarItemDao();
-      Repeatable      repeat          = Repeatable.toRepeatable(repeatable);
+    CalendarItemDao calendarItemDao = DaoFactory.getCalendarItemDao();
+    Repeatable      repeat          = Repeatable.toRepeatable(repeatable);
 
-      EventCategoryDao    eventCategoryDao = DaoFactory.getEventCategoryDao();
-      List<EventCategory> categories       = eventCategoryDao.selectAll();
-      EventCategory       category         = null;
+    EventCategoryDao    eventCategoryDao = DaoFactory.getEventCategoryDao();
+    List<EventCategory> categories       = eventCategoryDao.selectAll();
+    EventCategory       category         = null;
 
-      UserDao   userDao        = DaoFactory.getUserDao();
-      User      assigned       = userDao.selectByUsername(assignedUser);
-      Timestamp startTimestamp = convertUtilDateToSqlTimestamp(startDate);
-      Timestamp endTimestamp   = convertUtilDateToSqlTimestamp(endDate);
+    UserDao   userDao        = DaoFactory.getUserDao();
+    User      assigned       = userDao.selectByUsername(assignedUser);
+    Timestamp startTimestamp = convertUtilDateToSqlTimestamp(startDate);
+    Timestamp endTimestamp   = convertUtilDateToSqlTimestamp(endDate);
 
-      for (EventCategory cat : categories) {
-        if (eventCategory.equals(cat.getName())) {
-          category = cat;
-          break;
-        }
+    for (EventCategory cat : categories) {
+      if (eventCategory.equals(cat.getName())) {
+        category = cat;
+        break;
       }
-
-      CalendarItem item = new CalendarItem(description,
-                                           repeat,
-                                           startTimestamp,
-                                           endTimestamp,
-                                           group,
-                                           category,
-                                           assigned,
-                                           null);
-      int result = calendarItemDao.insert(item);
-
-      // insert successful == 1
-      if (result == 1) {
-        return true;
-      }
-      return false;
     }
+
+    CalendarItem item = new CalendarItem(description,
+                                         repeat,
+                                         startTimestamp,
+                                         endTimestamp,
+                                         group,
+                                         category,
+                                         assigned,
+                                         null);
+    int result = calendarItemDao.insert(item);
+
+    // insert successful == 1
+    return result == 1;
   }
 
   private Timestamp convertUtilDateToSqlTimestamp(Date dateToConvert) {

@@ -27,9 +27,6 @@ public final class InternetChecker {
   }
 
   private static Boolean typeConnected(int type) {
-    if (connectivityManager.getNetworkInfo(type).getState() == NetworkInfo.State.CONNECTED) {
-      return true;
-    }
-    return false;
+    return (connectivityManager.getNetworkInfo(type).getState() == NetworkInfo.State.CONNECTED);
   }
 }
