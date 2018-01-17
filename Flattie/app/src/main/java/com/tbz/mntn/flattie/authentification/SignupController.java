@@ -1,5 +1,7 @@
 package com.tbz.mntn.flattie.authentification;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.support.design.widget.Snackbar;
 
 import android.view.View;
@@ -7,9 +9,14 @@ import android.view.View;
 import com.tbz.mntn.flattie.authentification.LoggedInUser;
 import com.tbz.mntn.flattie.database.dao.DaoFactory;
 import com.tbz.mntn.flattie.database.dao.UserDao;
+import com.tbz.mntn.flattie.database.dataclasses.Group;
 import com.tbz.mntn.flattie.database.dataclasses.User;
+import com.tbz.mntn.flattie.internet.InternetChecker;
 
 import org.mindrot.jbcrypt.BCrypt;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Signup verification and handler.
@@ -25,40 +32,49 @@ public class SignupController {
    * @param repPassword from the user input
    * @return true if user could log in, false if there was a problem with the login
    */
-  public Boolean signup(String name, String email, String password, String repPassword, View view) {
+  public int signup(String name, String email, String password, String repPassword, Context context) {
+    if(InternetChecker.isInternetConnectionActive(context)){
+
+    }
     if (name.equals("")) {
-      Snackbar.make(view, "Please enter a name.", 3000).show();
-      return false;
+      return -1;
     } else if (email.equals("")) {
-      Snackbar.make(view, "Please enter an email address.", 3000).show();
-      return false;
+      return -2;
     } else if (password.equals("")) {
-      Snackbar.make(view, "Please enter a password.", 3000).show();
-      return false;
+      return -3;
     } else if (repPassword.equals("")) {
-      Snackbar.make(view, "Please repeat your password.", 3000).show();
-      return false;
+      return -4;
+    } else if(!validate(email)){
+      return -5;
     }
     if (password.equals(repPassword)) {
       UserDao userDao = DaoFactory.getUserDao();
 
       String salt = BCrypt.gensalt();
       String passwordHash = BCrypt.hashpw(password, salt);
-      User   newUser      = new User(email, name, passwordHash, null, null);
+      //group is by default null, afterwards it has to be changed
+      //TODO: change group value to null if implementation of grupt-set is done
+      Group group = new Group();
+      group.setId(1);
+      User   newUser      = new User(email, name, passwordHash, null, group);
       int    rows         = userDao.insert(newUser);
 
       if (rows > 0) {
         LoggedInUser.setLoggedInUser(newUser);
-        return true;
+        return 1;
       } else if (rows == -200) {
-        Snackbar.make(view, "Name or email address already in use."
-                            + " Please chose another one.", 3000).show();
-        return false;
+        return -6;
       }
-      Snackbar.make(view, "Creation of a new user account failed.", 3000).show();
-      return false;
+      return -7;
     }
-    Snackbar.make(view, "The repeat password does not match your password.", 3000).show();
-    return false;
+    return -8;
+  }
+
+  public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+      Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+  public static boolean validate(String emailStr) {
+    Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+    return matcher.find();
   }
 }
