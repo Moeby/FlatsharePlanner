@@ -28,9 +28,9 @@ public class SignupActivity extends AppCompatActivity {
 
     btnSignup = (Button) findViewById(R.id.btn_signup);
     btnLogin = (Button) findViewById(R.id.btn_goto_login);
-    final TextInputLayout name = findViewById(R.id.signup_input_layout_name);
-    final TextInputLayout email = findViewById(R.id.signup_input_layout_email);
-    final TextInputLayout password = findViewById(R.id.signup_input_layout_password);
+    final TextInputLayout name        = findViewById(R.id.signup_input_layout_name);
+    final TextInputLayout email       = findViewById(R.id.signup_input_layout_email);
+    final TextInputLayout password    = findViewById(R.id.signup_input_layout_password);
     final TextInputLayout repPassword = findViewById(R.id.signup_rep_layout_password);
 
     btnSignup.setOnClickListener(new View.OnClickListener() {
@@ -43,10 +43,10 @@ public class SignupActivity extends AppCompatActivity {
             && password.getEditText().length() > 0
             && repPassword.getEditText().length() > 0) {
           int signedUp = signupController.signup(name.getEditText().getText().toString(),
-              email.getEditText().getText().toString(),
-              password.getEditText().getText().toString(),
-              repPassword.getEditText().getText().toString(),
-              context);
+                                                 email.getEditText().getText().toString(),
+                                                 password.getEditText().getText().toString(),
+                                                 repPassword.getEditText().getText().toString(),
+                                                 context);
           switch (signedUp) {
             case 1:
               //TODO later: launch flattie group page instead of calendar view
@@ -54,23 +54,23 @@ public class SignupActivity extends AppCompatActivity {
               break;
             case -1:
               Snackbar.make(view, "Please enter valid email address.",
-                  MainActivity.SNACKBAR_DURATION).show();
+                            MainActivity.SNACKBAR_DURATION).show();
               break;
             case -2:
-              Snackbar.make(view, "Name or email address already in use."
-                  + " Please chose another one.", MainActivity.SNACKBAR_DURATION).show();
+              Snackbar.make(view, "Name or email address already in use. Please chose another one.",
+                            MainActivity.SNACKBAR_DURATION).show();
               break;
             case -3:
               Snackbar.make(view, "Creation of a new user account failed.",
-                  MainActivity.SNACKBAR_DURATION).show();
+                            MainActivity.SNACKBAR_DURATION).show();
               break;
             case -4:
               Snackbar.make(view, "The repeat password does not match your password.",
-                  MainActivity.SNACKBAR_DURATION).show();
+                            MainActivity.SNACKBAR_DURATION).show();
               break;
             case -5:
               Snackbar.make(view, "Please connect to internet.",
-                  MainActivity.SNACKBAR_DURATION).show();
+                            MainActivity.SNACKBAR_DURATION).show();
               break;
             default:
               Snackbar.make(view, "Unknown error.", MainActivity.SNACKBAR_DURATION).show();
@@ -103,10 +103,10 @@ public class SignupActivity extends AppCompatActivity {
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     if (keyCode == KeyEvent.KEYCODE_BACK) {
-      if(LoggedInUser.isLoggedIn()){
+      if (LoggedInUser.isLoggedIn()) {
         moveTaskToBack(true);
         return true;
-      }else {
+      } else {
         Intent intent = new Intent(SignupActivity.this, MainActivity.class);
         startActivity(intent);
         return false;

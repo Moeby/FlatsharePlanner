@@ -8,6 +8,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -27,6 +28,7 @@ import com.tbz.mntn.flattie.database.dataclasses.EventCategory;
 import com.tbz.mntn.flattie.database.dataclasses.Repeatable;
 import com.tbz.mntn.flattie.database.dataclasses.User;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,9 +42,14 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
   private Date startDate;
   private Date endDate;
 
+  private Date initStartDate;
+  private Date initEndDate;
+
+  @SuppressLint("SimpleDateFormat")
+  private SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy hh:mm aa");
+
   private SlideDateTimeListener listener = new SlideDateTimeListener() {
-    @SuppressLint("SimpleDateFormat")
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy hh:mm aa");
+    // private SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy hh:mm aa");
 
     /**
      * DateTime set on Datetimepicker.
@@ -52,7 +59,6 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
     public void onDateTimeSet(Date date) {
       startDate = date;
       TextInputLayout startDate = findViewById(R.id.cal_start_date);
-      // TODO #61: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
       if (endDate == null || date.before(endDate)) {
         startDate.getEditText().setText(dateFormat.format(date));
       } else {
@@ -86,7 +92,6 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
     public void onDateTimeSet(Date date) {
       endDate = date;
       TextInputLayout endDate = findViewById(R.id.cal_end_date);
-      // TODO #61: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
       if (startDate == null || date.after(startDate)) {
         endDate.getEditText().setText(dateFormat.format(date));
       } else {
@@ -110,6 +115,12 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.add_calentar_entry);
+
+    Intent intent = getIntent();
+    int    day    = intent.getIntExtra(CalendarActivity.EXTRA_INT_DAY, 0);
+    int    month  = intent.getIntExtra(CalendarActivity.EXTRA_INT_MONTH, 0);
+    int    year   = intent.getIntExtra(CalendarActivity.EXTRA_INT_YEAR, 0);
+
     User loggedInUser = LoggedInUser.getLoggedInUser();
 
     final EditText        startDate         = findViewById(R.id.cal_start_date_input);
@@ -120,6 +131,12 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
     final Spinner         categorySpinner   = findViewById(R.id.cal_entry_category);
     final Spinner         peopleSpinner     = findViewById(R.id.cal_entry_people);
 
+    // todo: change into not deprecated version
+    initStartDate = new Date(year - 1900, month, day);
+    initEndDate = new Date(year - 1900, month, day);
+    startDate.setText(dateFormat.format(initStartDate));
+    endDate.setText(dateFormat.format(initStartDate));
+
     setRepeatableSpinnerValues(repeatableSpinner);
     setCategorySpinnerValues(categorySpinner);
     setGroupMembersSpinnerValues(peopleSpinner);
@@ -128,9 +145,10 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
 
     submit.setOnClickListener(v -> {
       // Check dates and description are not empty
-      if (this.startDate != null && this.endDate != null) {
+      if (this.startDate != null
+          && this.endDate != null
+          && description.getEditText().length() > 0) {
         CalendarEntryController calendarEntryController = new CalendarEntryController();
-        // TODO #61: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
         Boolean isItemSavedToDb =
             calendarEntryController.saveCalendarEntryToDatabase(description.getEditText()
                                                                            .getText().toString(),
@@ -155,9 +173,8 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
   }
 
   /**
-   * Create Menu, logout function
-   *
-   * @param
+   * Create Menu, logout function.
+   * @param menu button in top bar
    * @return true if onclickevent is successful, false if not
    */
   @Override
@@ -177,16 +194,24 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
   }
 
   private void addListenersToDateFields(EditText startDate, EditText endDate) {
+    try {
+      initStartDate = dateFormat.parse(startDate.getText().toString());
+      initEndDate = dateFormat.parse(endDate.getText().toString());
+    } catch (ParseException e) {
+      initStartDate = new Date();
+      initEndDate = new Date();
+      Log.w("Parse Date Problem", e);
+    }
     startDate.setOnClickListener(v -> new SlideDateTimePicker.Builder(getSupportFragmentManager())
         .setListener(listener)
-        .setInitialDate(new Date())
+        .setInitialDate(initStartDate)
         .setMinDate(new Date())
         .build()
         .show());
 
     endDate.setOnClickListener(v -> new SlideDateTimePicker.Builder(getSupportFragmentManager())
         .setListener(listener2)
-        .setInitialDate(new Date())
+        .setInitialDate(initEndDate)
         .setMinDate(new Date())
         .build()
         .show());

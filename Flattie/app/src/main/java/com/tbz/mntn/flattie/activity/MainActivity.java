@@ -23,18 +23,18 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     context = this;
 
-    Button btnSignup = findViewById(R.id.btn_link_signup);
-    Button btnLogin = findViewById(R.id.btn_login);
-    final TextInputLayout usename = findViewById(R.id.login_input_layout_name);
-    final TextInputLayout password = findViewById(R.id.login_input_layout_password);
+    Button                btnSignup = findViewById(R.id.btn_link_signup);
+    Button                btnLogin  = findViewById(R.id.btn_login);
+    final TextInputLayout usename   = findViewById(R.id.login_input_layout_name);
+    final TextInputLayout password  = findViewById(R.id.login_input_layout_password);
 
     btnLogin.setOnClickListener(view -> {
       LoginController loginController = new LoginController();
       if (usename.getEditText().length() > 0
           && password.getEditText().length() > 0) {
         int loggedIn = loginController.login(usename.getEditText().getText().toString(),
-            password.getEditText().getText().toString(),
-            context);
+                                             password.getEditText().getText().toString(),
+                                             context);
 
         switch (loggedIn) {
           case 1:
@@ -74,10 +74,10 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     if (keyCode == KeyEvent.KEYCODE_BACK) {
-      if(LoggedInUser.isLoggedIn()){
+      if (LoggedInUser.isLoggedIn()) {
         moveTaskToBack(true);
         return true;
-      }else {
+      } else {
         Intent intent = new Intent(MainActivity.this, MainActivity.class);
         startActivity(intent);
         return false;
