@@ -158,7 +158,7 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
    * Create Menu, logout function
    *
    * @param
-   * @return
+   * @return true if onclickevent is successful, false if not
    */
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
