@@ -1,7 +1,9 @@
 package com.tbz.mntn.flattie.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,6 +13,7 @@ import com.tbz.mntn.flattie.R;
 import com.tbz.mntn.flattie.authentification.SignupController;
 
 public class SignupActivity extends AppCompatActivity {
+  Context context;
 
   private Button btnLogin;
   private Button btnSignup;
@@ -19,6 +22,7 @@ public class SignupActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.signup);
+    context = this;
 
     btnSignup = (Button) findViewById(R.id.btn_signup);
     btnLogin = (Button) findViewById(R.id.btn_goto_login);
@@ -33,24 +37,62 @@ public class SignupActivity extends AppCompatActivity {
       public void onClick(View view) {
         SignupController signupController = new SignupController();
         // TODO #56: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
-        Boolean signedUp = signupController.signup(name.getEditText().getText().toString(),
-                                                   email.getEditText().getText().toString(),
-                                                   password.getEditText().getText().toString(),
-                                                   repPassword.getEditText().getText().toString(),
-                                                   view);
-        // TODO #56: REVIEW Nadja: handle it same way like login controller to have a little convention how to handle snackbars
-        /*
-        if (signedUp == 3) {
-          Snackbar.make(view, "The repeat password does not match your password.", 3000).show();
-        } else if (signedUp == 2) {
-          Snackbar.make(view, "Name or email address already in use. "
-          + "Please chose another one.", 3000).show();
-        } else if (signedUp == 1) {
-          Snackbar.make(view, "Creation of a new user account failed.", 3000).show();
-          */
-        if (signedUp) {
-          //} else {
-          launchCalendarActivity();
+        if(!name.getEditText().getText().equals("")
+            && !email.getEditText().getText().equals("")
+            && !password.getEditText().getText().equals("")
+            && !repPassword.getEditText().getText().equals("")){
+          int signedUp = signupController.signup(name.getEditText().getText().toString(),
+              email.getEditText().getText().toString(),
+              password.getEditText().getText().toString(),
+              repPassword.getEditText().getText().toString(),
+              context);
+          // TODO #56: REVIEW Nadja: handle it same way like login controller to have a little convention how to handle snackbars
+          switch (signedUp){
+            case 1:
+              launchCalendarActivity();
+              break;
+            case -1:
+              Snackbar.make(view, "Please enter a name.", 3000).show();
+              break;
+            case -2:
+              Snackbar.make(view, "Please enter an email address.", 3000).show();
+              break;
+            case -3:
+              Snackbar.make(view, "Please enter a password.", 3000).show();
+              break;
+            case -4:
+              Snackbar.make(view, "Please repeat your password.", 3000).show();
+              break;
+            case -5:
+              Snackbar.make(view, "Please enter valid email address.", 3000).show();
+              break;
+            case -6:
+              Snackbar.make(view, "Name or email address already in use."
+                  + " Please chose another one.", 3000).show();
+              break;
+            case -7:
+              Snackbar.make(view, "Creation of a new user account failed.", 3000).show();
+              break;
+            case -8:
+              Snackbar.make(view, "The repeat password does not match your password.", 3000).show();
+              break;
+            default:
+              Snackbar.make(view, "Unknown error.", 3000).show();
+              break;
+          }
+          /*
+          if (signedUp == 3) {
+            Snackbar.make(view, "The repeat password does not match your password.", 3000).show();
+          } else if (signedUp == 2) {
+            Snackbar.make(view, "Name or email address already in use. "
+            + "Please chose another one.", 3000).show();
+          } else if (signedUp == 1) {
+            Snackbar.make(view, "Creation of a new user account failed.", 3000).show();
+          if (signedUp == 1) {
+            launchCalendarActivity();
+          }*/
+        } else{
+          Snackbar.make(view, "Please fill out all fields.", 3000).show();
         }
       }
     });
@@ -68,7 +110,6 @@ public class SignupActivity extends AppCompatActivity {
     startActivity(intent);
   }
 
-  //TODO: check if we could put it together with the function in MainActivity
   private void launchCalendarActivity() {
     Intent intent = new Intent(SignupActivity.this, CalendarActivity.class);
     startActivity(intent);

@@ -152,6 +152,28 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
     });
   }
 
+  /**
+   * Create Menu, logout function
+   *
+   * @param
+   * @return
+   */
+  /*@Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuItem menuItem = menu.add("Logout");
+    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+    menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+      @Override
+      public boolean onMenuItemClick(MenuItem item) {
+        LoggedInUser.logoutCurrentlyLoggedInUser();
+        Intent intent = new Intent(AddCalendarEntryActivity.this, MainActivity.class);
+        startActivity(intent);
+        return true;
+      }
+    });
+    return super.onCreateOptionsMenu(menu);
+  }*/
+
   private void addListenersToDateFields(EditText startDate, EditText endDate) {
     startDate.setOnClickListener(v -> new SlideDateTimePicker.Builder(getSupportFragmentManager())
         .setListener(listener)
