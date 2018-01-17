@@ -145,7 +145,9 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
 
     submit.setOnClickListener(v -> {
       // Check dates and description are not empty
-      if (this.startDate != null && this.endDate != null && description.getEditText().length() > 0) {
+      if (this.startDate != null
+          && this.endDate != null
+          && description.getEditText().length() > 0) {
         CalendarEntryController calendarEntryController = new CalendarEntryController();
         Boolean isItemSavedToDb =
             calendarEntryController.saveCalendarEntryToDatabase(description.getEditText()
