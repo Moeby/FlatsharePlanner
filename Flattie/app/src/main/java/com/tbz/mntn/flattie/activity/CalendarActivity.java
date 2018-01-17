@@ -3,10 +3,13 @@ package com.tbz.mntn.flattie.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
 
 import com.tbz.mntn.flattie.R;
+import com.tbz.mntn.flattie.authentification.LoggedInUser;
 
 import java.util.Date;
 
@@ -31,11 +34,11 @@ public class CalendarActivity extends AppCompatActivity {
   }
 
   /**
-   * Create Menu, logout function
-   * @param menu todo add text
-   * @return todo add text
+   * Create Menu, logout function.
+   * @param menu button in top bar
+   * @return true if onclickevent is successful, false if not
    */
-  /*@Override
+  @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuItem menuItem = menu.add("Logout");
     menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -49,7 +52,8 @@ public class CalendarActivity extends AppCompatActivity {
       }
     });
     return super.onCreateOptionsMenu(menu);
-  }*/
+  }
+
   private void launchAddCalendarEntryActivity(int year, int month, int day) {
     Intent intent = new Intent(getBaseContext(), AddCalendarEntryActivity.class);
     intent.putExtra(EXTRA_INT_DAY, day);

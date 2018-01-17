@@ -9,6 +9,8 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +41,9 @@ import java.util.List;
 public class AddCalendarEntryActivity extends AppCompatActivity {
   private Date startDate;
   private Date endDate;
+
+  private Date initStartDate;
+  private Date initEndDate;
 
   @SuppressLint("SimpleDateFormat")
   private SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy hh:mm aa");
@@ -142,7 +147,6 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
       // Check dates and description are not empty
       if (this.startDate != null && this.endDate != null && description.getEditText().length() > 0) {
         CalendarEntryController calendarEntryController = new CalendarEntryController();
-        // TODO #61: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
         Boolean isItemSavedToDb =
             calendarEntryController.saveCalendarEntryToDatabase(description.getEditText()
                                                                            .getText().toString(),
@@ -167,11 +171,11 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
   }
 
   /**
-   * Create Menu, logout function
-   * @param menu todo add text
-   * @return todo add text
+   * Create Menu, logout function.
+   * @param menu button in top bar
+   * @return true if onclickevent is successful, false if not
    */
-  /*@Override
+  @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuItem menuItem = menu.add("Logout");
     menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -185,9 +189,7 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
       }
     });
     return super.onCreateOptionsMenu(menu);
-  }*/
-  private Date initStartDate;
-  private Date initEndDate;
+  }
 
   private void addListenersToDateFields(EditText startDate, EditText endDate) {
     try {
