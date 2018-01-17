@@ -4,7 +4,7 @@
 
 | Type        | Description           | Solution            |
 | ------------|-----------------------| --------------------|
-| GLAD        |                       |                     |
+| GLAD        |everything we had to implement is working                       |                     |
 | GLAD        |                       |                     |
 | GLAD        |                       |                     |
 | SAD         |                       |                     |
