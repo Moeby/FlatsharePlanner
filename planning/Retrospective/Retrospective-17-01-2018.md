@@ -12,4 +12,3 @@
 | SAD         |marvin is sad because he thinks that the program is a little bit to hard                      |                     |
 | MAD         |everybody is mad about the long response times of our app     |read about it and implement solution                     |
 | MAD         |everybody is mad that the calendarview is not working as wished|for future: search a new calendarview that covers the need in our app                     |
-| MAD         |                       |                     |
