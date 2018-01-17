@@ -37,10 +37,10 @@ public class SignupActivity extends AppCompatActivity {
       public void onClick(View view) {
         SignupController signupController = new SignupController();
         // TODO #56: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
-        if(!name.getEditText().getText().equals("")
-            && !email.getEditText().getText().equals("")
-            && !password.getEditText().getText().equals("")
-            && !repPassword.getEditText().getText().equals("")){
+        if(name.getEditText().getText() != null
+            && email.getEditText().getText() != null
+            && password.getEditText().getText() != null
+            && repPassword.getEditText().getText() != null){
           int signedUp = signupController.signup(name.getEditText().getText().toString(),
               email.getEditText().getText().toString(),
               password.getEditText().getText().toString(),
@@ -49,6 +49,7 @@ public class SignupActivity extends AppCompatActivity {
           // TODO #56: REVIEW Nadja: handle it same way like login controller to have a little convention how to handle snackbars
           switch (signedUp){
             case 1:
+              //TODO later: launch flattie group page instead of calendar view
               launchCalendarActivity();
               break;
             case -1:

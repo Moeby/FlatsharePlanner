@@ -22,23 +22,26 @@ public class MainActivity extends AppCompatActivity {
 
     Button                btnSignup = findViewById(R.id.btn_link_signup);
     Button                btnLogin  = findViewById(R.id.btn_login);
-    final TextInputLayout email     = findViewById(R.id.login_input_layout_name);
+    final TextInputLayout usename   = findViewById(R.id.login_input_layout_name);
     final TextInputLayout password  = findViewById(R.id.login_input_layout_password);
 
     btnLogin.setOnClickListener(view -> {
       LoginController loginController = new LoginController();
       // TODO #57: REVIEW Nadja: without checking if edit texts has a text, the app will crash when a user don't enter a info
-      Boolean loggedIn = loginController.login(email.getEditText().getText().toString(),
-                                               password.getEditText().getText().toString(),
-                                               context);
+      if(usename.getEditText().getText() != null
+          && password.getEditText().getText() != null){
+        Boolean loggedIn = loginController.login(usename.getEditText().getText().toString(),
+            password.getEditText().getText().toString(),
+            context);
 
-      if (loggedIn == null) {
-        Snackbar.make(view, "User not found.", 1000).show();
-      } else if (!loggedIn) {
-        Snackbar.make(view, "Password incorrect. Please try again.", 1000).show();
-      } else {
-        // TODO later: launch flattie group page instead of calendar view
-        launchCalendarActivity();
+        if (loggedIn == null) {
+          Snackbar.make(view, "User not found.", 1000).show();
+        } else if (!loggedIn) {
+          Snackbar.make(view, "Password incorrect. Please try again.", 1000).show();
+        } else {
+          // TODO later: launch flattie group page instead of calendar view
+          launchCalendarActivity();
+        }
       }
     });
 
