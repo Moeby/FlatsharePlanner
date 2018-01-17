@@ -16,24 +16,27 @@ public class LoginController {
 
   /**
    * Check username and password and log user in if check successful.
+   *
    * @param username from the user input
    * @param password from the user input
-   * @return null if username doesn't exist, false if password wrong and true if login successful
+   * @return -3 if there is no internet connection, -2 if username doesn't exist,
+   *        -1 if password wrong and 1 if login successful
    */
-  public Boolean login(String username, String password, Context context) {
+  public int login(String username, String password, Context context) {
     if (InternetChecker.isInternetConnectionActive(context)) {
       UserDao userDao = DaoFactory.getUserDao();
-      User    user    = userDao.selectByUsername(username);
+      User user = userDao.selectByUsername(username);
 
       if (!(user == null)) {
         if (arePasswordsMatching(user.getPassword(), password)) {
           LoggedInUser.setLoggedInUser(user);
-          return true;
+          return 1;
         }
-        return false;
+        return -1;
       }
+      return -2;
     }
-    return null;
+    return -3;
   }
 
   private Boolean arePasswordsMatching(String userPassword, String password) {

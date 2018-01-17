@@ -40,7 +40,7 @@ public class CalendarActivity extends AppCompatActivity {
    * @param
    * @return
    */
-  /*@Override
+  @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuItem menuItem = menu.add("Logout");
     menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -54,7 +54,7 @@ public class CalendarActivity extends AppCompatActivity {
       }
     });
     return super.onCreateOptionsMenu(menu);
-  }*/
+  }
 
   private void launchAddCalendarEntryActivity(int year, int month, int day) {
     Intent intent = new Intent(getBaseContext(), AddCalendarEntryActivity.class);

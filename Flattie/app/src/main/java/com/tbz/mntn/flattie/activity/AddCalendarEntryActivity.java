@@ -8,6 +8,8 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -158,7 +160,7 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
    * @param
    * @return
    */
-  /*@Override
+  @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuItem menuItem = menu.add("Logout");
     menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -172,7 +174,7 @@ public class AddCalendarEntryActivity extends AppCompatActivity {
       }
     });
     return super.onCreateOptionsMenu(menu);
-  }*/
+  }
 
   private void addListenersToDateFields(EditText startDate, EditText endDate) {
     startDate.setOnClickListener(v -> new SlideDateTimePicker.Builder(getSupportFragmentManager())
